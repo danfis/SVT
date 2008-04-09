@@ -39,17 +39,17 @@ SbBool GSRM::Viewer::processSoEvent(const SoEvent *const event)
 {
     SbBool ret;
 
-    lock();
+    _lockEvent();
     ret = SoQtExaminerViewer::processSoEvent(event);
-    unlock();
+    _unlockEvent();
 
     return ret;
 }
 void GSRM::Viewer::actualRedraw(void)
 {
-    lock();
+    _lockRedraw();
     SoQtExaminerViewer::actualRedraw();
-    unlock();
+    _unlockRedraw();
 }
 
 void GSRM::Viewer::show()
@@ -119,21 +119,22 @@ void GSRM::Viewer::_setUpLightPosition()
 
         x = pos[0]*cos(_light_transform[0]) - pos[2]*sin(_light_transform[0]);
         y = pos[1]*cos(_light_transform[1]) - pos[2]*sin(_light_transform[1]);
-        z = pos[1]*cos(_light_transform[0]) + pos[2]*sin(_light_transform[0]) +
-            pos[1]*cos(_light_transform[1]) + pos[2]*sin(_light_transform[1]);
+        z = pos[2]*cos(_light_transform[0]) + pos[1]*sin(_light_transform[0]) +
+            pos[2]*cos(_light_transform[1]) + pos[1]*sin(_light_transform[1]);
+        z = z / 2;
 
-        x = (1 + _light_transform[2]) * x;
-        y = (1 + _light_transform[2]) * y;
-        z = (1 + _light_transform[2]) * z;
+        pos.setValue(x * -100, y * -100, z * -100);
 
-        pos.setValue(x, y, z);
-
+        SoDB::writelock();
         lock();
-        _light->location.setValue(pos * -100);
+        _light->location.setValue(pos);
         unlock();
+        SoDB::writeunlock();
     }else{
         SoDB::writelock();
+        lock();
         _light->location.setValue(0,0,0);
+        unlock();
         SoDB::writeunlock();
     }
 }
@@ -148,11 +149,5 @@ void GSRM::Viewer::leftWheelMotion(float val)
 void GSRM::Viewer::bottomWheelMotion(float val)
 {
     _light_transform[1] = val;
-    _setUpLightPosition();
-}
-
-void GSRM::Viewer::rightWheelMotion(float val)
-{
-    _light_transform[2] = val;
     _setUpLightPosition();
 }

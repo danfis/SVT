@@ -21,7 +21,8 @@ void ViewerCameraChangedCallback(void *data, SoSensor *);
  */
 class Viewer : public QObject, public SoQtExaminerViewer{
   private:
-    SbMutex _lock; /*! internal lock for multithreading */
+    SbMutex _lock1; /*! internal lock for multithreading */
+    SbMutex _lock2; /*! internal lock for multithreading */
     std::vector<ViewerPushButton *> _buttons; /*! list of registered buttons */
 
     SoPointLight *_light;
@@ -29,6 +30,11 @@ class Viewer : public QObject, public SoQtExaminerViewer{
     SbVec3f _light_transform;
 
   protected:
+    int _lockRedraw() { return _lock1.lock(); }
+    int _unlockRedraw() { return _lock1.unlock(); }
+    int _lockEvent() { return _lock2.lock(); }
+    int _unlockEvent() { return _lock2.unlock(); }
+
     virtual SbBool processSoEvent(const SoEvent *const event);
     virtual void actualRedraw(void);
 
@@ -38,7 +44,6 @@ class Viewer : public QObject, public SoQtExaminerViewer{
 
     void leftWheelMotion(float val);
     void bottomWheelMotion(float val);
-    void rightWheelMotion(float val);
   public:
     Viewer(QWidget *parent, const char *name = "");
     virtual ~Viewer();
@@ -46,8 +51,8 @@ class Viewer : public QObject, public SoQtExaminerViewer{
     /**
      * Lock/Unlock viewer
      */
-    int lock() { return _lock.lock(); }
-    int unlock() { return _lock.unlock(); }
+    bool lock() { return _lockRedraw() == 0 && _lockEvent() == 0; }
+    bool unlock() { return _unlockRedraw() == 0 && _unlockEvent() == 0; }
 
     /**
      * Add button using which is possible to show/hide given SoSeparator

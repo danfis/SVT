@@ -86,11 +86,16 @@ void ObjData::_setEdges()
 
         SoDrawStyle *draw_style = new SoDrawStyle;
         draw_style->style = SoDrawStyle::LINES;
-        draw_style->lineWidth = 2;
+        draw_style->lineWidth = 1;
         sep->addChild(draw_style);
 
         SoMaterial *line_material = new SoMaterial;
-        line_material->diffuseColor.setValue(0.58, 0.62, 1);
+        line_material->ambientColor.setValue(0, 0, 0);
+        line_material->diffuseColor.setValue(0.18, 0.22, 0.6);
+        line_material->specularColor.setValue(0, 0, 0);
+        line_material->emissiveColor.setValue(0, 0, 0);
+        line_material->shininess = 0.01;
+        line_material->transparency = 0.5;
         sep->addChild(line_material);
 
         SoIndexedLineSet *lines = new SoIndexedLineSet;
