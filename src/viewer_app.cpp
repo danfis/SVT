@@ -20,6 +20,7 @@
 #include <Inventor/nodes/SoSwitch.h>
 using namespace std;
 
+#include "objdata.hpp"
 #include "viewer.hpp"
 #include "msg.hpp"
 
@@ -34,6 +35,8 @@ int num_faces;
 static int faces[MAX_FACES * 4];
 SoPointLight *light;
 SoDirectionalLight *light2;
+
+ObjData *data;
 
 
 void callback(bool pressed, GSRM::Viewer *viewer, void *cl)
@@ -68,10 +71,12 @@ void readData(std::istream &in)
         cin >> z;
         if (!cin.good()) break;
 
+        data->addVertex(x, y, z);
         vertices[cur][0] = x;
         vertices[cur][1] = y;
         vertices[cur][2] = z;
     }
+    DBG("Vertices read: " << num_vertices);
     if (cur != num_vertices){
         ERR("num vertices: " << num_vertices << ", found: " << cur);
         exit(-1);
@@ -82,10 +87,12 @@ void readData(std::istream &in)
         cin >> b;
         if (!cin.good()) break;
 
+        data->addEdge(a, b);
         edges[cur*3] = a;
         edges[cur*3 + 1] = b;
         edges[cur*3 + 2] = -1;
     }
+    DBG("Edges read: " << num_edges);
     if (cur != num_edges){
         ERR("num edges: " << num_edges << ", found: " << cur);
         exit(-1);
@@ -97,11 +104,13 @@ void readData(std::istream &in)
         cin >> c;
         if (!cin.good()) break;
 
+        data->addFace(a, b, c);
         faces[cur*4] = a;
         faces[cur*4 + 1] = b;
         faces[cur*4 + 2] = c;
         faces[cur*4 + 3] = -1;
     }
+    DBG("Faces read: " << num_faces);
     if (cur != num_faces){
         ERR("num faces: " << num_faces << ", found: " << cur);
         exit(-1);
@@ -205,9 +214,13 @@ int main(int argc, char *argv[])
     QWidget *mainwin;
     GSRM::Viewer *viewer;
     SoSeparator *root;
+    SoSeparator *node;
+    SoPointSet *ps;
     SoSwitch *sw;
 
+    SoDB::init();
 
+    data = new ObjData();
     readData(cin);
 
     mainwin = SoQt::init(argc, argv, argv[0]);
@@ -216,14 +229,24 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    root = data->root();
+    /*
+    DBG("Num children: " << root->getNumChildren());
+    node = dynamic_cast<SoSeparator *>(root->getChild(1));
+    DBG("Num children (1): " << node->getNumChildren());
+    ps = dynamic_cast<SoPointSet *>(node->getChild(1));
+    DBG("Num points: " << ps->numPoints.getValue());
+    */
+
+    /*
     root = new SoSeparator;
     root->ref();
-
-
+    */
 
     viewer = new GSRM::Viewer(mainwin);
     viewer->setSceneGraph(root);
 
+    /*
     sw = new SoSwitch;
     sw->whichChild = SO_SWITCH_ALL;
     //viewer->addToggleButton(callback, sw);
@@ -247,15 +270,16 @@ int main(int argc, char *argv[])
     viewer->addToggleButton(callback, sw);
     root->addChild(sw);
     setFaces(sw, viewer);
+    */
 
     viewer->show();
 
 
     // Pop up the main window.
     SoQt::show(mainwin);
-
     SoQt::mainLoop();
-    root->unref();
+
+    delete data;
 
     return 0;
 }

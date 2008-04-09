@@ -1,7 +1,8 @@
 %{
-#include <stdlib.h>
-#include "y.tab.h"
+#include "parser_lexer_common.h"
 %}
+
+%option yylineno
 
 DIGIT [0-9]
 NONZERO [1-9]
@@ -16,63 +17,60 @@ DELIM [-=+]
 %%
 <points>{MINUS}?{NONZERO}{DIGIT}*{DOT}?{DIGIT}* {
     yylval.flt_num = atof(yytext);
-    printf("T_FLT_NUM: detected float: '%s' -> %f\n", yytext, atof(yytext));
+    yylval.lineno = yylineno;
     return T_FLT_NUM;
-                                        }
+}
 <points>{MINUS}?{ZERO}{DOT}? {
     yylval.flt_num = atof(yytext);
-    printf("T_FLT_NUM: detected float: '%s' -> %f\n", yytext, atof(yytext));
+    yylval.lineno = yylineno;
     return T_FLT_NUM;
-                     }
+}
 <points>{MINUS}?{ZERO}{DOT}{DIGIT}* {
     yylval.flt_num = atof(yytext);
-    printf("T_FLT_NUM: detected float: '%s' -> %f\n", yytext, atof(yytext));
+    yylval.lineno = yylineno;
     return T_FLT_NUM;
-                            }
+}
 
 <edges,faces>{NONZERO}{DIGIT}* {
     yylval.int_num = atoi(yytext);
-    printf("T_INT_NUM: detected num '%s' -> %d\n", yytext, atoi(yytext));
+    yylval.lineno = yylineno;
     return T_INT_NUM;
 }
 <edges,faces>{ZERO} {
     yylval.int_num = atoi(yytext);
-    printf("T_INT_NUM: detected zero\n");
+    yylval.lineno = yylineno;
     return T_INT_NUM;
 }
 
-{WHITESPACE}+ {
-    printf("detected whitespace: '%s'\n", yytext);
-              }
+{WHITESPACE}+ {}
 
-{COMMENT}[^\n]*\n {
-    printf("detected comment: '%s'\n", yytext);
-                }
+{COMMENT}[^\n]*\n {}
 
 [Pp][Oo][Ii][Nn][Tt][Ss]: {
     BEGIN(points);
-    printf("T_POINTS: detected Points delimiter: '%s'\n", yytext);
+    yylval.lineno = yylineno;
     return T_POINTS;
-                            }
+}
 [Ee][Dd][Gg][Ee][Ss]: {
     BEGIN(edges);
-    printf("T_EDGES: detected Edges delimiter: '%s'\n", yytext);
+    yylval.lineno = yylineno;
     return T_EDGES;
-                      }
+}
 [Ff][Aa][Cc][Ee][Ss]: {
     BEGIN(faces);
-    printf("T_FACES: detected Faces delimiter: '%s'\n", yytext);
+    yylval.lineno = yylineno;
     return T_FACES;
-                      }
+}
 
 {DELIM}+\n {
     BEGIN(INITIAL);
-    printf("T_DELIM: detected delimiter: '%s'\n", yytext);
+    yylval.lineno = yylineno;
     return T_DELIM;
-}
-. {
-    printf("T_ERROR: Unknown input: '%s'!\n", yytext);
-    return T_ERROR;
-  }
-%%
+           }
 
+. {
+    yylval.lineno = yylineno;
+    yylval.c = yytext[0];
+    return T_ERROR;
+}
+%%
