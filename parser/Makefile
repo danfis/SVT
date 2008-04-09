@@ -1,4 +1,4 @@
-CXXFLAGS += -I../common
+CXXFLAGS += -I../common $(QT_CXXFLAGS)
 
 TARGETS = libparser.a
 OBJS = parser.o lexer.o

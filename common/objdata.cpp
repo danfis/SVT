@@ -5,6 +5,15 @@ ObjData::~ObjData()
 {
     if (_root != 0)
         _root->unref();
+
+    if (_node_vertices != 0)
+        _node_vertices->unref();
+    if (_node_edges != 0)
+        _node_edges->unref();
+    if (_node_faces != 0)
+        _node_faces->unref();
+    if (_node_faces2 != 0)
+        _node_faces2->unref();
 }
 
 void ObjData::addVertex(float x, float y, float z)
@@ -36,12 +45,11 @@ void ObjData::addFace(int a, int b, int c)
 void ObjData::_setCoords()
 {
     if (_num_vertices > 0){
-        SoSwitch *sep = new SoSwitch;
-        sep->whichChild = SO_SWITCH_ALL;
+        SoSeparator *sep = new SoSeparator;
 
         SoCoordinate3 *coords = new SoCoordinate3;
         coords->point = _vertices;
-        sep->addChild(coords);
+        _root->addChild(coords);
 
         _root->addChild(sep);
     }
@@ -63,6 +71,8 @@ void ObjData::_setVertices()
         points->numPoints = _num_vertices;
         sep->addChild(points);
 
+        _node_vertices = sep;
+        _node_vertices->ref();
         _root->addChild(sep);
     }
 }
@@ -87,6 +97,8 @@ void ObjData::_setEdges()
         lines->coordIndex = _edges;
         sep->addChild(lines);
 
+        _node_edges = sep;
+        _node_edges->ref();
         _root->addChild(sep);
     }
 }
@@ -94,17 +106,7 @@ void ObjData::_setEdges()
 void ObjData::_setFaces()
 {
     if (_num_vertices > 0 && _num_faces > 0){
-        /*
-           SoDrawStyle *style = new SoDrawStyle;
-           style->style = SoDrawStyle::FILLED;
-           sep->addChild(style);
-
-           SoMaterial *material2 = new SoMaterial;
-           material2->diffuseColor.setValue(0.75, 1, 0.41);
-           material2->transparency = 0;
-           sep->addChild(material2);
-         */
-        //SoSeparator *sep = new SoSeparator;
+        // texture
         SoSwitch *sep = new SoSwitch;
         sep->whichChild = SO_SWITCH_ALL;
 
@@ -121,15 +123,37 @@ void ObjData::_setFaces()
         face->coordIndex = _faces;
         sep->addChild(face);
 
+        // non-texure
+        SoSwitch *sep2 = new SoSwitch;
+        sep2->whichChild = SO_SWITCH_ALL;
+
+        SoDrawStyle *style2 = new SoDrawStyle;
+        style2->style = SoDrawStyle::FILLED;
+        sep2->addChild(style2);
+
+        SoMaterial *material2 = new SoMaterial;
+        material2->diffuseColor.setValue(0.75, 1, 0.41);
+        material2->transparency = 0;
+        sep2->addChild(material2);
+
+        sep2->addChild(face);
+
+        _node_faces = sep;
+        _node_faces->ref();
+        _node_faces2 = sep2;
+        _node_faces2->ref();
         _root->addChild(sep);
+        _root->addChild(sep2);
     }
 }
 
-SoSeparator *ObjData::root()
+SoNode *ObjData::root()
 {
     if (_root == 0){
-        _root = new SoSeparator;
+        _root = new SoSwitch;
         _root->ref();
+        _root->whichChild = SO_SWITCH_ALL;
+
         _setCoords();
         _setVertices();
         _setEdges();
@@ -137,4 +161,28 @@ SoSeparator *ObjData::root()
     }
 
     return _root;
+}
+
+static void ObjDataButtonCallback(bool pressed, GSRM::Viewer *, void *cl);
+void ObjData::addButtons(GSRM::Viewer &viewer)
+{
+    viewer.addToggleButton(ObjDataButtonCallback, _root);
+    viewer.addToggleButton(ObjDataButtonCallback, _node_vertices);
+    viewer.addToggleButton(ObjDataButtonCallback, _node_edges);
+    viewer.addToggleButton(ObjDataButtonCallback, _node_faces);
+    viewer.addToggleButton(ObjDataButtonCallback, _node_faces2);
+}
+static void ObjDataButtonCallback(bool pressed, GSRM::Viewer *viewer, void *cl)
+{
+    SoSwitch *sw = (SoSwitch *)cl;
+
+    SoDB::writelock();
+    viewer->lock();
+    if (pressed){
+        sw->whichChild = SO_SWITCH_NONE;
+    }else{
+        sw->whichChild = SO_SWITCH_ALL;
+    }
+    viewer->unlock();
+    SoDB::writeunlock();
 }

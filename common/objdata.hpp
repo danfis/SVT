@@ -12,9 +12,12 @@
 #include <Inventor/nodes/SoIndexedLineSet.h>
 #include <Inventor/nodes/SoIndexedFaceSet.h>
 
+#include "viewer.hpp"
+
 class ObjData {
   private:
-    SoSeparator *_root;
+    SoSwitch *_root;
+    SoSwitch *_node_vertices, *_node_edges, *_node_faces, *_node_faces2;
 
     SoMFVec3f _vertices;
     int _num_vertices;
@@ -32,15 +35,18 @@ class ObjData {
   public:
     ObjData()
        : _root(0),
+         _node_vertices(0), _node_edges(0), _node_faces(0), _node_faces2(0),
          _num_vertices(0),
          _num_edges(0),
-         _num_faces(0){}
+         _num_faces(0)
+        { SoDB::init(); }
     virtual ~ObjData();
 
     void addVertex(float x, float y, float z);
     void addEdge(int from, int to);
     void addFace(int a, int b, int c);
 
-    SoSeparator *root();
+    SoNode *root();
+    void addButtons(GSRM::Viewer &viewer);
 };
 #endif

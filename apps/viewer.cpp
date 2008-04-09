@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 {
     Parser *parser;
     ObjData *data;
-    SoGroup *root;
+    SoNode *root;
     QWidget *mainwin;
     GSRM::Viewer *viewer;
 
@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
     viewer = new GSRM::Viewer(mainwin);
     viewer->setSceneGraph(root);
 
+    data->addButtons(*viewer);
     /*
     sw = new SoSwitch;
     sw->whichChild = SO_SWITCH_ALL;
