@@ -6,8 +6,12 @@
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoPointLight.h>
 #include <Inventor/nodes/SoCamera.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/nodes/SoDrawStyle.h>
 #include <Inventor/sensors/SoFieldSensor.h>
 #include <Inventor/threads/SbMutex.h>
+#include <QDockWidget>
 
 #include "msg.hpp"
 #include "objdata.hpp"
@@ -20,7 +24,7 @@ void ViewerCameraChangedCallback(void *data, SoSensor *);
 /**
  * Vewer based on SoQtExaminerViewer
  */
-class Viewer : public QObject, public SoQtExaminerViewer{
+class Viewer : public QWidget, public SoQtExaminerViewer{
   private:
     SbMutex _lock1, _lock2; /*! internal locks for multithreading */
 
@@ -29,6 +33,8 @@ class Viewer : public QObject, public SoQtExaminerViewer{
 
     SoPointLight *_light;
     SoSeparator *_root;
+    SoDrawStyle *_style_points, *_style_edges, *_style_faces;
+    SoMaterial *_material_points, *_material_edges, *_material_faces;
     SbVec3f _light_transform;
 
   protected:
