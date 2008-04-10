@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <QVBoxLayout>
 #include "viewer.hpp"
 using namespace std;
@@ -26,12 +27,20 @@ GSRM::Viewer::~Viewer()
     _root->unref();
 }
 
+void GSRM::Viewer::addObjData(ObjData *object)
+{
+    list<ObjData *>::iterator it = _objects.end();
+    if (find(_objects.begin(), it, object) == it){
+        _objects.push_back(object);
+    }
+}
+
 void GSRM::Viewer::addToggleButton(ViewerPushButtonCallback callback,
                                    void *closure)
 {
     ViewerPushButton *button = new ViewerPushButton(this, callback,
                                                     closure);
-    _buttons.push_back(button);
+    //_buttons.push_back(button);
     addAppPushButton(button);
 }
 
@@ -66,12 +75,15 @@ void GSRM::Viewer::show()
         layout->setAlignment(Qt::AlignTop);
     }
 
+    _setUpSceneGraph();
+
     SoQtExaminerViewer::show();
 
     _initLight();
     _initCallbacks();
 }
 
+/*
 void GSRM::Viewer::setSceneGraph(SoNode *root)
 {
     _root->removeAllChildren();
@@ -81,6 +93,7 @@ void GSRM::Viewer::setSceneGraph(SoNode *root)
     SoQtExaminerViewer::setSceneGraph(_root);
     _initLight();
 }
+*/
 
 
 // private:
@@ -139,6 +152,108 @@ void GSRM::Viewer::_setUpLightPosition()
     }
 }
 
+
+SoSwitch *GSRM::Viewer::_buildObjGraph(ObjData *obj)
+{
+    SoSwitch *sw, *sw2;
+    SoDrawStyle *style;
+    SoMaterial *material;
+
+    sw = new SoSwitch;
+    sw->whichChild = SO_SWITCH_ALL;
+
+    // coordinates
+    sw->addChild(obj->coords);
+
+    // points:
+    sw2 = new SoSwitch;
+    sw2->whichChild = SO_SWITCH_ALL;
+
+    style = new SoDrawStyle;
+    style->pointSize = 3;
+    sw2->addChild(style);
+
+    sw2->addChild(obj->points);
+
+    sw->addChild(sw2);
+
+    // edges:
+    sw2 = new SoSwitch;
+    sw2->whichChild = SO_SWITCH_ALL;
+
+    style = new SoDrawStyle;
+    style->style = SoDrawStyle::LINES;
+    style->lineWidth = 1;
+    sw2->addChild(style);
+
+    material = new SoMaterial;
+    material->ambientColor.setValue(0, 0, 0);
+    material->diffuseColor.setValue(0.18, 0.22, 0.6);
+    material->specularColor.setValue(0, 0, 0);
+    material->emissiveColor.setValue(0, 0, 0);
+    material->shininess = 0.01;
+    material->transparency = 0.5;
+    sw2->addChild(material);
+
+    sw2->addChild(obj->edges);
+
+    sw->addChild(sw2);
+
+    // faces:
+    /* texture
+    SoSwitch *sep = new SoSwitch;
+    sep->whichChild = SO_SWITCH_ALL;
+
+    SoDrawStyle *draw_style = new SoDrawStyle;
+    draw_style->style = SoDrawStyle::FILLED;
+    sep->addChild(draw_style);
+
+    SoTexture2 *texture = new SoTexture2;
+    texture->filename = "texture.jpg"; // TODO: parametrize this
+    texture->model = SoTexture2::MODULATE;
+    sep->addChild(texture);
+
+    SoIndexedFaceSet *face = new SoIndexedFaceSet;
+    face->coordIndex = _faces;
+    sep->addChild(face);
+    */
+
+    // non-texure
+    sw2 = new SoSwitch;
+    sw2->whichChild = SO_SWITCH_ALL;
+
+    style = new SoDrawStyle;
+    style->style = SoDrawStyle::FILLED;
+    sw2->addChild(style);
+
+    material = new SoMaterial;
+    material->diffuseColor.setValue(0.75, 1, 0.41);
+    material->transparency = 0;
+    sw2->addChild(material);
+
+    sw2->addChild(obj->faces);
+
+    sw->addChild(sw2);
+
+    return sw;
+}
+
+void GSRM::Viewer::_setUpSceneGraph()
+{
+    list<ObjData *>::iterator it, it_end;
+
+    _root->removeAllChildren();
+    _root->addChild(_light);
+
+    it = _objects.begin();
+    it_end = _objects.end();
+    for (; it != it_end; it++){
+        _root->addChild(_buildObjGraph(*it));
+    }
+
+    SoQtExaminerViewer::setSceneGraph(_root);
+    _initLight();
+}
 
 void GSRM::Viewer::leftWheelMotion(float val)
 {

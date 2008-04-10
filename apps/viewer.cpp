@@ -56,12 +56,13 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    root = data->root();
+    //root = data->root();
 
     viewer = new GSRM::Viewer(mainwin);
-    viewer->setSceneGraph(root);
+    viewer->addObjData(data);
+    //viewer->setSceneGraph(root);
 
-    data->addButtons(*viewer);
+    //data->addButtons(*viewer);
     /*
     sw = new SoSwitch;
     sw->whichChild = SO_SWITCH_ALL;

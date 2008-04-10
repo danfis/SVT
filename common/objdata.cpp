@@ -1,47 +1,61 @@
 #include "objdata.hpp"
 #include "msg.hpp"
 
+ObjData::ObjData()
+    : num_coords(0), num_points(0), num_edges(0), num_faces(0)
+{
+    coords = new SoCoordinate3;
+    coords->ref();
+    points = new SoPointSet;
+    points->ref();
+    edges = new SoIndexedLineSet;
+    edges->ref();
+    faces = new SoIndexedFaceSet;
+    faces->ref();
+}
+
 ObjData::~ObjData()
 {
-    if (_root != 0)
-        _root->unref();
-
-    if (_node_vertices != 0)
-        _node_vertices->unref();
-    if (_node_edges != 0)
-        _node_edges->unref();
-    if (_node_faces != 0)
-        _node_faces->unref();
-    if (_node_faces2 != 0)
-        _node_faces2->unref();
+    if (coords != 0)
+        coords->unref();
+    if (points != 0)
+        points->unref();
+    if (edges != 0)
+        edges->unref();
+    if (faces != 0)
+        faces->unref();
 }
 
 void ObjData::addVertex(float x, float y, float z)
 {
-    _vertices.insertSpace(_num_vertices, 1);
-    _vertices.set1Value(_num_vertices, x, y, z);
-    _num_vertices++;
+    coords->point.insertSpace(num_coords, 1);
+    coords->point.set1Value(num_coords, x, y, z);
+    num_coords++;
+    num_points++;
+
+    points->numPoints = num_points;
 }
 
 void ObjData::addEdge(int from, int to)
 {
-    _edges.insertSpace(_num_edges * 3, 3);
-    _edges.set1Value(_num_edges * 3, from);
-    _edges.set1Value(_num_edges * 3 + 1, to);
-    _edges.set1Value(_num_edges * 3 + 2, -1);
-    _num_edges++;
+    edges->coordIndex.insertSpace(num_edges * 3, 3);
+    edges->coordIndex.set1Value(num_edges * 3, from);
+    edges->coordIndex.set1Value(num_edges * 3 + 1, to);
+    edges->coordIndex.set1Value(num_edges * 3 + 2, -1);
+    num_edges++;
 }
 
 void ObjData::addFace(int a, int b, int c)
 {
-    _faces.insertSpace(_num_faces * 4, 4);
-    _faces.set1Value(_num_faces * 4, a);
-    _faces.set1Value(_num_faces * 4 + 1, b);
-    _faces.set1Value(_num_faces * 4 + 2, c);
-    _faces.set1Value(_num_faces * 4 + 3, -1);
-    _num_faces++;
+    faces->coordIndex.insertSpace(num_faces * 4, 4);
+    faces->coordIndex.set1Value(num_faces * 4, a);
+    faces->coordIndex.set1Value(num_faces * 4 + 1, b);
+    faces->coordIndex.set1Value(num_faces * 4 + 2, c);
+    faces->coordIndex.set1Value(num_faces * 4 + 3, -1);
+    num_faces++;
 }
 
+/*
 void ObjData::_setCoords()
 {
     if (_num_vertices > 0){
@@ -191,3 +205,4 @@ static void ObjDataButtonCallback(bool pressed, GSRM::Viewer *viewer, void *cl)
     viewer->unlock();
     SoDB::writeunlock();
 }
+*/

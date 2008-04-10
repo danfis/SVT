@@ -1,7 +1,7 @@
 #ifndef _VIEWER_H_
 #define _VIEWER_H_
 
-#include <vector>
+#include <list>
 #include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoPointLight.h>
@@ -10,6 +10,7 @@
 #include <Inventor/threads/SbMutex.h>
 
 #include "msg.hpp"
+#include "objdata.hpp"
 #include "viewer_push_button.hpp"
 
 namespace GSRM {
@@ -17,13 +18,14 @@ namespace GSRM {
 void ViewerCameraChangedCallback(void *data, SoSensor *);
 
 /**
- * Viewer based on SoQtExaminerViewer
+ * Vewer based on SoQtExaminerViewer
  */
 class Viewer : public QObject, public SoQtExaminerViewer{
   private:
-    SbMutex _lock1; /*! internal lock for multithreading */
-    SbMutex _lock2; /*! internal lock for multithreading */
-    std::vector<ViewerPushButton *> _buttons; /*! list of registered buttons */
+    SbMutex _lock1, _lock2; /*! internal locks for multithreading */
+
+    std::list<ObjData *> _objects; /*! list of objects managed by this
+                                       viewer */
 
     SoPointLight *_light;
     SoSeparator *_root;
@@ -42,8 +44,13 @@ class Viewer : public QObject, public SoQtExaminerViewer{
     virtual void _initLight();
     virtual void _setUpLightPosition();
 
+    SoSwitch *_buildObjGraph(ObjData *);
+    virtual void _setUpSceneGraph();
+
     void leftWheelMotion(float val);
     void bottomWheelMotion(float val);
+
+    void setSceneGraph(SoNode *root){}
   public:
     Viewer(QWidget *parent, const char *name = "");
     virtual ~Viewer();
@@ -55,13 +62,17 @@ class Viewer : public QObject, public SoQtExaminerViewer{
     bool unlock() { return _unlockRedraw() == 0 && _unlockEvent() == 0; }
 
     /**
+     * Add ObjData object to viewer to manage it
+     */
+    void addObjData(ObjData *object);
+
+    /**
      * Add button using which is possible to show/hide given SoSeparator
      */
     void addToggleButton(ViewerPushButtonCallback callback,
                          void *closure = NULL);
 
     virtual void show();
-    void setSceneGraph(SoNode *root);
 
     friend void ViewerCameraChangedCallback(void *data, SoSensor *);
 };
