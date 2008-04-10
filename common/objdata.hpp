@@ -1,12 +1,6 @@
 #ifndef _OBJDATA_HPP_
 #define _OBJDATA_HPP_
 
-#include <Inventor/nodes/SoSeparator.h>
-#include <Inventor/nodes/SoSwitch.h>
-#include <Inventor/nodes/SoTexture2.h>
-#include <Inventor/nodes/SoMaterial.h>
-#include <Inventor/nodes/SoDrawStyle.h>
-#include <Inventor/nodes/SoPointLight.h>
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoPointSet.h>
 #include <Inventor/nodes/SoIndexedLineSet.h>

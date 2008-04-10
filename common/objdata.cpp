@@ -6,12 +6,15 @@ ObjData::ObjData()
 {
     coords = new SoCoordinate3;
     coords->ref();
+    coords->point.deleteValues(0);
     points = new SoPointSet;
     points->ref();
     edges = new SoIndexedLineSet;
     edges->ref();
+    edges->coordIndex.deleteValues(0);
     faces = new SoIndexedFaceSet;
     faces->ref();
+    faces->coordIndex.deleteValues(0);
 }
 
 ObjData::~ObjData()
