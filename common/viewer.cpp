@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 #include <QMainWindow>
 #include "viewer.hpp"
-#include "style_window.hpp"
+#include "style_dialog.hpp"
 using namespace std;
 
 void ViewerCameraChangedCallback(void *data, SoSensor *)
@@ -120,6 +120,9 @@ void Viewer::actualRedraw(void)
 
 void Viewer::show()
 {
+    StylePushButton *button = new StylePushButton(this);
+    addAppPushButton(button);
+
     // set up properly alignment to top
     QWidget *parent = SoQtExaminerViewer::getAppPushButtonParent();
     QLayout *layout;

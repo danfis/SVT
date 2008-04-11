@@ -16,6 +16,7 @@
 #include "msg.hpp"
 #include "objdata.hpp"
 #include "viewer_push_button.hpp"
+#include "style_dialog.hpp"
 
 void ViewerCameraChangedCallback(void *data, SoSensor *);
 

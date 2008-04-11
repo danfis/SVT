@@ -2,18 +2,20 @@ CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
 
 TARGETS = libcommon.a
 OBJS = viewer.o viewer_push_button.o objdata.o \
-       style_window.o
+       style_dialog.o
 
 all: $(TARGETS)
 
 libcommon.a: $(OBJS)
 	ar cr $@ $^
 	ranlib $@
+	touch ../apps/viewer.cpp
 
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 viewer_push_button.cpp: viewer_push_button.moc
+style_dialog.cpp: style_dialog.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 
