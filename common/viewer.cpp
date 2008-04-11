@@ -21,45 +21,6 @@ Viewer::Viewer(QWidget *parent, const char *name)
     _root->ref();
 
     _light_transform.setValue(0, 0, 0);
-
-
-    // style
-    _style_points = new SoDrawStyle;
-    _style_points->ref();
-    _style_points->pointSize = 3;
-
-    _style_edges = new SoDrawStyle;
-    _style_edges->ref();
-    _style_edges->style = SoDrawStyle::LINES;
-    _style_edges->lineWidth = 1;
-
-    _style_faces = new SoDrawStyle;
-    _style_faces->ref();
-    _style_faces->style = SoDrawStyle::FILLED;
-
-    // material
-    _material_points = new SoMaterial;
-    _material_points->ref();
-    _material_points->ambientColor.setValue(0, 0, 0);
-    _material_points->diffuseColor.setValue(1, 1, 1);
-    _material_points->specularColor.setValue(0, 0, 0);
-    _material_points->emissiveColor.setValue(0, 0, 0);
-    _material_points->shininess = 0.2;
-    _material_points->transparency = 0;
-
-    _material_edges = new SoMaterial;
-    _material_edges->ref();
-    _material_edges->ambientColor.setValue(0, 0, 0);
-    _material_edges->diffuseColor.setValue(0.18, 0.22, 0.6);
-    _material_edges->specularColor.setValue(0, 0, 0);
-    _material_edges->emissiveColor.setValue(0, 0, 0);
-    _material_edges->shininess = 0.01;
-    _material_edges->transparency = 0.5;
-
-    _material_faces = new SoMaterial;
-    _material_faces->ref();
-    _material_faces->diffuseColor.setValue(0.75, 1, 0.41);
-    _material_faces->transparency = 0;
 }
 
 Viewer::~Viewer()
@@ -68,13 +29,6 @@ Viewer::~Viewer()
 
     _light->unref();
     _root->unref();
-
-    _style_points->unref();
-    _style_edges->unref();
-    _style_faces->unref();
-    _material_points->unref();
-    _material_edges->unref();
-    _material_faces->unref();
 
     it = _objects.begin();
     it_end = _objects.end();
@@ -120,8 +74,15 @@ void Viewer::actualRedraw(void)
 
 void Viewer::show()
 {
-    StylePushButton *button = new StylePushButton(this);
-    addAppPushButton(button);
+    StylePushButton *button;
+    list<ObjData *>::iterator it, it_end;
+
+    it = _objects.begin();
+    it_end = _objects.end();
+    for (; it != it_end; it++){
+        button = new StylePushButton(this, *it);
+        addAppPushButton(button);
+    }
 
     // set up properly alignment to top
     QWidget *parent = SoQtExaminerViewer::getAppPushButtonParent();
@@ -201,68 +162,6 @@ void Viewer::_setUpLightPosition()
 }
 
 
-SoSwitch *Viewer::_buildObjGraph(ObjData *obj)
-{
-    SoSwitch *sw, *sw2;
-
-    sw = new SoSwitch;
-    sw->whichChild = SO_SWITCH_ALL;
-
-    // coordinates
-    sw->addChild(obj->coords);
-
-    // points:
-    sw2 = new SoSwitch;
-    sw2->whichChild = SO_SWITCH_ALL;
-
-    sw2->addChild(_style_points);
-    sw2->addChild(_material_points);
-    sw2->addChild(obj->points);
-
-    sw->addChild(sw2);
-
-    // edges:
-    sw2 = new SoSwitch;
-    sw2->whichChild = SO_SWITCH_ALL;
-
-    sw2->addChild(_style_edges);
-    sw2->addChild(_material_edges);
-    sw2->addChild(obj->edges);
-
-    sw->addChild(sw2);
-
-    // faces:
-    /* texture
-    SoSwitch *sep = new SoSwitch;
-    sep->whichChild = SO_SWITCH_ALL;
-
-    SoDrawStyle *draw_style = new SoDrawStyle;
-    draw_style->style = SoDrawStyle::FILLED;
-    sep->addChild(draw_style);
-
-    SoTexture2 *texture = new SoTexture2;
-    texture->filename = "texture.jpg"; // TODO: parametrize this
-    texture->model = SoTexture2::MODULATE;
-    sep->addChild(texture);
-
-    SoIndexedFaceSet *face = new SoIndexedFaceSet;
-    face->coordIndex = _faces;
-    sep->addChild(face);
-    */
-
-    // non-texure
-    sw2 = new SoSwitch;
-    sw2->whichChild = SO_SWITCH_ALL;
-
-    sw2->addChild(_style_faces);
-    sw2->addChild(_material_faces);
-    sw2->addChild(obj->faces);
-
-    sw->addChild(sw2);
-
-    return sw;
-}
-
 void Viewer::_setUpSceneGraph()
 {
     list<ObjData *>::iterator it, it_end;
@@ -273,7 +172,7 @@ void Viewer::_setUpSceneGraph()
     it = _objects.begin();
     it_end = _objects.end();
     for (; it != it_end; it++){
-        _root->addChild(_buildObjGraph(*it));
+        _root->addChild((*it)->sw);
     }
 
     SoQtExaminerViewer::setSceneGraph(_root);

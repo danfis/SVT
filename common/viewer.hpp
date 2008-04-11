@@ -32,10 +32,9 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
 
     SoPointLight *_light;
     SoSeparator *_root;
-    SoDrawStyle *_style_points, *_style_edges, *_style_faces;
-    SoMaterial *_material_points, *_material_edges, *_material_faces;
     SbVec3f _light_transform;
 
+    friend class StyleDialog;
   protected:
     int _lockRedraw() { return _lock1.lock(); }
     int _unlockRedraw() { return _lock1.unlock(); }
@@ -49,7 +48,6 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     virtual void _initLight();
     virtual void _setUpLightPosition();
 
-    SoSwitch *_buildObjGraph(ObjData *);
     virtual void _setUpSceneGraph();
 
     void leftWheelMotion(float val);
