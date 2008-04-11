@@ -17,8 +17,6 @@
 #include "objdata.hpp"
 #include "viewer_push_button.hpp"
 
-namespace GSRM {
-
 void ViewerCameraChangedCallback(void *data, SoSensor *);
 
 /**
@@ -82,6 +80,4 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
 
     friend void ViewerCameraChangedCallback(void *data, SoSensor *);
 };
-
-}
 #endif

@@ -1,16 +1,18 @@
 #include <iostream>
 #include <algorithm>
 #include <QVBoxLayout>
+#include <QMainWindow>
 #include "viewer.hpp"
+#include "style_window.hpp"
 using namespace std;
 
-void GSRM::ViewerCameraChangedCallback(void *data, SoSensor *)
+void ViewerCameraChangedCallback(void *data, SoSensor *)
 {
-    GSRM::Viewer *viewer = (GSRM::Viewer *)data;
+    Viewer *viewer = (Viewer *)data;
     viewer->_setUpLightPosition();
 }
 
-GSRM::Viewer::Viewer(QWidget *parent, const char *name)
+Viewer::Viewer(QWidget *parent, const char *name)
     : SoQtExaminerViewer(parent, name)
 {
     _light = new SoPointLight;
@@ -60,7 +62,7 @@ GSRM::Viewer::Viewer(QWidget *parent, const char *name)
     _material_faces->transparency = 0;
 }
 
-GSRM::Viewer::~Viewer()
+Viewer::~Viewer()
 {
     list<ObjData *>::iterator it, it_end;
 
@@ -82,7 +84,7 @@ GSRM::Viewer::~Viewer()
 }
 
 
-void GSRM::Viewer::addObjData(ObjData *object)
+void Viewer::addObjData(ObjData *object)
 {
     list<ObjData *>::iterator it = _objects.end();
     if (std::find(_objects.begin(), it, object) == it){
@@ -90,7 +92,7 @@ void GSRM::Viewer::addObjData(ObjData *object)
     }
 }
 
-void GSRM::Viewer::addToggleButton(ViewerPushButtonCallback callback,
+void Viewer::addToggleButton(ViewerPushButtonCallback callback,
                                    void *closure)
 {
     ViewerPushButton *button = new ViewerPushButton(this, callback,
@@ -99,7 +101,7 @@ void GSRM::Viewer::addToggleButton(ViewerPushButtonCallback callback,
     addAppPushButton(button);
 }
 
-SbBool GSRM::Viewer::processSoEvent(const SoEvent *const event)
+SbBool Viewer::processSoEvent(const SoEvent *const event)
 {
     SbBool ret;
 
@@ -109,14 +111,14 @@ SbBool GSRM::Viewer::processSoEvent(const SoEvent *const event)
 
     return ret;
 }
-void GSRM::Viewer::actualRedraw(void)
+void Viewer::actualRedraw(void)
 {
     _lockRedraw();
     SoQtExaminerViewer::actualRedraw();
     _unlockRedraw();
 }
 
-void GSRM::Viewer::show()
+void Viewer::show()
 {
     // set up properly alignment to top
     QWidget *parent = SoQtExaminerViewer::getAppPushButtonParent();
@@ -140,7 +142,7 @@ void GSRM::Viewer::show()
 
 
 // private:
-void GSRM::Viewer::_initLight()
+void Viewer::_initLight()
 {
     _light->on = true;
     _light->intensity = 1;
@@ -149,7 +151,7 @@ void GSRM::Viewer::_initLight()
     _setUpLightPosition();
 }
 
-void GSRM::Viewer::_initCallbacks()
+void Viewer::_initCallbacks()
 {
     SoCamera *camera = this->getCamera();
     if (camera == NULL){
@@ -161,7 +163,7 @@ void GSRM::Viewer::_initCallbacks()
     cam_sensor->attach(&camera->position);
 }
 
-void GSRM::Viewer::_setUpLightPosition()
+void Viewer::_setUpLightPosition()
 {
     SoCamera *cam = this->getCamera();
     SbVec3f pos;
@@ -196,7 +198,7 @@ void GSRM::Viewer::_setUpLightPosition()
 }
 
 
-SoSwitch *GSRM::Viewer::_buildObjGraph(ObjData *obj)
+SoSwitch *Viewer::_buildObjGraph(ObjData *obj)
 {
     SoSwitch *sw, *sw2;
 
@@ -258,7 +260,7 @@ SoSwitch *GSRM::Viewer::_buildObjGraph(ObjData *obj)
     return sw;
 }
 
-void GSRM::Viewer::_setUpSceneGraph()
+void Viewer::_setUpSceneGraph()
 {
     list<ObjData *>::iterator it, it_end;
 
@@ -275,13 +277,13 @@ void GSRM::Viewer::_setUpSceneGraph()
     _initLight();
 }
 
-void GSRM::Viewer::leftWheelMotion(float val)
+void Viewer::leftWheelMotion(float val)
 {
     _light_transform[0] = val;
     _setUpLightPosition();
 }
 
-void GSRM::Viewer::bottomWheelMotion(float val)
+void Viewer::bottomWheelMotion(float val)
 {
     _light_transform[1] = val;
     _setUpLightPosition();

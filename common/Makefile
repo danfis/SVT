@@ -1,7 +1,8 @@
 CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
 
 TARGETS = libcommon.a
-OBJS = viewer.o viewer_push_button.o objdata.o
+OBJS = viewer.o viewer_push_button.o objdata.o \
+       style_window.o
 
 all: $(TARGETS)
 

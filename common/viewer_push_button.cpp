@@ -4,7 +4,7 @@ using namespace std;
 
 #include "viewer_push_button.moc"
 
-GSRM::ViewerPushButton::ViewerPushButton(Viewer *v,
+ViewerPushButton::ViewerPushButton(Viewer *v,
                      ViewerPushButtonCallback callback, void *closure,
                      const char *text)
     : QPushButton(text), _viewer(v), _callback(callback),
@@ -14,11 +14,11 @@ GSRM::ViewerPushButton::ViewerPushButton(Viewer *v,
     connect(this, SIGNAL(clicked()), this, SLOT(callCallback()));
 }
 
-GSRM::ViewerPushButton::~ViewerPushButton()
+ViewerPushButton::~ViewerPushButton()
 {
 }
 
-void GSRM::ViewerPushButton::callCallback()
+void ViewerPushButton::callCallback()
 {
     _callback(isChecked(), _viewer, _closure);
 }

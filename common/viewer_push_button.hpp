@@ -4,14 +4,10 @@
 #include <QPushButton>
 #include <Inventor/nodes/SoSwitch.h>
 
-namespace GSRM {
-
 class Viewer;
 
-
-typedef void (*ViewerPushButtonCallback)(bool pressed, GSRM::Viewer *,
+typedef void (*ViewerPushButtonCallback)(bool pressed, Viewer *,
                                          void *closure);
-
 
 /**
  * PushButton used by Viewer
@@ -32,6 +28,4 @@ class ViewerPushButton : public QPushButton {
                      const char *text = NULL);
     ~ViewerPushButton();
 };
-
-}
 #endif
