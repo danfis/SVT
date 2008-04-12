@@ -30,122 +30,170 @@ StyleDialog::StyleDialog(QWidget *parent, Viewer *viewer, ObjData *data)
    
     // points:
     vlayout->addWidget(_buildPoints());
+    vlayout->addWidget(_buildEdges());
+    vlayout->addWidget(_buildFaces());
     
     this->setLayout(vlayout);
     resize(200, 200);
 }
 
+#define BUILD_PRE \
+    QVBoxLayout *vlayout; \
+    QHBoxLayout *hlayout; \
+    QLabel *label; \
+    QDoubleSpinBox *spin; \
+    QGroupBox *box; \
+    QPushButton *button; \
+    \
+    vlayout = new QVBoxLayout
+#define BUILD_SIZE(name, slotSize) \
+    label = new QLabel("Size"); \
+    vlayout->addWidget(label); \
+    spin = new QDoubleSpinBox(); \
+    spin->setSingleStep(0.1); \
+    spin->setRange(1, 10); \
+    spin->setValue(_data->style_##name->pointSize.getValue()); \
+    vlayout->addWidget(spin); \
+    connect(spin, SIGNAL(valueChanged(double)), \
+            this, SLOT(slotSize(double)))
+#define BUILD_COLOR(name, slotColorR, slotColorG, slotColorB) \
+    label = new QLabel("Diffuse Color"); \
+    vlayout->addWidget(label); \
+    hlayout = new QHBoxLayout; \
+    \
+    spin = new QDoubleSpinBox; \
+    spin->setSingleStep(0.05); \
+    spin->setRange(0, 1); \
+    spin->setValue(_data->material_##name->diffuseColor[0][0]); \
+    hlayout->addWidget(spin); \
+    connect(spin, SIGNAL(valueChanged(double)), \
+            this, SLOT(slotColorR(double))); \
+    \
+    spin = new QDoubleSpinBox; \
+    spin->setSingleStep(0.05); \
+    spin->setRange(0, 1); \
+    spin->setValue(_data->material_##name->diffuseColor[0][1]); \
+    hlayout->addWidget(spin); \
+    connect(spin, SIGNAL(valueChanged(double)), \
+            this, SLOT(slotColorG(double))); \
+    \
+    spin = new QDoubleSpinBox; \
+    spin->setSingleStep(0.05); \
+    spin->setRange(0, 1); \
+    spin->setValue(_data->material_##name->diffuseColor[0][2]); \
+    hlayout->addWidget(spin); \
+    connect(spin, SIGNAL(valueChanged(double)), \
+            this, SLOT(slotColorB(double))); \
+    \
+    vlayout->addLayout(hlayout)
+
+#define BUILD_ON_OFF(name, slotOnOff) \
+    button = new QPushButton("On/Off"); \
+    button->setCheckable(true); \
+    if (_data->sw_##name->whichChild.getValue() != SO_SWITCH_ALL) \
+        button->setChecked(true); \
+    vlayout->addWidget(button); \
+    connect(button, SIGNAL(clicked(bool)), \
+            this, SLOT(slotOnOff(bool)))
+
+#define BUILD_POST(title) \
+    box = new QGroupBox(title, this); \
+    box->setLayout(vlayout); \
+    \
+    return box
+
+#define BUILD(name, title, slotSize, slotColorR, slotColorG, slotColorB,\
+              slotOnOff) \
+    BUILD_PRE; \
+    BUILD_SIZE(name, slotSize); \
+    BUILD_COLOR(name, slotColorR, slotColorG, slotColorB); \
+    BUILD_ON_OFF(name, slotOnOff); \
+    BUILD_POST(title);
+
 QWidget *StyleDialog::_buildPoints()
 {
-    QVBoxLayout *vlayout;
-    QHBoxLayout *hlayout;
-    QLabel *label;
-    QDoubleSpinBox *spin;
-    QGroupBox *box;
-    QPushButton *button;
-   
-    vlayout = new QVBoxLayout;
-
-    label = new QLabel("Size");
-    vlayout->addWidget(label);
-    spin = new QDoubleSpinBox();
-    spin->setSingleStep(0.1);
-    spin->setRange(1, 10);
-    spin->setValue(_data->style_points->pointSize.getValue());
-    vlayout->addWidget(spin);
-    connect(spin, SIGNAL(valueChanged(double)),
-            this, SLOT(changePointsSize(double)));
-
-    label = new QLabel("Diffuse Color");
-    vlayout->addWidget(label);
-    hlayout = new QHBoxLayout;
-
-    spin = new QDoubleSpinBox;
-    spin->setSingleStep(0.05);
-    spin->setRange(0, 1);
-    spin->setValue(_data->material_points->diffuseColor[0][0]);
-    hlayout->addWidget(spin);
-    connect(spin, SIGNAL(valueChanged(double)),
-            this, SLOT(changePointsDiffuseColorRed(double)));
-
-    spin = new QDoubleSpinBox;
-    spin->setSingleStep(0.05);
-    spin->setRange(0, 1);
-    spin->setValue(_data->material_points->diffuseColor[0][1]);
-    hlayout->addWidget(spin);
-    connect(spin, SIGNAL(valueChanged(double)),
-            this, SLOT(changePointsDiffuseColorGreen(double)));
-
-    spin = new QDoubleSpinBox;
-    spin->setSingleStep(0.05);
-    spin->setRange(0, 1);
-    spin->setValue(_data->material_points->diffuseColor[0][2]);
-    hlayout->addWidget(spin);
-    connect(spin, SIGNAL(valueChanged(double)),
-            this, SLOT(changePointsDiffuseColorBlue(double)));
-
-    vlayout->addLayout(hlayout);
-
-    button = new QPushButton("On/Off");
-    button->setCheckable(true);
-    if (_data->sw_points->whichChild.getValue() != SO_SWITCH_ALL)
-        button->setChecked(true);
-    vlayout->addWidget(button);
-    connect(button, SIGNAL(clicked(bool)),
-            this, SLOT(turnOnOffPoints(bool)));
-
-    box = new QGroupBox("Points", this);
-    box->setLayout(vlayout);
-
-    return box;
+    BUILD(points, "Points", changePointsSize,
+          changePointsDiffuseColorRed, changePointsDiffuseColorGreen,
+          changePointsDiffuseColorBlue, turnOnOffPoints);
 }
+
+QWidget *StyleDialog::_buildEdges()
+{
+    BUILD(edges, "Edges", changeEdgesSize,
+          changeEdgesDiffuseColorRed, changeEdgesDiffuseColorGreen,
+          changeEdgesDiffuseColorBlue, turnOnOffEdges);
+}
+
+QWidget *StyleDialog::_buildFaces()
+{
+    BUILD_PRE;
+    BUILD_COLOR(faces, changeFacesDiffuseColorRed,
+                changeFacesDiffuseColorGreen, changeFacesDiffuseColorBlue);
+    BUILD_ON_OFF(faces, turnOnOffFaces);
+    BUILD_POST("Faces");
+}
+
+
+#define SIZE_SET(name, attr) \
+    lock(); \
+    _data->name->attr = val; \
+    unlock()
+
+#define COLOR_SET(name, idx) \
+    lock(); \
+    SbColor color = _data->name->diffuseColor[0]; \
+    color[idx] = val; \
+    _data->name->diffuseColor.setValue(color); \
+    unlock()
+
+#define TURN_ON_OFF(name) \
+    lock(); \
+    if (pressed){ \
+        _data->name->whichChild = SO_SWITCH_NONE; \
+    }else{ \
+        _data->name->whichChild = SO_SWITCH_ALL; \
+    } \
+    unlock()
 
 void StyleDialog::changePointsSize(double val)
-{
-    lock();
-    _data->style_points->pointSize = val;
-    unlock();
-}
+{ SIZE_SET(style_points, pointSize); }
 void StyleDialog::changePointsDiffuseColorRed(double val)
-{
-    lock();
-    SbColor color = _data->material_points->diffuseColor[0];
-    color[0] = val;
-    _data->material_points->diffuseColor.setValue(color);
-    unlock();
-}
+{ COLOR_SET(material_points, 0); }
 void StyleDialog::changePointsDiffuseColorGreen(double val)
-{
-    lock();
-    SbColor color = _data->material_points->diffuseColor[0];
-    color[1] = val;
-    _data->material_points->diffuseColor.setValue(color);
-    unlock();
-}
+{ COLOR_SET(material_points, 1); }
 void StyleDialog::changePointsDiffuseColorBlue(double val)
-{
-    lock();
-    SbColor color = _data->material_points->diffuseColor[0];
-    color[2] = val;
-    _data->material_points->diffuseColor.setValue(color);
-    unlock();
-}
+{ COLOR_SET(material_points, 2); }
 void StyleDialog::turnOnOffPoints(bool pressed)
-{
-    lock();
-    if (pressed){
-        _data->sw_points->whichChild = SO_SWITCH_NONE;
-    }else{
-        _data->sw_points->whichChild = SO_SWITCH_ALL;
-    }
-    unlock();
-}
+{ TURN_ON_OFF(sw_points); }
+
+void StyleDialog::changeEdgesSize(double val)
+{ SIZE_SET(style_edges, lineWidth); }
+void StyleDialog::changeEdgesDiffuseColorRed(double val)
+{ COLOR_SET(material_edges, 0); }
+void StyleDialog::changeEdgesDiffuseColorGreen(double val)
+{ COLOR_SET(material_edges, 1); }
+void StyleDialog::changeEdgesDiffuseColorBlue(double val)
+{ COLOR_SET(material_edges, 2); }
+void StyleDialog::turnOnOffEdges(bool pressed)
+{ TURN_ON_OFF(sw_edges); }
+
+void StyleDialog::changeFacesSize(double val)
+{ SIZE_SET(style_faces, pointSize); }
+void StyleDialog::changeFacesDiffuseColorRed(double val)
+{ COLOR_SET(material_faces, 0); }
+void StyleDialog::changeFacesDiffuseColorGreen(double val)
+{ COLOR_SET(material_faces, 1); }
+void StyleDialog::changeFacesDiffuseColorBlue(double val)
+{ COLOR_SET(material_faces, 2); }
+void StyleDialog::turnOnOffFaces(bool pressed)
+{ TURN_ON_OFF(sw_faces); }
 
 
 
 
-StylePushButton::StylePushButton(Viewer *viewer, ObjData *data)
-        : QPushButton((QWidget *)viewer), _parent((QWidget *)viewer),
+StylePushButton::StylePushButton(Viewer *viewer, ObjData *data,
+                                 const QString str)
+        : QPushButton(str, (QWidget *)viewer), _parent((QWidget *)viewer),
           _viewer(viewer), _data(data)
 {
     connect(this, SIGNAL(clicked()), this, SLOT(showDialog()));

@@ -1,11 +1,9 @@
-#include "viewer_push_button.hpp"
+#include "toggle_push_button.hpp"
+#include "toggle_push_button.moc"
 #include "viewer.hpp"
-using namespace std;
 
-#include "viewer_push_button.moc"
-
-ViewerPushButton::ViewerPushButton(Viewer *v,
-                     ViewerPushButtonCallback callback, void *closure,
+TogglePushButton::TogglePushButton(Viewer *v,
+                     TogglePushButtonCallback callback, void *closure,
                      const char *text)
     : QPushButton(text), _viewer(v), _callback(callback),
       _closure(closure)
@@ -14,11 +12,11 @@ ViewerPushButton::ViewerPushButton(Viewer *v,
     connect(this, SIGNAL(clicked()), this, SLOT(callCallback()));
 }
 
-ViewerPushButton::~ViewerPushButton()
+TogglePushButton::~TogglePushButton()
 {
 }
 
-void ViewerPushButton::callCallback()
+void TogglePushButton::callCallback()
 {
     _callback(isChecked(), _viewer, _closure);
 }

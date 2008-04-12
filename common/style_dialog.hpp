@@ -26,6 +26,16 @@ class StyleDialog : public QDialog {
     void changePointsDiffuseColorGreen(double val);
     void changePointsDiffuseColorBlue(double val);
     void turnOnOffPoints(bool pressed);
+    void changeEdgesSize(double val);
+    void changeEdgesDiffuseColorRed(double val);
+    void changeEdgesDiffuseColorGreen(double val);
+    void changeEdgesDiffuseColorBlue(double val);
+    void turnOnOffEdges(bool pressed);
+    void changeFacesSize(double val);
+    void changeFacesDiffuseColorRed(double val);
+    void changeFacesDiffuseColorGreen(double val);
+    void changeFacesDiffuseColorBlue(double val);
+    void turnOnOffFaces(bool pressed);
 
   public:
     StyleDialog(QWidget *parent, Viewer *viewer, ObjData *data);
@@ -41,7 +51,7 @@ class StylePushButton : public QPushButton {
     ObjData *_data;
 
   public:
-    StylePushButton(Viewer *viewer, ObjData *data);
+    StylePushButton(Viewer *viewer, ObjData *data, const QString = "");
     ~StylePushButton(){}
 
   private slots:

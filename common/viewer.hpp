@@ -15,8 +15,9 @@
 
 #include "msg.hpp"
 #include "objdata.hpp"
-#include "viewer_push_button.hpp"
-#include "style_dialog.hpp"
+#include "toggle_push_button.hpp"
+
+class ConfigDialog;
 
 void ViewerCameraChangedCallback(void *data, SoSensor *);
 
@@ -24,6 +25,8 @@ void ViewerCameraChangedCallback(void *data, SoSensor *);
  * Vewer based on SoQtExaminerViewer
  */
 class Viewer : public QWidget, public SoQtExaminerViewer{
+    Q_OBJECT
+
   private:
     SbMutex _lock1, _lock2; /*! internal locks for multithreading */
 
@@ -34,7 +37,14 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     SoSeparator *_root;
     SbVec3f _light_transform;
 
-    friend class StyleDialog;
+    ConfigDialog *_conf_dialog;
+    TogglePushButton *_conf_button;
+
+    friend class ConfigDialog;
+
+  protected slots:
+    void offConfigDialog(int);
+
   protected:
     int _lockRedraw() { return _lock1.lock(); }
     int _unlockRedraw() { return _lock1.unlock(); }
@@ -48,6 +58,7 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     virtual void _initLight();
     virtual void _setUpLightPosition();
 
+    virtual void _setUpConfigDialog();
     virtual void _setUpSceneGraph();
 
     void leftWheelMotion(float val);
@@ -68,12 +79,6 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
      * Add ObjData object to viewer to manage it
      */
     void addObjData(ObjData *object);
-
-    /**
-     * Add button using which is possible to show/hide given SoSeparator
-     */
-    void addToggleButton(ViewerPushButtonCallback callback,
-                         void *closure = NULL);
 
     virtual void show();
 

@@ -6,26 +6,26 @@
 
 class Viewer;
 
-typedef void (*ViewerPushButtonCallback)(bool pressed, Viewer *,
+typedef void (*TogglePushButtonCallback)(bool pressed, Viewer *,
                                          void *closure);
 
 /**
  * PushButton used by Viewer
  */
-class ViewerPushButton : public QPushButton {
+class TogglePushButton : public QPushButton {
     Q_OBJECT
 
   private:
     Viewer *_viewer; /*! pointer to Viewer object */
-    ViewerPushButtonCallback _callback;
+    TogglePushButtonCallback _callback;
     void *_closure;
 
   private slots:
     void callCallback();
 
   public:
-    ViewerPushButton(Viewer *, ViewerPushButtonCallback, void *closure = NULL,
+    TogglePushButton(Viewer *, TogglePushButtonCallback, void *closure = NULL,
                      const char *text = NULL);
-    ~ViewerPushButton();
+    ~TogglePushButton();
 };
 #endif
