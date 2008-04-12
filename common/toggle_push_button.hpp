@@ -10,7 +10,7 @@ typedef void (*TogglePushButtonCallback)(bool pressed, Viewer *,
                                          void *closure);
 
 /**
- * PushButton used by Viewer
+ * PushButton which provides functionality of toggle/released button.
  */
 class TogglePushButton : public QPushButton {
     Q_OBJECT

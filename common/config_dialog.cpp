@@ -23,6 +23,7 @@ ConfigDialog::ConfigDialog(Viewer *viewer)
         layout->addWidget(_buildObj(*it, QString("Object %1").arg(i)));
     }
 
+    // big group containing all objects
     QGroupBox *box = new QGroupBox("Objects");
     box->setFlat(true);
     layout->setContentsMargins(0, 0, 0, 0);

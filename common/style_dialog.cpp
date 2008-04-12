@@ -6,9 +6,11 @@
 #include <QLabel>
 
 #include "style_dialog.hpp"
-#include "style_dialog.moc"
 #include "viewer.hpp"
 #include "msg.hpp"
+
+
+#include "style_dialog.moc"
 
 void StyleDialog::lock()
 {

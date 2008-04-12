@@ -1,11 +1,11 @@
 #include <iostream>
 #include <algorithm>
 #include <QVBoxLayout>
-#include <QMainWindow>
 #include "viewer.hpp"
-#include "viewer.moc"
 #include "config_dialog.hpp"
 using namespace std;
+
+#include "viewer.moc"
 
 void ViewerCameraChangedCallback(void *data, SoSensor *)
 {
@@ -46,17 +46,6 @@ void Viewer::addObjData(ObjData *object)
         _objects.push_back(object);
     }
 }
-
-/*
-void Viewer::addToggleButton(ViewerPushButtonCallback callback,
-                                   void *closure)
-{
-    ViewerPushButton *button = new ViewerPushButton(this, callback,
-                                                    closure, "On/Off");
-    //_buttons.push_back(button);
-    addAppPushButton(button);
-}
-*/
 
 SbBool Viewer::processSoEvent(const SoEvent *const event)
 {

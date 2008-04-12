@@ -7,6 +7,10 @@
 
 class Viewer;
 
+/**
+ * Class which provides dialog for configuring of properties(style) of one
+ * ObjData object.
+ */
 class StyleDialog : public QDialog {
     Q_OBJECT
 
@@ -42,6 +46,10 @@ class StyleDialog : public QDialog {
     virtual ~StyleDialog(){}
 };
 
+
+/**
+ * Button by which is possible to show StyleDialog
+ */
 class StylePushButton : public QPushButton {
     Q_OBJECT
 

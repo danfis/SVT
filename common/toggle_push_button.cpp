@@ -1,6 +1,8 @@
 #include "toggle_push_button.hpp"
-#include "toggle_push_button.moc"
 #include "viewer.hpp"
+
+
+#include "toggle_push_button.moc"
 
 TogglePushButton::TogglePushButton(Viewer *v,
                      TogglePushButtonCallback callback, void *closure,

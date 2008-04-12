@@ -25,6 +25,5 @@ clean:
 	rm -f *.o
 	rm -f *~
 	rm -f *.moc
-	rm -f lexer.c
 
 .PHONY: all clean
