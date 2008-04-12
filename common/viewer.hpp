@@ -42,6 +42,10 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
                                   transformation of _light from camera
                                   position */
 
+    /*! default values: */
+    SbColor _color_points, _color_edges, _color_faces;
+    float _point_size, _line_width;
+
     ConfigDialog *_conf_dialog; /*! holds pointer to shown ConfigDialog
                                     or 0 (if no ConfigDialog is shown) */
     TogglePushButton *_conf_button; /*! button using which is possible to
@@ -91,6 +95,20 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
      */
     void addObjData(ObjData *object);
 
-    virtual void show();
+    /**
+     * Set default values by which will be modified all added ObjData
+     */
+    void setDefaultPointsDiffuseColor(float r, float g, float b)
+        { _color_points.setValue(r, g, b); }
+    void setDefaultEdgesDiffuseColor(float r, float g, float b)
+        { _color_edges.setValue(r, g, b); }
+    void setDefaultFacesDiffuseColor(float r, float g, float b)
+        { _color_faces.setValue(r, g, b); }
+    void setdefaultPointSize(float point_size)
+        { _point_size = point_size; }
+    void setDefaultLineWidth(float line_width)
+        { _line_width = line_width; }
+
+    void show();
 };
 #endif

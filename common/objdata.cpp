@@ -19,12 +19,12 @@ ObjData::ObjData()
     // style
     style_points = new SoDrawStyle;
     style_points->ref();
-    style_points->pointSize = 3;
+    //style_points->pointSize = 3;
 
     style_edges = new SoDrawStyle;
     style_edges->ref();
     style_edges->style = SoDrawStyle::LINES;
-    style_edges->lineWidth = 1;
+    //style_edges->lineWidth = 1;
 
     style_faces = new SoDrawStyle;
     style_faces->ref();
@@ -33,26 +33,32 @@ ObjData::ObjData()
     // material
     material_points = new SoMaterial;
     material_points->ref();
+    /*
     material_points->ambientColor.setValue(0, 0, 0);
     material_points->diffuseColor.setValue(1, 1, 1);
     material_points->specularColor.setValue(0, 0, 0);
     material_points->emissiveColor.setValue(0, 0, 0);
     material_points->shininess = 0.2;
     material_points->transparency = 0;
+    */
 
     material_edges = new SoMaterial;
     material_edges->ref();
+    /*
     material_edges->ambientColor.setValue(0, 0, 0);
     material_edges->diffuseColor.setValue(0.18, 0.22, 0.6);
     material_edges->specularColor.setValue(0, 0, 0);
     material_edges->emissiveColor.setValue(0, 0, 0);
     material_edges->shininess = 0.01;
     material_edges->transparency = 0.5;
+    */
 
     material_faces = new SoMaterial;
     material_faces->ref();
+    /*
     material_faces->diffuseColor.setValue(0.75, 1, 0.41);
     material_faces->transparency = 0;
+    */
 
     sw = new SoSwitch;
     sw->ref();

@@ -22,6 +22,12 @@ Viewer::Viewer(QWidget *parent, const char *name)
     _root->ref();
 
     _light_transform.setValue(0, 0, 0);
+
+    _color_points.setValue(1, 1, 1);
+    _color_edges.setValue(0.2, 0.2, 0.6);
+    _color_faces.setValue(0.2, 0.75, 0.2);
+    _point_size = 2;
+    _line_width = 1;
 }
 
 Viewer::~Viewer()
@@ -43,6 +49,14 @@ void Viewer::addObjData(ObjData *object)
 {
     list<ObjData *>::iterator it = _objects.end();
     if (std::find(_objects.begin(), it, object) == it){
+        // set default values:
+        object->material_points->diffuseColor.setValue(_color_points);
+        object->material_edges->diffuseColor.setValue(_color_edges);
+        object->material_faces->diffuseColor.setValue(_color_faces);
+        object->style_points->pointSize.setValue(_point_size);
+        object->style_edges->lineWidth.setValue(_line_width);
+
+        // add to list
         _objects.push_back(object);
     }
 }
@@ -82,6 +96,8 @@ void Viewer::show()
     }
 
     _setUpSceneGraph();
+
+    SoQtExaminerViewer::setSceneGraph(_root);
     SoQtExaminerViewer::show();
 
     _initLight();
@@ -158,9 +174,6 @@ void Viewer::_setUpSceneGraph()
     for (; it != it_end; it++){
         _root->addChild((*it)->sw);
     }
-
-    SoQtExaminerViewer::setSceneGraph(_root);
-    _initLight();
 }
 
 static void ConfigDialogCallback(bool pressed, Viewer *, void *cl);
