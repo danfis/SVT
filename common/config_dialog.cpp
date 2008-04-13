@@ -7,7 +7,7 @@
 #include "toggle_push_button.hpp"
 
 
-ConfigDialog::ConfigDialog(Viewer *viewer)
+ConfigDialog::ConfigDialog(ViewerWithConfigDialog *viewer)
     : QDialog((QWidget *)viewer,
               Qt::Dialog | Qt::SubWindow | Qt::WindowStaysOnTopHint),
       _viewer(viewer)

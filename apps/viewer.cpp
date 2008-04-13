@@ -5,38 +5,9 @@
 using namespace std;
 
 #include "objdata.hpp"
-#include "viewer.hpp"
+#include "viewer_with_config_dialog.hpp"
 #include "parser.hpp"
 #include "msg.hpp"
-
-void callback(bool pressed, Viewer *viewer, void *cl)
-{
-    SoSwitch *sw = (SoSwitch *)cl;
-
-    SoDB::writelock();
-    viewer->lock();
-    if (pressed){
-        sw->whichChild = SO_SWITCH_NONE;
-    }else{
-        sw->whichChild = SO_SWITCH_ALL;
-    }
-    viewer->unlock();
-    SoDB::writeunlock();
-}
-
-// Callback that reports whenever the viewer's position changes.
-/*
-static void cameraChangedCB(void *data, SoSensor *)
-{
-   SoCamera *viewerCamera = (SoCamera *)data;
-
-   SoDB::writelock();
-   SbVec3f cameraPosition = viewerCamera->position.getValue();
-   light->location.setValue(cameraPosition * -100);
-   SoDB::writeunlock();
-}
-*/
-
 
 int main(int argc, char *argv[])
 {
@@ -53,7 +24,7 @@ int main(int argc, char *argv[])
     }
 
     parser = Parser::instance();
-    viewer = new Viewer(mainwin);
+    viewer = new ViewerWithConfigDialog(mainwin);
     while ((data = parser->parse()) != 0)
         viewer->addObjData(data);
 

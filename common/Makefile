@@ -2,21 +2,21 @@ CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
 
 TARGETS = libcommon.a
 OBJS = viewer.o toggle_push_button.o objdata.o \
-       style_dialog.o config_dialog.o
+       style_dialog.o config_dialog.o viewer_with_config_dialog.o
 
 all: $(TARGETS)
 
 libcommon.a: $(OBJS)
 	ar cr $@ $^
 	ranlib $@
-	touch ../apps/viewer.cpp
+	$(MAKE) -C ../apps clean
 
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 toggle_push_button.cpp: toggle_push_button.moc
 style_dialog.cpp: style_dialog.moc
-viewer.cpp: viewer.moc
+viewer_with_config_dialog.cpp: viewer_with_config_dialog.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 

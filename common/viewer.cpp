@@ -2,10 +2,7 @@
 #include <algorithm>
 #include <QVBoxLayout>
 #include "viewer.hpp"
-#include "config_dialog.hpp"
 using namespace std;
-
-#include "viewer.moc"
 
 void ViewerCameraChangedCallback(void *data, SoSensor *)
 {
@@ -14,7 +11,7 @@ void ViewerCameraChangedCallback(void *data, SoSensor *)
 }
 
 Viewer::Viewer(QWidget *parent, const char *name)
-    : SoQtExaminerViewer(parent, name), _conf_dialog(0)
+    : SoQtExaminerViewer(parent, name)
 {
     _light = new SoPointLight;
     _light->ref();
@@ -47,6 +44,8 @@ Viewer::~Viewer()
 
 void Viewer::addObjData(ObjData *object)
 {
+    lock();
+
     list<ObjData *>::iterator it = _objects.end();
     if (std::find(_objects.begin(), it, object) == it){
         // set default values:
@@ -59,6 +58,23 @@ void Viewer::addObjData(ObjData *object)
         // add to list
         _objects.push_back(object);
     }
+
+    unlock();
+}
+
+void Viewer::clear()
+{
+    lock();
+    list<ObjData *>::iterator it, it_end;
+    it = _objects.begin();
+    it_end = _objects.end();
+    for (; it != it_end; it++){
+        delete *it;
+    }
+    _objects.clear();
+    
+    _setUpSceneGraph();
+    unlock();
 }
 
 SbBool Viewer::processSoEvent(const SoEvent *const event)
@@ -81,8 +97,6 @@ void Viewer::actualRedraw(void)
 //static void ObjDataButtonCallback(bool pressed, Viewer *, void *cl);
 void Viewer::show()
 {
-    _setUpConfigDialog();
-
     // set up properly alignment of left side bar to top
     QWidget *parent = SoQtExaminerViewer::getAppPushButtonParent();
     QLayout *layout;
@@ -176,30 +190,6 @@ void Viewer::_setUpSceneGraph()
     }
 }
 
-static void ConfigDialogCallback(bool pressed, Viewer *, void *cl);
-void Viewer::_setUpConfigDialog()
-{
-    _conf_button = new TogglePushButton(this, ConfigDialogCallback,
-                                        (void *)&_conf_dialog);
-
-    addAppPushButton(_conf_button);
-}
-static void ConfigDialogCallback(bool pressed, Viewer *viewer, void *cl)
-{
-    ConfigDialog **dialog = (ConfigDialog **)cl;
-
-    if (pressed && *dialog == 0){
-        *dialog = new ConfigDialog(viewer);
-        (*dialog)->show();
-        viewer->connect(*dialog, SIGNAL(finished(int)),
-                        viewer, SLOT(offConfigDialog(int)));
-    }
-
-    if (!pressed && *dialog != 0){
-        delete *dialog;
-        *dialog = 0;
-    }
-}
 
 void Viewer::leftWheelMotion(float val)
 {
@@ -211,10 +201,4 @@ void Viewer::bottomWheelMotion(float val)
 {
     _light_transform[1] = val;
     _setUpLightPosition();
-}
-
-void Viewer::offConfigDialog(int)
-{
-    _conf_dialog = 0;
-    _conf_button->setChecked(false);
 }

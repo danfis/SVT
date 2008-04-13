@@ -15,9 +15,7 @@
 
 #include "msg.hpp"
 #include "objdata.hpp"
-#include "toggle_push_button.hpp"
 
-class ConfigDialog;
 
 void ViewerCameraChangedCallback(void *data, SoSensor *);
 
@@ -28,8 +26,6 @@ void ViewerCameraChangedCallback(void *data, SoSensor *);
  * objects.
  */
 class Viewer : public QWidget, public SoQtExaminerViewer{
-    Q_OBJECT
-
   protected:
     SbMutex _lock1, _lock2; /*! internal locks for multithreading */
 
@@ -46,11 +42,6 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     SbColor _color_points, _color_edges, _color_faces;
     float _point_size, _line_width;
 
-    ConfigDialog *_conf_dialog; /*! holds pointer to shown ConfigDialog
-                                    or 0 (if no ConfigDialog is shown) */
-    TogglePushButton *_conf_button; /*! button using which is possible to
-                                        show/hide ConfigDialog */
-
     int _lockRedraw() { return _lock1.lock(); }
     int _unlockRedraw() { return _lock1.unlock(); }
     int _lockEvent() { return _lock2.lock(); }
@@ -60,7 +51,6 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     virtual void _initCallbacks();
     virtual void _initLight();
     virtual void _setUpLightPosition();
-    virtual void _setUpConfigDialog();
     virtual void _setUpSceneGraph();
 
     /**
@@ -72,13 +62,7 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     void bottomWheelMotion(float val);
     void setSceneGraph(SoNode *root){}
 
-    friend class ConfigDialog;
     friend void ViewerCameraChangedCallback(void *data, SoSensor *);
-  protected slots:
-    /**
-     * Slot used by _conf_button and _conf_dialog
-     */
-    void offConfigDialog(int);
 
   public:
     Viewer(QWidget *parent, const char *name = "");
@@ -96,6 +80,11 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     void addObjData(ObjData *object);
 
     /**
+     * Clear viewer from ObjData objects
+     */
+    void clear();
+
+    /**
      * Set default values by which will be modified all added ObjData
      */
     void setDefaultPointsDiffuseColor(float r, float g, float b)
@@ -110,5 +99,13 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
         { _line_width = line_width; }
 
     void show();
+
+    /**
+     * Rebuild scene graph.
+     * Use this function if viewer is already running and you add some
+     * objects to show.
+     */
+    void rebuildSceneGraph()
+        { _setUpSceneGraph(); }
 };
 #endif
