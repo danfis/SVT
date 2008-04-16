@@ -47,5 +47,9 @@ struct ObjData {
 
     void addEdge(int from, int to);
     void addFace(int a, int b, int c);
+
+    int numPoints() const { return points->numPoints.getValue(); }
+    int numEdges() const { return edges->coordIndex.getNum() / 3; }
+    int numFaces() const { return faces->coordIndex.getNum() / 4; }
 };
 #endif
