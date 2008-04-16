@@ -1,6 +1,5 @@
 #ifndef _VIEWER_H_
-#define _VIEWER_H_
-
+#define _VIEWER_H_ 
 #include <list>
 #include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -45,6 +44,7 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     /*! default values: */
     SbColor _color_points, _color_edges, _color_faces;
     float _point_size, _line_width;
+    bool _points_switch_on, _edges_switch_on, _faces_switch_on;
 
     ConfigDialog *_conf_dialog; /*! holds pointer to shown ConfigDialog
                                     or 0 (if no ConfigDialog is shown) */
@@ -108,7 +108,17 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
         { _point_size = point_size; }
     void setDefaultLineWidth(float line_width)
         { _line_width = line_width; }
+    void setDefaultPointsSwitch(bool on)
+        { _points_switch_on = on; }
+    void setDefaultEdgesSwitch(bool on)
+        { _edges_switch_on = on; }
+    void setFacesEdgesSwitch(bool on)
+        { _faces_switch_on = on; }
 
     void show();
+
+    void clear();
+    void rebuildSceneGraph()
+        { lock(); _setUpSceneGraph(); unlock();}
 };
 #endif

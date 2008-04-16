@@ -28,6 +28,9 @@ Viewer::Viewer(QWidget *parent, const char *name)
     _color_faces.setValue(0.2, 0.75, 0.2);
     _point_size = 2;
     _line_width = 1;
+    _points_switch_on = true;
+    _edges_switch_on = true;
+    _faces_switch_on = true;
 }
 
 Viewer::~Viewer()
@@ -47,6 +50,8 @@ Viewer::~Viewer()
 
 void Viewer::addObjData(ObjData *object)
 {
+    lock();
+
     list<ObjData *>::iterator it = _objects.end();
     if (std::find(_objects.begin(), it, object) == it){
         // set default values:
@@ -55,10 +60,24 @@ void Viewer::addObjData(ObjData *object)
         object->material_faces->diffuseColor.setValue(_color_faces);
         object->style_points->pointSize.setValue(_point_size);
         object->style_edges->lineWidth.setValue(_line_width);
+        if (_points_switch_on)
+            object->sw_points->whichChild = SO_SWITCH_ALL;
+        else
+            object->sw_points->whichChild = SO_SWITCH_NONE;
+        if (_edges_switch_on)
+            object->sw_edges->whichChild = SO_SWITCH_ALL;
+        else
+            object->sw_edges->whichChild = SO_SWITCH_NONE;
+        if (_faces_switch_on)
+            object->sw_faces->whichChild = SO_SWITCH_ALL;
+        else
+            object->sw_faces->whichChild = SO_SWITCH_NONE;
 
         // add to list
         _objects.push_back(object);
     }
+
+    unlock();
 }
 
 SbBool Viewer::processSoEvent(const SoEvent *const event)
@@ -217,4 +236,22 @@ void Viewer::offConfigDialog(int)
 {
     _conf_dialog = 0;
     _conf_button->setChecked(false);
+}
+
+void Viewer::clear()
+{
+    lock();
+
+    std::list<ObjData *>::iterator it, it_end;
+    _root->removeAllChildren();
+
+    it = _objects.begin();
+    it_end = _objects.end();
+    for (; it != it_end; it++){
+        delete *it;
+    }
+    _objects.clear();
+    
+    _setUpSceneGraph();
+    unlock();
 }
