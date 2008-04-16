@@ -26,6 +26,9 @@ int main(int argc, char *argv[])
     }
 
     viewer = new Viewer(mainwin);
+    viewer->setDefaultFacesDiffuseColor(0.2, 0.8, 0.2);
+    viewer->setDefaultPointsSwitch(false);
+    viewer->setDefaultEdgesSwitch(false);
 
     pthread_create(&th, 0, thStart, (void *)viewer);
 
@@ -43,17 +46,31 @@ int main(int argc, char *argv[])
 
 void *thStart(void *arg)
 {
+    long frame = 1;
+    int seconds = 10;
     ObjData *data;
     Viewer *viewer = (Viewer *)arg;
     Parser *parser = Parser::instance();
 
-    sleep(1);
+    for (int i=seconds; i >= 0; i--){
+        cout << " Waiting " << i << " seconds" << "\r";
+        cout.flush();
+        sleep(1);
+    }
 
     while ((data = parser->parse()) != 0){
+        cout << " Frame " << frame << ", "
+             << data->numPoints() << " points, "
+             << data->numEdges() << " edges, "
+             << data->numFaces() << " faces" << "\r";
+        cout.flush();
+
         viewer->clear();
         viewer->addObjData(data);
         viewer->rebuildSceneGraph();
-        //usleep(500000);
+        //usleep(50000);
+
+        frame++;
     }
 
     return 0;
