@@ -3,6 +3,7 @@
 #include <Inventor/nodes/SoGroup.h>
 #include <QApplication>
 #include "pthread.h"
+#include "signal.h"
 using namespace std;
 
 #include "objdata.hpp"
@@ -36,7 +37,10 @@ int main(int argc, char *argv[])
     SoQt::show(mainwin);
     SoQt::mainLoop();
 
-    pthread_join(th, 0);
+    //pthread_join(th, 0);
+    pthread_kill(th, SIGINT);
+
+    cout << endl;
 
     delete mainwin;
     delete viewer;
@@ -47,16 +51,9 @@ int main(int argc, char *argv[])
 void *thStart(void *arg)
 {
     long frame = 1;
-    int seconds = 10;
     ObjData *data;
     Viewer *viewer = (Viewer *)arg;
     Parser *parser = Parser::instance();
-
-    for (int i=seconds; i >= 0; i--){
-        cout << " Waiting " << i << " seconds" << "\r";
-        cout.flush();
-        sleep(1);
-    }
 
     while ((data = parser->parse()) != 0){
         cout << " Frame " << frame << ", "
@@ -66,7 +63,7 @@ void *thStart(void *arg)
         cout.flush();
 
         viewer->clear();
-        viewer->addObjData(data);
+        viewer->addDynObjData(data);
         viewer->rebuildSceneGraph();
         //usleep(50000);
 

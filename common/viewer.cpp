@@ -20,6 +20,8 @@ Viewer::Viewer(QWidget *parent, const char *name)
     _light->ref();
     _root = new SoSeparator;
     _root->ref();
+    _dyn_root = new SoSeparator;
+    _dyn_root->ref();
 
     _light_transform.setValue(0, 0, 0);
 
@@ -39,45 +41,59 @@ Viewer::~Viewer()
 
     _light->unref();
     _root->unref();
+    _dyn_root->unref();
 
     it = _objects.begin();
     it_end = _objects.end();
     for (; it != it_end; it++){
         delete *it;
     }
+    _objects.clear();
+
+    it = _dyn_objects.begin();
+    it_end = _dyn_objects.end();
+    for (; it != it_end; it++){
+        delete *it;
+    }
+    _dyn_objects.clear();
 }
 
+#define ViewerAddObjData(listName) \
+    lock(); \
+\
+    list<ObjData *>::iterator it = listName.end(); \
+    if (std::find(listName.begin(), it, object) == it){ \
+        object->material_points->diffuseColor.setValue(_color_points); \
+        object->material_edges->diffuseColor.setValue(_color_edges); \
+        object->material_faces->diffuseColor.setValue(_color_faces); \
+        object->style_points->pointSize.setValue(_point_size); \
+        object->style_edges->lineWidth.setValue(_line_width); \
+        if (_points_switch_on) \
+            object->sw_points->whichChild = SO_SWITCH_ALL; \
+        else \
+            object->sw_points->whichChild = SO_SWITCH_NONE; \
+        if (_edges_switch_on) \
+            object->sw_edges->whichChild = SO_SWITCH_ALL; \
+        else \
+            object->sw_edges->whichChild = SO_SWITCH_NONE; \
+        if (_faces_switch_on) \
+            object->sw_faces->whichChild = SO_SWITCH_ALL; \
+        else \
+            object->sw_faces->whichChild = SO_SWITCH_NONE; \
+\
+        listName.push_back(object); \
+    } \
+\
+    unlock()
 
 void Viewer::addObjData(ObjData *object)
 {
-    lock();
+    ViewerAddObjData(_objects);
+}
 
-    list<ObjData *>::iterator it = _objects.end();
-    if (std::find(_objects.begin(), it, object) == it){
-        // set default values:
-        object->material_points->diffuseColor.setValue(_color_points);
-        object->material_edges->diffuseColor.setValue(_color_edges);
-        object->material_faces->diffuseColor.setValue(_color_faces);
-        object->style_points->pointSize.setValue(_point_size);
-        object->style_edges->lineWidth.setValue(_line_width);
-        if (_points_switch_on)
-            object->sw_points->whichChild = SO_SWITCH_ALL;
-        else
-            object->sw_points->whichChild = SO_SWITCH_NONE;
-        if (_edges_switch_on)
-            object->sw_edges->whichChild = SO_SWITCH_ALL;
-        else
-            object->sw_edges->whichChild = SO_SWITCH_NONE;
-        if (_faces_switch_on)
-            object->sw_faces->whichChild = SO_SWITCH_ALL;
-        else
-            object->sw_faces->whichChild = SO_SWITCH_NONE;
-
-        // add to list
-        _objects.push_back(object);
-    }
-
-    unlock();
+void Viewer::addDynObjData(ObjData *object)
+{
+    ViewerAddObjData(_dyn_objects);
 }
 
 SbBool Viewer::processSoEvent(const SoEvent *const event)
@@ -115,6 +131,7 @@ void Viewer::show()
     }
 
     _setUpSceneGraph();
+    _setUpDynSceneGraph();
 
     SoQtExaminerViewer::setSceneGraph(_root);
     SoQtExaminerViewer::show();
@@ -185,13 +202,26 @@ void Viewer::_setUpSceneGraph()
 {
     list<ObjData *>::iterator it, it_end;
 
-    _root->removeAllChildren();
     _root->addChild(_light);
 
     it = _objects.begin();
     it_end = _objects.end();
     for (; it != it_end; it++){
         _root->addChild((*it)->sw);
+    }
+
+    _root->addChild(_dyn_root);
+}
+void Viewer::_setUpDynSceneGraph()
+{
+    list<ObjData *>::iterator it, it_end;
+
+    _dyn_root->removeAllChildren();
+
+    it = _dyn_objects.begin();
+    it_end = _dyn_objects.end();
+    for (; it != it_end; it++){
+        _dyn_root->addChild((*it)->sw);
     }
 }
 
@@ -243,15 +273,14 @@ void Viewer::clear()
     lock();
 
     std::list<ObjData *>::iterator it, it_end;
-    _root->removeAllChildren();
 
-    it = _objects.begin();
-    it_end = _objects.end();
+    it = _dyn_objects.begin();
+    it_end = _dyn_objects.end();
     for (; it != it_end; it++){
         delete *it;
     }
-    _objects.clear();
+    _dyn_objects.clear();
     
-    _setUpSceneGraph();
+    _setUpDynSceneGraph();
     unlock();
 }

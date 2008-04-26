@@ -34,8 +34,11 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
 
     std::list<ObjData *> _objects; /*! list of objects managed by this
                                        viewer */
+    std::list<ObjData *> _dyn_objects; /*! list of dynamic objects, i.e.
+                                          objects which can be removed */
 
     SoSeparator *_root; /*! root of scene graph */
+    SoSeparator *_dyn_root; /*! root of dynamic objects */
     SoPointLight *_light; /*! main light source */
     SbVec3f _light_transform; /*! vector which holds data used for relative
                                   transformation of _light from camera
@@ -62,6 +65,8 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     virtual void _setUpLightPosition();
     virtual void _setUpConfigDialog();
     virtual void _setUpSceneGraph();
+    virtual void _setUpDynSceneGraph(); /*! set up dynamic part of scene
+                                            graph */
 
     /**
      * Overloaded methods of SoQtExaminerViewer
@@ -96,6 +101,12 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     void addObjData(ObjData *object);
 
     /**
+     * Add ObjData object as dynamic object (it means to list of dynamic
+     * objects
+     */
+    void addDynObjData(ObjData *object);
+
+    /**
      * Set default values by which will be modified all added ObjData
      */
     void setDefaultPointsDiffuseColor(float r, float g, float b)
@@ -119,6 +130,6 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
 
     void clear();
     void rebuildSceneGraph()
-        { lock(); _setUpSceneGraph(); unlock();}
+        { lock(); _setUpDynSceneGraph(); unlock();}
 };
 #endif
