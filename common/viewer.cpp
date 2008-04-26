@@ -14,7 +14,8 @@ void ViewerCameraChangedCallback(void *data, SoSensor *)
 }
 
 Viewer::Viewer(QWidget *parent, const char *name)
-    : SoQtExaminerViewer(parent, name), _conf_dialog(0)
+    : SoQtExaminerViewer(parent, name), _conf_dialog(0),
+      _default_style_dialog(0)
 {
     _light = new SoPointLight;
     _light->ref();
@@ -226,11 +227,16 @@ void Viewer::_setUpDynSceneGraph()
 }
 
 static void ConfigDialogCallback(bool pressed, Viewer *, void *cl);
+static void DefaultStyleDialogCallback(bool pressed, Viewer *, void *cl);
 void Viewer::_setUpConfigDialog()
 {
+    _default_style_button = new TogglePushButton(this,
+                                    DefaultStyleDialogCallback,
+                                    (void *)&_default_style_dialog);
     _conf_button = new TogglePushButton(this, ConfigDialogCallback,
                                         (void *)&_conf_dialog);
 
+    addAppPushButton(_default_style_button);
     addAppPushButton(_conf_button);
 }
 static void ConfigDialogCallback(bool pressed, Viewer *viewer, void *cl)
@@ -242,6 +248,22 @@ static void ConfigDialogCallback(bool pressed, Viewer *viewer, void *cl)
         (*dialog)->show();
         viewer->connect(*dialog, SIGNAL(finished(int)),
                         viewer, SLOT(offConfigDialog(int)));
+    }
+
+    if (!pressed && *dialog != 0){
+        delete *dialog;
+        *dialog = 0;
+    }
+}
+static void DefaultStyleDialogCallback(bool pressed, Viewer *viewer, void *cl)
+{
+    DefaultStyleDialog **dialog = (DefaultStyleDialog **)cl;
+
+    if (pressed && *dialog == 0){
+        *dialog = new DefaultStyleDialog((QWidget *)viewer, viewer);
+        (*dialog)->show();
+        viewer->connect(*dialog, SIGNAL(finished(int)),
+                        viewer, SLOT(offDefaultStyleDialog(int)));
     }
 
     if (!pressed && *dialog != 0){
@@ -266,6 +288,11 @@ void Viewer::offConfigDialog(int)
 {
     _conf_dialog = 0;
     _conf_button->setChecked(false);
+}
+void Viewer::offDefaultStyleDialog(int)
+{
+    _default_style_dialog = 0;
+    _default_style_button->setChecked(false);
 }
 
 void Viewer::clear()

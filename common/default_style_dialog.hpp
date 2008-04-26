@@ -1,5 +1,5 @@
-#ifndef _STYLE_WINDOW_HPP_
-#define _STYLE_WINDOW_HPP_
+#ifndef _DEFAULT_STYLE_WINDOW_HPP_
+#define _DEFAULT_STYLE_WINDOW_HPP_
 
 #include <QDialog>
 #include <QPushButton>
@@ -11,11 +11,10 @@ class Viewer;
  * Class which provides dialog for configuring of properties(style) of one
  * ObjData object.
  */
-class StyleDialog : public QDialog {
+class DefaultStyleDialog : public QDialog {
     Q_OBJECT
 
-  protected:
-    ObjData *_data;
+  private:
     Viewer *_viewer;
 
     QWidget *_buildPoints();
@@ -24,7 +23,7 @@ class StyleDialog : public QDialog {
 
     void lock();
     void unlock();
-  protected slots:
+  private slots:
     void changePointsSize(double val);
     void changePointsDiffuseColorRed(double val);
     void changePointsDiffuseColorGreen(double val);
@@ -41,27 +40,26 @@ class StyleDialog : public QDialog {
     void turnOnOffFaces(bool pressed);
 
   public:
-    StyleDialog(QWidget *parent, Viewer *viewer, ObjData *data);
-    virtual ~StyleDialog(){}
+    DefaultStyleDialog(QWidget *parent, Viewer *viewer);
+    virtual ~DefaultStyleDialog(){}
 };
 
-
 /**
- * Button by which is possible to show StyleDialog
+ * Button by which is possible to show DefaultStyleDialog
  */
-class StylePushButton : public QPushButton {
+class DefaultStylePushButton : public QPushButton {
     Q_OBJECT
 
   private:
     QWidget *_parent;
     Viewer *_viewer;
-    ObjData *_data;
 
   public:
-    StylePushButton(Viewer *viewer, ObjData *data, const QString = "");
-    ~StylePushButton(){}
+    DefaultStylePushButton(Viewer *viewer, const QString = "");
+    ~DefaultStylePushButton(){}
 
   private slots:
     void showDialog();
 };
 #endif
+

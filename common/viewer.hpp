@@ -15,6 +15,7 @@
 #include "msg.hpp"
 #include "objdata.hpp"
 #include "toggle_push_button.hpp"
+#include "default_style_dialog.hpp"
 
 class ConfigDialog;
 
@@ -53,6 +54,8 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
                                     or 0 (if no ConfigDialog is shown) */
     TogglePushButton *_conf_button; /*! button using which is possible to
                                         show/hide ConfigDialog */
+    DefaultStyleDialog *_default_style_dialog;
+    TogglePushButton *_default_style_button;
 
     int _lockRedraw() { return _lock1.lock(); }
     int _unlockRedraw() { return _lock1.unlock(); }
@@ -84,6 +87,7 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
      * Slot used by _conf_button and _conf_dialog
      */
     void offConfigDialog(int);
+    void offDefaultStyleDialog(int);
 
   public:
     Viewer(QWidget *parent, const char *name = "");
@@ -110,21 +114,63 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
      * Set default values by which will be modified all added ObjData
      */
     void setDefaultPointsDiffuseColor(float r, float g, float b)
-        { _color_points.setValue(r, g, b); }
+        { lock(); _color_points.setValue(r, g, b); unlock(); }
+    void setDefaultPointsDiffuseColorRed(float val)
+        { lock(); _color_points[0] = val; unlock(); }
+    void setDefaultPointsDiffuseColorGreen(float val)
+        { lock(); _color_points[1] = val; unlock(); }
+    void setDefaultPointsDiffuseColorBlue(float val)
+        { lock(); _color_points[2] = val; unlock(); }
+    void defaultPointsDiffuseColor(float *r, float *g, float *b)
+        { lock(); _color_points.getValue(*r, *g, *b); unlock(); }
+
     void setDefaultEdgesDiffuseColor(float r, float g, float b)
-        { _color_edges.setValue(r, g, b); }
+        { lock(); _color_edges.setValue(r, g, b); unlock(); }
+    void setDefaultEdgesDiffuseColorRed(float val)
+        { lock(); _color_edges[0] = val; unlock(); }
+    void setDefaultEdgesDiffuseColorGreen(float val)
+        { lock(); _color_edges[1] = val; unlock(); }
+    void setDefaultEdgesDiffuseColorBlue(float val)
+        { lock(); _color_edges[2] = val; unlock(); }
+    void defaultEdgesDiffuseColor(float *r, float *g, float *b)
+        { lock(); _color_edges.getValue(*r, *g, *b); unlock(); }
+
     void setDefaultFacesDiffuseColor(float r, float g, float b)
-        { _color_faces.setValue(r, g, b); }
-    void setdefaultPointSize(float point_size)
-        { _point_size = point_size; }
+        { lock(); _color_faces.setValue(r, g, b); unlock(); }
+    void setDefaultFacesDiffuseColorRed(float val)
+        { lock(); _color_faces[0] = val; unlock(); }
+    void setDefaultFacesDiffuseColorGreen(float val)
+        { lock(); _color_faces[1] = val; unlock(); }
+    void setDefaultFacesDiffuseColorBlue(float val)
+        { lock(); _color_faces[2] = val; unlock(); }
+    void defaultFacesDiffuseColor(float *r, float *g, float *b)
+        { lock(); _color_faces.getValue(*r, *g, *b); unlock(); }
+
+    void setDefaultPointSize(float point_size)
+        { lock(); _point_size = point_size; unlock(); }
+    void defaultPointSize(float *point_size)
+        { lock(); *point_size = _point_size; unlock(); }
+
+
     void setDefaultLineWidth(float line_width)
-        { _line_width = line_width; }
+        { lock(); _line_width = line_width; unlock(); }
+    void defaultLineWidth(float *line_width)
+        { lock(); *line_width = _line_width; unlock(); }
+
     void setDefaultPointsSwitch(bool on)
-        { _points_switch_on = on; }
+        { lock(); _points_switch_on = on; unlock(); }
+    void defaultPointsSwitch(bool *on)
+        { lock(); *on = _points_switch_on; unlock(); }
+
     void setDefaultEdgesSwitch(bool on)
-        { _edges_switch_on = on; }
-    void setFacesEdgesSwitch(bool on)
-        { _faces_switch_on = on; }
+        { lock(); _edges_switch_on = on; unlock(); }
+    void defaultEdgesSwitch(bool *on)
+        { lock(); *on = _edges_switch_on; unlock(); }
+
+    void setDefaultFacesSwitch(bool on)
+        { lock(); _faces_switch_on = on; unlock(); }
+    void defaultFacesSwitch(bool *on)
+        { lock(); *on = _faces_switch_on; unlock(); }
 
     void show();
 

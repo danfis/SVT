@@ -185,8 +185,6 @@ void StyleDialog::changeEdgesDiffuseColorBlue(double val)
 void StyleDialog::turnOnOffEdges(bool pressed)
 { TURN_ON_OFF(sw_edges); }
 
-void StyleDialog::changeFacesSize(double val)
-{ SIZE_SET(style_faces, pointSize); }
 void StyleDialog::changeFacesDiffuseColorRed(double val)
 { COLOR_SET(material_faces, 0); }
 void StyleDialog::changeFacesDiffuseColorGreen(double val)
