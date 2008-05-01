@@ -202,10 +202,9 @@ StylePushButton::StylePushButton(Viewer *viewer, ObjData *data,
         : QPushButton(str, (QWidget *)viewer), _parent((QWidget *)viewer),
           _viewer(viewer), _data(data)
 {
-    connect(this, SIGNAL(clicked()), this, SLOT(showDialog()));
+    connect(this, SIGNAL(clicked()), this, SLOT(showDialogInternal()));
 }
-void StylePushButton::showDialog()
+void StylePushButton::showDialogInternal()
 {
-    StyleDialog dialog(_parent, _viewer, _data);
-    dialog.exec();
+    emit showDialog(new StyleDialog(_parent, _viewer, _data));
 }

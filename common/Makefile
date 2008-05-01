@@ -3,7 +3,7 @@ CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
 TARGETS = libcommon.a
 OBJS = viewer.o toggle_push_button.o objdata.o \
        style_dialog.o config_dialog.o default_style_dialog.o \
-	   coin3dtools.o
+	   coin3dtools.o main_window.o
 
 all: $(TARGETS)
 
@@ -19,6 +19,8 @@ toggle_push_button.cpp: toggle_push_button.moc
 style_dialog.cpp: style_dialog.moc
 default_style_dialog.cpp: default_style_dialog.moc
 viewer.cpp: viewer.moc
+main_window.cpp: main_window.moc
+config_dialog.cpp: config_dialog.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 

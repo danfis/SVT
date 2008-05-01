@@ -212,11 +212,10 @@ DefaultStylePushButton::DefaultStylePushButton(Viewer *viewer,
         : QPushButton(str, (QWidget *)viewer), _parent((QWidget *)viewer),
           _viewer(viewer)
 {
-    connect(this, SIGNAL(clicked()), this, SLOT(showDialog()));
+    connect(this, SIGNAL(clicked()), this, SLOT(showDialogInternal()));
 }
-void DefaultStylePushButton::showDialog()
+void DefaultStylePushButton::showDialogInternal()
 {
-    DefaultStyleDialog dialog(_parent, _viewer);
-    dialog.exec();
+    emit showDialog(new DefaultStyleDialog(_parent, _viewer));
 }
 

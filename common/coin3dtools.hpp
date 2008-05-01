@@ -3,14 +3,14 @@
 
 #include <Inventor/Qt/SoQt.h>
 #include <QWidget>
-#include <QMainWindow>
 #include <QStatusBar>
 #include "viewer.hpp"
+#include "main_window.hpp"
 
 
 class Coin3dTools {
   private:
-    static QMainWindow *_mainwin;
+    static MainWindow *_mainwin;
     static QWidget *_win;
     static QStatusBar *_status_bar;
     static Viewer *_viewer;

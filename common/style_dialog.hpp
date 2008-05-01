@@ -62,6 +62,9 @@ class StylePushButton : public QPushButton {
     ~StylePushButton(){}
 
   private slots:
-    void showDialog();
+    void showDialogInternal();
+
+  signals:
+    void showDialog(QWidget *widg);
 };
 #endif
