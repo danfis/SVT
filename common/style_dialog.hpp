@@ -1,7 +1,6 @@
 #ifndef _STYLE_WINDOW_HPP_
 #define _STYLE_WINDOW_HPP_
 
-#include <QDialog>
 #include <QPushButton>
 #include "objdata.hpp"
 
@@ -11,7 +10,7 @@ class Viewer;
  * Class which provides dialog for configuring of properties(style) of one
  * ObjData object.
  */
-class StyleDialog : public QDialog {
+class StyleDialog : public QWidget {
     Q_OBJECT
 
   protected:
@@ -62,6 +61,9 @@ class StylePushButton : public QPushButton {
     ~StylePushButton(){}
 
   private slots:
-    void showDialog();
+    void showDialogInternal();
+
+  signals:
+    void showDialog(QWidget *widg);
 };
 #endif

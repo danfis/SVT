@@ -1,47 +1,40 @@
 #include <list>
 #include <QVBoxLayout>
 #include <QGroupBox>
-#include <QScrollArea>
 #include "config_dialog.hpp"
 #include "style_dialog.hpp"
+#include "default_style_dialog.hpp"
 #include "toggle_push_button.hpp"
 
 
+#include "config_dialog.moc"
+
 ConfigDialog::ConfigDialog(Viewer *viewer)
-    : QDialog((QWidget *)viewer,
-              Qt::Dialog | Qt::SubWindow | Qt::WindowStaysOnTopHint),
+    : QScrollArea((QWidget *)viewer),
+              //Qt::Dialog | Qt::SubWindow | Qt::WindowStaysOnTopHint),
       _viewer(viewer)
 {
     std::list<ObjData *>::iterator it, it_end;
 
+    QWidget *inside = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setSpacing(10);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    layout->addWidget(_buildDefaultStyle("Default Style"));
 
     it = _viewer->_objects.begin();
     it_end= _viewer->_objects.end();
     for (int i=1; it != it_end; it++, i++){
         layout->addWidget(_buildObj(*it, QString("Object %1").arg(i)));
     }
+    inside->setLayout(layout);
 
-    // big group containing all objects
-    QGroupBox *box = new QGroupBox("Objects");
-    box->setFlat(true);
-    layout->setContentsMargins(0, 0, 0, 0);
-    box->setLayout(layout);
-
-    QScrollArea *area = new QScrollArea;
-    area->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    area->setLineWidth(0);
-    area->setFrameShape(QFrame::NoFrame);
-    area->setContentsMargins(0, 0, 0, 0);
-    area->setWidget(box);
-    layout = new QVBoxLayout;
-    layout->addWidget(area);
-    layout->setContentsMargins(0, 0, 0, 0);
-    setLayout(layout);
-
-    setModal(false);
-    resize(130, 300);
+    setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    setLineWidth(0);
+    setFrameShape(QFrame::NoFrame);
+    setContentsMargins(0, 0, 0, 0);
+    setWidget(inside);
 }
 
 static void ObjDataButtonCallback(bool pressed, Viewer *viewer, void *cl);
@@ -59,6 +52,8 @@ QWidget *ConfigDialog::_buildObj(ObjData *data, QString name)
     layout->addWidget(button);
 
     StylePushButton *style = new StylePushButton(_viewer, data, "Config");
+    connect(style, SIGNAL(showDialog(QWidget *)),
+            this, SLOT(showWidgetSlot(QWidget *)));
     layout->addWidget(style);
 
     QGroupBox *box = new QGroupBox(name);
@@ -80,4 +75,20 @@ static void ObjDataButtonCallback(bool pressed, Viewer *viewer, void *cl)
     }
     viewer->unlock();
     SoDB::writeunlock();
+}
+
+
+QWidget *ConfigDialog::_buildDefaultStyle(QString title)
+{
+    QVBoxLayout *layout = new QVBoxLayout;
+
+    DefaultStylePushButton *style = new DefaultStylePushButton(_viewer, "Config");
+    connect(style, SIGNAL(showDialog(QWidget *)),
+            this, SLOT(showWidgetSlot(QWidget *)));
+    layout->addWidget(style);
+
+    QGroupBox *box = new QGroupBox(title);
+    box->setLayout(layout);
+
+    return box;
 }
