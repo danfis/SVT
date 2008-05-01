@@ -35,8 +35,6 @@ ConfigDialog::ConfigDialog(Viewer *viewer)
     setFrameShape(QFrame::NoFrame);
     setContentsMargins(0, 0, 0, 0);
     setWidget(inside);
-
-    setMinimumHeight(0);
 }
 
 static void ObjDataButtonCallback(bool pressed, Viewer *viewer, void *cl);

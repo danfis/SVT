@@ -15,7 +15,7 @@
 
 
 DefaultStyleDialog::DefaultStyleDialog(QWidget *parent, Viewer *viewer)
-    : QDialog(parent), _viewer(viewer)
+    : QWidget(parent), _viewer(viewer)
 {
     QVBoxLayout *vlayout = new QVBoxLayout;
    
@@ -26,7 +26,6 @@ DefaultStyleDialog::DefaultStyleDialog(QWidget *parent, Viewer *viewer)
     
     this->setLayout(vlayout);
 
-    setModal(false);
     resize(200, 200);
 }
 

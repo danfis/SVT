@@ -26,7 +26,7 @@ void StyleDialog::unlock()
 
 
 StyleDialog::StyleDialog(QWidget *parent, Viewer *viewer, ObjData *data)
-    : QDialog(parent), _data(data), _viewer(viewer)
+    : QWidget(parent), _data(data), _viewer(viewer)
 {
     QVBoxLayout *vlayout = new QVBoxLayout;
    

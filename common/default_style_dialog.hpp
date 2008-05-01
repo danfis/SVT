@@ -11,7 +11,7 @@ class Viewer;
  * Class which provides dialog for configuring of properties(style) of one
  * ObjData object.
  */
-class DefaultStyleDialog : public QDialog {
+class DefaultStyleDialog : public QWidget {
     Q_OBJECT
 
   private:
