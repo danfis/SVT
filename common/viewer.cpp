@@ -2,7 +2,10 @@
 #include <algorithm>
 #include <QVBoxLayout>
 #include "viewer.hpp"
+#include "config_dialog.hpp"
 using namespace std;
+
+#include "viewer.moc"
 
 void ViewerCameraChangedCallback(void *data, SoSensor *)
 {
@@ -11,12 +14,15 @@ void ViewerCameraChangedCallback(void *data, SoSensor *)
 }
 
 Viewer::Viewer(QWidget *parent, const char *name)
-    : SoQtExaminerViewer(parent, name)
+    : SoQtExaminerViewer(parent, name), _conf_dialog(0),
+      _default_style_dialog(0)
 {
     _light = new SoPointLight;
     _light->ref();
     _root = new SoSeparator;
     _root->ref();
+    _dyn_root = new SoSeparator;
+    _dyn_root->ref();
 
     _light_transform.setValue(0, 0, 0);
 
@@ -25,6 +31,9 @@ Viewer::Viewer(QWidget *parent, const char *name)
     _color_faces.setValue(0.2, 0.75, 0.2);
     _point_size = 2;
     _line_width = 1;
+    _points_switch_on = true;
+    _edges_switch_on = true;
+    _faces_switch_on = true;
 }
 
 Viewer::~Viewer()
@@ -33,48 +42,59 @@ Viewer::~Viewer()
 
     _light->unref();
     _root->unref();
+    _dyn_root->unref();
 
-    it = _objects.begin();
-    it_end = _objects.end();
-    for (; it != it_end; it++){
-        delete *it;
-    }
-}
-
-
-void Viewer::addObjData(ObjData *object)
-{
-    lock();
-
-    list<ObjData *>::iterator it = _objects.end();
-    if (std::find(_objects.begin(), it, object) == it){
-        // set default values:
-        object->material_points->diffuseColor.setValue(_color_points);
-        object->material_edges->diffuseColor.setValue(_color_edges);
-        object->material_faces->diffuseColor.setValue(_color_faces);
-        object->style_points->pointSize.setValue(_point_size);
-        object->style_edges->lineWidth.setValue(_line_width);
-
-        // add to list
-        _objects.push_back(object);
-    }
-
-    unlock();
-}
-
-void Viewer::clear()
-{
-    lock();
-    list<ObjData *>::iterator it, it_end;
     it = _objects.begin();
     it_end = _objects.end();
     for (; it != it_end; it++){
         delete *it;
     }
     _objects.clear();
-    
-    _setUpSceneGraph();
-    unlock();
+
+    it = _dyn_objects.begin();
+    it_end = _dyn_objects.end();
+    for (; it != it_end; it++){
+        delete *it;
+    }
+    _dyn_objects.clear();
+}
+
+#define ViewerAddObjData(listName) \
+    lock(); \
+\
+    list<ObjData *>::iterator it = listName.end(); \
+    if (std::find(listName.begin(), it, object) == it){ \
+        object->material_points->diffuseColor.setValue(_color_points); \
+        object->material_edges->diffuseColor.setValue(_color_edges); \
+        object->material_faces->diffuseColor.setValue(_color_faces); \
+        object->style_points->pointSize.setValue(_point_size); \
+        object->style_edges->lineWidth.setValue(_line_width); \
+        if (_points_switch_on) \
+            object->sw_points->whichChild = SO_SWITCH_ALL; \
+        else \
+            object->sw_points->whichChild = SO_SWITCH_NONE; \
+        if (_edges_switch_on) \
+            object->sw_edges->whichChild = SO_SWITCH_ALL; \
+        else \
+            object->sw_edges->whichChild = SO_SWITCH_NONE; \
+        if (_faces_switch_on) \
+            object->sw_faces->whichChild = SO_SWITCH_ALL; \
+        else \
+            object->sw_faces->whichChild = SO_SWITCH_NONE; \
+\
+        listName.push_back(object); \
+    } \
+\
+    unlock()
+
+void Viewer::addObjData(ObjData *object)
+{
+    ViewerAddObjData(_objects);
+}
+
+void Viewer::addDynObjData(ObjData *object)
+{
+    ViewerAddObjData(_dyn_objects);
 }
 
 SbBool Viewer::processSoEvent(const SoEvent *const event)
@@ -97,6 +117,8 @@ void Viewer::actualRedraw(void)
 //static void ObjDataButtonCallback(bool pressed, Viewer *, void *cl);
 void Viewer::show()
 {
+    _setUpConfigDialog();
+
     // set up properly alignment of left side bar to top
     QWidget *parent = SoQtExaminerViewer::getAppPushButtonParent();
     QLayout *layout;
@@ -110,6 +132,7 @@ void Viewer::show()
     }
 
     _setUpSceneGraph();
+    _setUpDynSceneGraph();
 
     SoQtExaminerViewer::setSceneGraph(_root);
     SoQtExaminerViewer::show();
@@ -180,7 +203,6 @@ void Viewer::_setUpSceneGraph()
 {
     list<ObjData *>::iterator it, it_end;
 
-    _root->removeAllChildren();
     _root->addChild(_light);
 
     it = _objects.begin();
@@ -188,8 +210,67 @@ void Viewer::_setUpSceneGraph()
     for (; it != it_end; it++){
         _root->addChild((*it)->sw);
     }
+
+    _root->addChild(_dyn_root);
+}
+void Viewer::_setUpDynSceneGraph()
+{
+    list<ObjData *>::iterator it, it_end;
+
+    _dyn_root->removeAllChildren();
+
+    it = _dyn_objects.begin();
+    it_end = _dyn_objects.end();
+    for (; it != it_end; it++){
+        _dyn_root->addChild((*it)->sw);
+    }
 }
 
+static void ConfigDialogCallback(bool pressed, Viewer *, void *cl);
+static void DefaultStyleDialogCallback(bool pressed, Viewer *, void *cl);
+void Viewer::_setUpConfigDialog()
+{
+    _default_style_button = new TogglePushButton(this,
+                                    DefaultStyleDialogCallback,
+                                    (void *)&_default_style_dialog);
+    _conf_button = new TogglePushButton(this, ConfigDialogCallback,
+                                        (void *)&_conf_dialog);
+
+    addAppPushButton(_default_style_button);
+    addAppPushButton(_conf_button);
+}
+static void ConfigDialogCallback(bool pressed, Viewer *viewer, void *cl)
+{
+    ConfigDialog **dialog = (ConfigDialog **)cl;
+
+    if (pressed && *dialog == 0){
+        *dialog = new ConfigDialog(viewer);
+        (*dialog)->show();
+        viewer->connect(*dialog, SIGNAL(finished(int)),
+                        viewer, SLOT(offConfigDialog(int)));
+    }
+
+    if (!pressed && *dialog != 0){
+        delete *dialog;
+        *dialog = 0;
+    }
+}
+static void DefaultStyleDialogCallback(bool pressed, Viewer *viewer, void *cl)
+{
+    DefaultStyleDialog **dialog = (DefaultStyleDialog **)cl;
+
+    if (pressed && *dialog == 0){
+        *dialog = new DefaultStyleDialog((QWidget *)viewer, viewer);
+        (*dialog)->show();
+        viewer->connect(*dialog, SIGNAL(finished(int)),
+                        viewer, SLOT(offDefaultStyleDialog(int)));
+    }
+
+    if (!pressed && *dialog != 0){
+        delete *dialog;
+        *dialog = 0;
+    }
+}
 
 void Viewer::leftWheelMotion(float val)
 {
@@ -201,4 +282,32 @@ void Viewer::bottomWheelMotion(float val)
 {
     _light_transform[1] = val;
     _setUpLightPosition();
+}
+
+void Viewer::offConfigDialog(int)
+{
+    _conf_dialog = 0;
+    _conf_button->setChecked(false);
+}
+void Viewer::offDefaultStyleDialog(int)
+{
+    _default_style_dialog = 0;
+    _default_style_button->setChecked(false);
+}
+
+void Viewer::clear()
+{
+    lock();
+
+    std::list<ObjData *>::iterator it, it_end;
+
+    it = _dyn_objects.begin();
+    it_end = _dyn_objects.end();
+    for (; it != it_end; it++){
+        delete *it;
+    }
+    _dyn_objects.clear();
+    
+    _setUpDynSceneGraph();
+    unlock();
 }

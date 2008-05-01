@@ -25,7 +25,7 @@ ObjData *Parser::parse()
     _cur_obj = new ObjData;
     _parsed = false;
 
-    if (_cur_token == -1){
+    if (_cur_token == -1 || _cur_token == T_DELIM){
         SKIP_DELIMS;
     }
 
@@ -44,7 +44,7 @@ ObjData *Parser::parse()
                 _parseError();
                 break;
             case T_DELIM:
-                _parseDelim();
+                //_parseDelim();
                 end = true;
                 break;
             default:

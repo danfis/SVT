@@ -48,13 +48,13 @@ StyleDialog::StyleDialog(QWidget *parent, Viewer *viewer, ObjData *data)
     QPushButton *button; \
     \
     vlayout = new QVBoxLayout
-#define BUILD_SIZE(name, slotSize) \
+#define BUILD_SIZE(name, valueMember, slotSize) \
     label = new QLabel("Size"); \
     vlayout->addWidget(label); \
     spin = new QDoubleSpinBox(); \
     spin->setSingleStep(0.1); \
     spin->setRange(1, 10); \
-    spin->setValue(_data->style_##name->pointSize.getValue()); \
+    spin->setValue(_data->style_##name->valueMember.getValue()); \
     vlayout->addWidget(spin); \
     connect(spin, SIGNAL(valueChanged(double)), \
             this, SLOT(slotSize(double)))
@@ -114,16 +114,22 @@ StyleDialog::StyleDialog(QWidget *parent, Viewer *viewer, ObjData *data)
 
 QWidget *StyleDialog::_buildPoints()
 {
-    BUILD(points, "Points", changePointsSize,
-          changePointsDiffuseColorRed, changePointsDiffuseColorGreen,
-          changePointsDiffuseColorBlue, turnOnOffPoints);
+    BUILD_PRE;
+    BUILD_SIZE(points, pointSize, changePointsSize);
+    BUILD_COLOR(points, changePointsDiffuseColorRed,
+                changePointsDiffuseColorGreen, changePointsDiffuseColorBlue);
+    BUILD_ON_OFF(points, turnOnOffPoints);
+    BUILD_POST("Points");
 }
 
 QWidget *StyleDialog::_buildEdges()
 {
-    BUILD(edges, "Edges", changeEdgesSize,
-          changeEdgesDiffuseColorRed, changeEdgesDiffuseColorGreen,
-          changeEdgesDiffuseColorBlue, turnOnOffEdges);
+    BUILD_PRE;
+    BUILD_SIZE(edges, lineWidth, changeEdgesSize);
+    BUILD_COLOR(edges, changeEdgesDiffuseColorRed,
+                changeEdgesDiffuseColorGreen, changeEdgesDiffuseColorBlue);
+    BUILD_ON_OFF(edges, turnOnOffEdges);
+    BUILD_POST("Edges");
 }
 
 QWidget *StyleDialog::_buildFaces()
@@ -179,8 +185,6 @@ void StyleDialog::changeEdgesDiffuseColorBlue(double val)
 void StyleDialog::turnOnOffEdges(bool pressed)
 { TURN_ON_OFF(sw_edges); }
 
-void StyleDialog::changeFacesSize(double val)
-{ SIZE_SET(style_faces, pointSize); }
 void StyleDialog::changeFacesDiffuseColorRed(double val)
 { COLOR_SET(material_faces, 0); }
 void StyleDialog::changeFacesDiffuseColorGreen(double val)
