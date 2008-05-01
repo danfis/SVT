@@ -10,40 +10,30 @@ using namespace std;
 #include "viewer.hpp"
 #include "parser.hpp"
 #include "msg.hpp"
+#include "coin3dtools.hpp"
 
 static void *thStart(void *arg);
 
 int main(int argc, char *argv[])
 {
     Viewer *viewer;
-    QWidget *mainwin;
     pthread_t th;
 
-    mainwin = SoQt::init(argc, argv, argv[0]);
+    Coin3dTools::init("viewer");
 
-    if (mainwin == NULL){
-        ERR("Can't create main window");
-        exit(1);
-    }
-
-    viewer = new Viewer(mainwin);
+    viewer = Coin3dTools::viewer();
     viewer->setDefaultFacesDiffuseColor(0.2, 0.8, 0.2);
     viewer->setDefaultPointsSwitch(false);
     viewer->setDefaultEdgesSwitch(false);
 
     pthread_create(&th, 0, thStart, (void *)viewer);
 
-    viewer->show();
-    SoQt::show(mainwin);
-    SoQt::mainLoop();
+    Coin3dTools::mainLoop();
 
     //pthread_join(th, 0);
     pthread_kill(th, SIGINT);
 
     cout << endl;
-
-    delete mainwin;
-    delete viewer;
 
     return 0;
 }
