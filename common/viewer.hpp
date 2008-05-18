@@ -48,7 +48,7 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     /*! default values: */
     SbColor _color_points, _color_edges, _color_faces;
     float _point_size, _line_width;
-    bool _points_switch_on, _edges_switch_on, _faces_switch_on;
+    bool _switch_on, _points_switch_on, _edges_switch_on, _faces_switch_on;
 
     int _lockRedraw() { return _lock1.lock(); }
     int _unlockRedraw() { return _lock1.unlock(); }
@@ -143,6 +143,10 @@ class Viewer : public QWidget, public SoQtExaminerViewer{
     void defaultLineWidth(float *line_width)
         { lock(); *line_width = _line_width; unlock(); }
 
+    void setDefaultSwitch(bool on)
+        { lock(); _switch_on = on; unlock(); }
+    void defaultSwitch(bool *on)
+        { lock(); *on = _switch_on; unlock(); }
     void setDefaultPointsSwitch(bool on)
         { lock(); _points_switch_on = on; unlock(); }
     void defaultPointsSwitch(bool *on)

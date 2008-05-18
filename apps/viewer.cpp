@@ -1,4 +1,5 @@
 #include <iostream>
+#include <getopt.h>
 #include <Inventor/Qt/SoQt.h>
 #include <Inventor/nodes/SoGroup.h>
 #include <QApplication>
@@ -12,6 +13,9 @@ using namespace std;
 #include "msg.hpp"
 #include "coin3dtools.hpp"
 
+
+#include "viewer_common.cpp"
+
 int main(int argc, char *argv[])
 {
     Parser *parser;
@@ -19,9 +23,11 @@ int main(int argc, char *argv[])
     Viewer *viewer;
 
     Coin3dTools::init("viewer");
+    viewer = Coin3dTools::viewer();
+
+#include "viewer_common_main.cpp"
 
     parser = Parser::instance();
-    viewer = Coin3dTools::viewer();
     while ((data = parser->parse()) != 0)
         viewer->addObjData(data);
 

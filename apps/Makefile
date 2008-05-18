@@ -15,8 +15,14 @@ iv-viewer: $(IV_VIEWER_OBJS)
 viewer-live: $(VIEWER_LIVE_OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS) -lpthread
 
+viewer.o: viewer.cpp viewer_common.cpp viewer_common_main.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+viewer-live.o: viewer-live.cpp viewer_common.cpp viewer_common_main.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 %.o: %.cpp %.hpp
-	$(CXX) $(VIEWER_CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(TARGETS)

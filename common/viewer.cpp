@@ -29,6 +29,7 @@ Viewer::Viewer(QWidget *parent, const char *name)
     _color_faces.setValue(0.2, 0.75, 0.2);
     _point_size = 2;
     _line_width = 1;
+    _switch_on = true;
     _points_switch_on = true;
     _edges_switch_on = true;
     _faces_switch_on = true;
@@ -79,6 +80,10 @@ Viewer::~Viewer()
             object->sw_faces->whichChild = SO_SWITCH_ALL; \
         else \
             object->sw_faces->whichChild = SO_SWITCH_NONE; \
+        if (_switch_on) \
+            object->sw->whichChild = SO_SWITCH_ALL; \
+        else \
+            object->sw->whichChild = SO_SWITCH_NONE; \
 \
         listName.push_back(object); \
     } \

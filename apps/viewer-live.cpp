@@ -1,4 +1,5 @@
 #include <iostream>
+#include <getopt.h>
 #include <Inventor/Qt/SoQt.h>
 #include <Inventor/nodes/SoGroup.h>
 #include <QApplication>
@@ -12,6 +13,8 @@ using namespace std;
 #include "msg.hpp"
 #include "coin3dtools.hpp"
 
+#include "viewer_common.cpp"
+
 static void *thStart(void *arg);
 
 int main(int argc, char *argv[])
@@ -22,9 +25,8 @@ int main(int argc, char *argv[])
     Coin3dTools::init("viewer");
 
     viewer = Coin3dTools::viewer();
-    viewer->setDefaultFacesDiffuseColor(0.2, 0.8, 0.2);
-    viewer->setDefaultPointsSwitch(false);
-    viewer->setDefaultEdgesSwitch(false);
+
+#include "viewer_common_main.cpp"
 
     pthread_create(&th, 0, thStart, (void *)viewer);
 
