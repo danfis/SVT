@@ -116,4 +116,12 @@
                 usage(argc, argv);
         }
     }
+
+    if (argc - optind > 0){
+        args = argv + optind;
+        num_args = argc - optind;
+    }else{
+        args = 0;
+        num_args = 0;
+    }
 #endif

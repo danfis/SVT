@@ -5,6 +5,9 @@ static void usage(int argc, char *argv[], const char *oprtstr = 0);
 static bool parseFloat(const char *, float *);
 static bool parseInt(const char *, int *);
 
+char **args;
+int num_args;
+
 enum Options {
     HELP = 100,
     ALL_OFF,

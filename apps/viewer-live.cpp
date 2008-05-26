@@ -16,6 +16,7 @@ using namespace std;
 #include "viewer_common.cpp"
 
 static void *thStart(void *arg);
+static void thParse(Viewer *viewer, long *frame);
 
 int main(int argc, char *argv[])
 {
@@ -43,15 +44,36 @@ int main(int argc, char *argv[])
 void *thStart(void *arg)
 {
     long frame = 1;
-    ObjData *data;
     Viewer *viewer = (Viewer *)arg;
     Parser *parser = Parser::instance();
 
+    if (args != 0){
+        for (int i=0; i < num_args; i++){
+            cerr << "Parsing file " << args[0] << " ..." << endl;
+            if (!parser->setInput(args[i])){
+                ERR("Can't read file " << args[i]);
+                continue;
+            }
+
+            thParse(viewer, &frame);
+        }
+    }else{
+        thParse(viewer, &frame);
+    }
+
+    return 0;
+}
+
+void thParse(Viewer *viewer, long *frame)
+{
+    ObjData *data;
+    Parser *parser = Parser::instance();
+
     while ((data = parser->parse()) != 0){
-        cout << " Frame " << frame << ", "
-             << data->numPoints() << " points, "
-             << data->numEdges() << " edges, "
-             << data->numFaces() << " faces" << "\r";
+        cout << " Frame " << *frame << ", "
+            << data->numPoints() << " points, "
+            << data->numEdges() << " edges, "
+            << data->numFaces() << " faces" << "\r";
         cout.flush();
 
         viewer->clear();
@@ -59,8 +81,6 @@ void *thStart(void *arg)
         viewer->rebuildSceneGraph();
         //usleep(50000);
 
-        frame++;
+        (*frame)++;
     }
-
-    return 0;
 }

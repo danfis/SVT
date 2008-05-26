@@ -11,11 +11,41 @@ yylval_t yylval;
          && _cur_token == T_DELIM; \
          _cur_token = yylex())
 
+Parser::~Parser()
+{
+    if (_input != stdin){
+        fclose(_input);
+    }
+}
+
+
 Parser *Parser::instance()
 {
     static Parser parser;
 
     return &parser;
+}
+
+bool Parser::setInput(const char *filename)
+{
+    if (_input != stdin){
+        fclose(_input);
+    }
+
+    if (filename != 0){
+        _input = fopen(filename, "r");
+        if (_input == NULL){
+            _input = stdin;
+            return false;
+        }
+    }else{
+        _input = stdin;
+    }
+
+
+    _cur_token = -1;
+    yyin = _input;
+    return true;
 }
 
 ObjData *Parser::parse()

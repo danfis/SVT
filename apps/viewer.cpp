@@ -28,8 +28,22 @@ int main(int argc, char *argv[])
 #include "viewer_common_main.cpp"
 
     parser = Parser::instance();
-    while ((data = parser->parse()) != 0)
-        viewer->addObjData(data);
+
+    if (args != 0){
+        for (int i=0; i < num_args; i++){
+            cerr << "Parsing file " << args[0] << " ..." << endl;
+            if (!parser->setInput(args[i])){
+                ERR("Can't read file " << args[i]);
+                continue;
+            }
+
+            while ((data = parser->parse()) != 0)
+                viewer->addObjData(data);
+        }
+    }else{
+        while ((data = parser->parse()) != 0)
+            viewer->addObjData(data);
+    }
 
     Coin3dTools::mainLoop();
 

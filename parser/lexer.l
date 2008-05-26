@@ -2,6 +2,7 @@
 #include "parser_lexer_common.h"
 %}
 
+%option noyywrap
 %option yylineno
 
 DIGIT [0-9]

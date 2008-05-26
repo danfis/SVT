@@ -19,4 +19,6 @@ typedef struct _yylval_t {
 
 extern yylval_t yylval;
 
+extern FILE *yyin;
+
 #endif

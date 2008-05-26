@@ -8,6 +8,7 @@ all: $(TARGETS)
 libparser.a: $(OBJS)
 	ar cr $@ $^
 	ranlib $@
+	touch ../apps/*.cpp
 
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
