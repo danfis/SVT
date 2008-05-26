@@ -18,6 +18,7 @@ class Parser {
     FILE *_input;
 
     void _parsePoints();
+    void _parsePoints2d();
     void _parseEdges();
     void _parseFaces();
     void _parseDelim();

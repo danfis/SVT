@@ -14,19 +14,19 @@ WHITESPACE [ \t\n]
 COMMENT "#"
 DELIM [-=+]
 
-%s points edges faces
+%s points points2d edges faces
 %%
-<points>{MINUS}?{NONZERO}{DIGIT}*{DOT}?{DIGIT}* {
+<points,points2d>{MINUS}?{NONZERO}{DIGIT}*{DOT}?{DIGIT}* {
     yylval.flt_num = atof(yytext);
     yylval.lineno = yylineno;
     return T_FLT_NUM;
 }
-<points>{MINUS}?{ZERO}{DOT}? {
+<points,points2d>{MINUS}?{ZERO}{DOT}? {
     yylval.flt_num = atof(yytext);
     yylval.lineno = yylineno;
     return T_FLT_NUM;
 }
-<points>{MINUS}?{ZERO}{DOT}{DIGIT}* {
+<points,points2d>{MINUS}?{ZERO}{DOT}{DIGIT}* {
     yylval.flt_num = atof(yytext);
     yylval.lineno = yylineno;
     return T_FLT_NUM;
@@ -52,6 +52,12 @@ DELIM [-=+]
     yylval.lineno = yylineno;
     return T_POINTS;
 }
+[Pp][Oo][Ii][Nn][Tt][Ss][2][Dd]: {
+    BEGIN(points2d);
+    yylval.lineno = yylineno;
+    return T_POINTS2D;
+}
+
 [Ee][Dd][Gg][Ee][Ss]: {
     BEGIN(edges);
     yylval.lineno = yylineno;

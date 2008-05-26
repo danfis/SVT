@@ -64,6 +64,9 @@ ObjData *Parser::parse()
             case T_POINTS:
                 _parsePoints();
                 break;
+            case T_POINTS2D:
+                _parsePoints2d();
+                break;
             case T_EDGES:
                 _parseEdges();
                 break;
@@ -116,6 +119,33 @@ void Parser::_parsePoints()
             cerr << coords[0] << endl;
         if (i == 2)
             cerr << coords[0] << " " << coords[1] << endl;
+    }
+}
+
+void Parser::_parsePoints2d()
+{
+    float coords[2];
+    int i = 0;
+
+    _parsed = true;
+
+    _cur_token = yylex();
+    while (_cur_token == T_FLT_NUM){
+        coords[i] = yylval.flt_num;
+        i = (i + 1) % 2;
+
+        // three coords already read
+        if (i == 0){
+            _cur_obj->addVertex(coords[0], coords[1], 0.f);
+        }
+
+        _cur_token = yylex();
+    }
+
+    if (i != 0){
+        cerr << "Some numbers unparsed: ";
+        if (i == 1)
+            cerr << coords[0] << endl;
     }
 }
 

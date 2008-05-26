@@ -9,6 +9,7 @@
 #define T_FACES 262
 #define T_DELIM 263
 #define T_ERROR 264
+#define T_POINTS2D 265
 
 typedef struct _yylval_t {
     float flt_num;
