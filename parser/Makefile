@@ -1,7 +1,7 @@
 CXXFLAGS += -I../common $(QT_CXXFLAGS)
 
 TARGETS = libparser.a
-OBJS = parser.o lexer.o
+OBJS = parser.o lexer.o parse_func.o
 
 all: $(TARGETS)
 
@@ -12,6 +12,8 @@ libparser.a: $(OBJS)
 
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
+%.o: %.c %.h
+	$(CC) $(CXXFLAGS) -c -o $@ $<
 
 lexer.c: lexer.l
 	$(FLEX) -o $@ $<

@@ -1,5 +1,21 @@
 %{
 #include "parser_lexer_common.h"
+#include "parse_func.h"
+
+#define PARSE_FLOAT(ret) \
+    if (parseFloat(yytext, &yylval.flt_num) != 0){ \
+        return T_ERROR; \
+    } \
+    yylval.lineno = yylineno; \
+    return ret
+
+#define PARSE_INT(ret) \
+    if (parseInt(yytext, &yylval.int_num) != 0){ \
+        return T_ERROR; \
+    } \
+    yylval.lineno = yylineno; \
+    return ret
+
 %}
 
 %option noyywrap
@@ -8,39 +24,28 @@
 DIGIT [0-9]
 NONZERO [1-9]
 ZERO "0"
-MINUS "-"
+SIGN [-+]
 DOT "."
 WHITESPACE [ \t\n]
 COMMENT "#"
 DELIM [-=+]
+EXP [eE]
 
 %s points points2d edges faces
 %%
-<points,points2d>{MINUS}?{NONZERO}{DIGIT}*{DOT}?{DIGIT}* {
-    yylval.flt_num = atof(yytext);
-    yylval.lineno = yylineno;
-    return T_FLT_NUM;
+<points,points2d>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
+    PARSE_FLOAT(T_FLT_NUM);
 }
-<points,points2d>{MINUS}?{ZERO}{DOT}? {
-    yylval.flt_num = atof(yytext);
-    yylval.lineno = yylineno;
-    return T_FLT_NUM;
-}
-<points,points2d>{MINUS}?{ZERO}{DOT}{DIGIT}* {
-    yylval.flt_num = atof(yytext);
-    yylval.lineno = yylineno;
-    return T_FLT_NUM;
+
+<points,points2d>{SIGN}?{NONZERO}{DIGIT}*({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -1043.1234e-23 */
+    PARSE_FLOAT(T_FLT_NUM);
 }
 
 <edges,faces>{NONZERO}{DIGIT}* {
-    yylval.int_num = atoi(yytext);
-    yylval.lineno = yylineno;
-    return T_INT_NUM;
+    PARSE_INT(T_INT_NUM);
 }
 <edges,faces>{ZERO} {
-    yylval.int_num = atoi(yytext);
-    yylval.lineno = yylineno;
-    return T_INT_NUM;
+    PARSE_INT(T_INT_NUM);
 }
 
 {WHITESPACE}+ {}
