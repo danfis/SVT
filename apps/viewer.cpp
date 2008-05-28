@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     if (args != 0){
         for (int i=0; i < num_args; i++){
-            cerr << "Parsing file " << args[0] << " ..." << endl;
+            cerr << "Parsing file " << args[i] << " ..." << endl;
             if (!parser->setInput(args[i])){
                 ERR("Can't read file " << args[i]);
                 continue;
