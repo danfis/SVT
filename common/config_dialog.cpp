@@ -26,7 +26,11 @@ ConfigDialog::ConfigDialog(Viewer *viewer)
     it = _viewer->_objects.begin();
     it_end= _viewer->_objects.end();
     for (int i=1; it != it_end; it++, i++){
-        layout->addWidget(_buildObj(*it, QString("Object %1").arg(i)));
+        if ((*it)->name.size() > 0){
+            layout->addWidget(_buildObj(*it, QString::fromStdString((*it)->name)));
+        }else{
+            layout->addWidget(_buildObj(*it, QString("Object %1").arg(i)));
+        }
     }
     inside->setLayout(layout);
 

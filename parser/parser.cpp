@@ -73,6 +73,9 @@ ObjData *Parser::parse()
             case T_FACES:
                 _parseFaces();
                 break;
+            case T_NAME:
+                _parseName();
+                break;
             case T_ERROR:
                 _parseError();
                 break;
@@ -199,6 +202,13 @@ void Parser::_parseFaces()
         if (i == 2)
             cerr << nums[0] << " " << nums[1] << endl;
     }
+}
+
+void Parser::_parseName()
+{
+    if (strlen(yylval.buffer) > 0)
+        _cur_obj->setName(yylval.buffer);
+    _cur_token = yylex();
 }
 
 void Parser::_parseDelim()

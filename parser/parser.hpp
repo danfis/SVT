@@ -21,6 +21,7 @@ class Parser {
     void _parsePoints2d();
     void _parseEdges();
     void _parseFaces();
+    void _parseName();
     void _parseDelim();
     void _parseError();
 

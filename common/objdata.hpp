@@ -8,6 +8,7 @@
 #include <Inventor/nodes/SoIndexedFaceSet.h>
 #include <Inventor/nodes/SoDrawStyle.h>
 #include <Inventor/nodes/SoMaterial.h>
+#include <string>
 
 /**
  * Class which describes visualisable object by Coin3d library.
@@ -15,6 +16,8 @@
  * holds data and do with them not much things.
  */
 struct ObjData {
+    std::string name; /*! name of object */
+
     SoCoordinate3 *coords; /*! coordinates */
     SoPointSet *points; /*! points (holds number of points formed by
                             coordinates) */
@@ -39,6 +42,11 @@ struct ObjData {
      */
     ObjData();
     virtual ~ObjData();
+
+    /**
+     * Set up name of object.
+     */
+    void setName(const char *str) { name = str; }
 
     /**
      * Add one coordinate to object and also incerement number of points

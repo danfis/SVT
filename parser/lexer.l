@@ -31,7 +31,7 @@ COMMENT "#"
 DELIM [-=+]
 EXP [eE]
 
-%s points points2d edges faces
+%s points points2d edges faces name
 %%
 <points,points2d>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
     PARSE_FLOAT(T_FLT_NUM);
@@ -74,11 +74,22 @@ EXP [eE]
     return T_FACES;
 }
 
+[Nn][Aa][Mm][Ee]:[ \t]* {
+    BEGIN(name);
+    yylval.lineno = yylineno;
+    yylval.buffer[0] = 0x0;
+}
+<name>[^\n]* {
+    BEGIN(INITIAL);
+    strncpy(yylval.buffer, yytext, BUFSIZE);
+    return T_NAME;
+}
+
 {DELIM}+\n {
     BEGIN(INITIAL);
     yylval.lineno = yylineno;
     return T_DELIM;
-           }
+}
 
 . {
     yylval.lineno = yylineno;
