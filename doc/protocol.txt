@@ -1,0 +1,51 @@
+Protocol
+=========
+Here is described protocol which can be processed by Coin3dTools.
+
+
+i) Delimiters can be:
+    --------
+    ========
+    ++++++++
+   and any combination:
+    ===---++++
+
+ii) Points can be defined by:
+    Points:
+    1      11.1 -11.12e12
+    2.3    -2   +2.3
+    1.e-12 3.12 15
+
+    or 
+
+    Points2d:
+    1   23.2
+    -11 +34
+
+iii) Edges can be defined by:
+    Edges:
+    0 1
+    2 3
+
+iv) Faces can be defined by:
+    Faces:
+    0 1 2
+    3 4 5
+    2 2 2
+
+v) Comments begins at #
+    # this is some comment
+
+vi) Objects can be named by:
+    Name: Some name
+
+
+
+
+List of labels:
+---------------
+ - Points:
+ - Points2d:
+ - Edges:
+ - Faces:
+ - Name:
