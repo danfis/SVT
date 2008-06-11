@@ -8,6 +8,15 @@ static bool parseInt(const char *, int *);
 char **args;
 int num_args;
 
+#ifdef VIEWER
+/**
+ * Indicates if some these elements should be coloured
+ */
+bool colour_points = false;
+bool colour_edges = false;
+bool colour_faces = false;
+#endif /* VIEWER */
+
 enum Options {
     HELP = 100,
     ALL_OFF,
@@ -25,6 +34,11 @@ enum Options {
     FACE_COLOR_RED,
     FACE_COLOR_GREEN,
     FACE_COLOR_BLUE,
+#ifdef VIEWER
+    COLOUR_POINTS,
+    COLOUR_EDGES,
+    COLOUR_FACES,
+#endif /* VIEWER */
     OPTIONS_END
 };
 
@@ -44,6 +58,11 @@ static struct option options[] = {
     { "face-color-red", required_argument, NULL, FACE_COLOR_RED },
     { "face-color-green", required_argument, NULL, FACE_COLOR_GREEN },
     { "face-color-blue", required_argument, NULL, FACE_COLOR_BLUE },
+#ifdef VIEWER
+    { "colour-points", no_argument, NULL, COLOUR_POINTS },
+    { "colour-edges",  no_argument, NULL, COLOUR_EDGES },
+    { "colour-faces",  no_argument, NULL, COLOUR_FACES },
+#endif /* VIEWER */
     { NULL, 0, NULL, 0 }
 };
 
@@ -74,6 +93,12 @@ static void usage(int argc, char *argv[], const char *optstr)
     cout << "  --face-color-red     float  Set color of faces to specified value." << endl;
     cout << "  --face-color-green   float  Value must be between 0 and 1." << endl;
     cout << "  --face-color-blue    float" << endl;
+#ifdef VIEWER
+    cout << endl;
+    cout << "  --colour-points             Colour points from different objects by different color." << endl;
+    cout << "  --colour-edges              Colour edges from different objects by different color." << endl;
+    cout << "  --colour-faces              Colour faces from different objects by different color." << endl;
+#endif /* VIEWER */
     exit(-1);
 }
 

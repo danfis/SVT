@@ -13,6 +13,8 @@ using namespace std;
 #include "msg.hpp"
 #include "coin3dtools.hpp"
 
+#define VIEWER_LIVE
+
 #include "viewer_common.cpp"
 
 static void *thStart(void *arg);
