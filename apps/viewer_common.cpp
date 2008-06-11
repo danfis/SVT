@@ -1,9 +1,9 @@
 #ifndef _VIEWER_COMMON_CPP_
 #define _VIEWER_COMMON_CPP_
 
+#include "parse_func.h"
+
 static void usage(int argc, char *argv[], const char *oprtstr = 0);
-static bool parseFloat(const char *, float *);
-static bool parseInt(const char *, int *);
 
 char **args;
 int num_args;
@@ -102,46 +102,4 @@ static void usage(int argc, char *argv[], const char *optstr)
     exit(-1);
 }
 
-static bool parseFloat(const char *str, float *val)
-{
-    char c = *str;
-    float fract = 0.0;
-    float mult;
-
-    *val = 0.0;
-    while (c != 0){
-        if (c == '.')
-            break;
-        if (c < 48 || c > 57)
-            return false;
-        *val = *val * 10 + c - 48;
-        c = *++str;
-    }
-    c = *++str;
-    mult = 0.1;
-    while (c != 0){
-        if (c < 48 || c > 57)
-            return false;
-        fract = fract + mult*(c - 48); 
-        mult *= 0.1;
-        c = *++str;
-    }
-    *val += fract;
-    
-    return true;
-}
-
-static bool parseInt(const char *str, int *val)
-{
-    char c = *str;
-
-    *val = 0;
-    while (c != 0){
-        if (c < 48 || c > 57)
-            return false;
-        *val = *val * 10 + c - 48;
-        c = *++str;
-    }
-    return true;
-}
 #endif
