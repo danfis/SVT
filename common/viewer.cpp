@@ -33,6 +33,8 @@ Viewer::Viewer(QWidget *parent, const char *name)
     _points_switch_on = true;
     _edges_switch_on = true;
     _faces_switch_on = true;
+
+    setPopupMenuEnabled(false);
 }
 
 Viewer::~Viewer()
