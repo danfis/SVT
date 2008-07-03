@@ -18,7 +18,7 @@ bool colour_faces = false;
 #endif /* VIEWER */
 
 enum Options {
-    HELP = 100,
+    HELP = 'h',
     ALL_OFF,
     POINTS_OFF,
     EDGES_OFF,

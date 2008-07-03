@@ -2,7 +2,7 @@
 #define _VIEWER_COMMON_MAIN_CPP_
     int c, option_index;
     float f;
-    while ((c = getopt_long(argc, argv, "", options, &option_index)) != -1){
+    while ((c = getopt_long(argc, argv, "h", options, &option_index)) != -1){
         switch (c){
             case HELP:
                 usage(argc, argv);
