@@ -43,6 +43,7 @@ enum Options {
 };
 
 static struct option options[] = {
+    { "help", no_argument, NULL, HELP },
     { "all-off", no_argument, NULL, ALL_OFF },
     { "points-off", no_argument, NULL, POINTS_OFF },
     { "edges-off", no_argument, NULL, EDGES_OFF },
@@ -72,7 +73,9 @@ static void usage(int argc, char *argv[], const char *optstr)
         cout << optstr << endl;
     }
 
-    cout << "Usage: " << argv[0] << " <file.txt" << endl;
+    cout << "Usage: " << argv[0] << " [ Options ] <file.txt" << endl;
+    cout << "          or" << endl;
+    cout << "       " << argv[0] << " [ Options ] file1.txt file2.txt ..." << endl;
     cout << endl;
     cout << "Options:" << endl;
     cout << "  --help                      Show this help." << endl;
