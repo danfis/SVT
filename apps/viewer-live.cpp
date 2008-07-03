@@ -12,10 +12,7 @@ using namespace std;
 #include "parser.hpp"
 #include "msg.hpp"
 #include "coin3dtools.hpp"
-
-#define VIEWER_LIVE
-
-#include "viewer_common.cpp"
+#include "common.hpp"
 
 static void *thStart(void *arg);
 static void thParse(Viewer *viewer, long *frame);
@@ -31,6 +28,22 @@ int main(int argc, char *argv[])
 
 #include "viewer_common_main.cpp"
 
+    // first parse static objects
+    if (args != 0){
+        Parser *parser = Parser::instance();
+
+        for (int i=0; i < num_args; i++){
+            cerr << "Parsing file " << args[i] << " ..." << endl;
+            if (!parser->setInput(args[i])){
+                ERR("Can't read file " << args[i]);
+                continue;
+            }
+
+            parseObjData();
+        }
+    }
+
+    // start reading thread
     pthread_create(&th, 0, thStart, (void *)viewer);
 
     Coin3dTools::mainLoop();
@@ -49,19 +62,9 @@ void *thStart(void *arg)
     Viewer *viewer = (Viewer *)arg;
     Parser *parser = Parser::instance();
 
-    if (args != 0){
-        for (int i=0; i < num_args; i++){
-            cerr << "Parsing file " << args[i] << " ..." << endl;
-            if (!parser->setInput(args[i])){
-                ERR("Can't read file " << args[i]);
-                continue;
-            }
+    parser->setInput(0);// set input to stdin
 
-            thParse(viewer, &frame);
-        }
-    }else{
-        thParse(viewer, &frame);
-    }
+    thParse(viewer, &frame);
 
     return 0;
 }
@@ -86,3 +89,4 @@ void thParse(Viewer *viewer, long *frame)
         (*frame)++;
     }
 }
+

@@ -112,7 +112,6 @@
                                       " between 0 and 1");
                 viewer->setDefaultFacesDiffuseColorBlue(f);
                 break;
-#ifdef VIEWER
             case COLOUR_POINTS:
                 colour_points = true;
                 break;
@@ -122,7 +121,6 @@
             case COLOUR_FACES:
                 colour_faces = true;
                 break;
-#endif /* VIEWER */
             default:
                 usage(argc, argv);
         }

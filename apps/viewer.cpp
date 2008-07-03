@@ -13,10 +13,7 @@ using namespace std;
 #include "parser.hpp"
 #include "msg.hpp"
 #include "coin3dtools.hpp"
-
-#define VIEWER
-
-#include "viewer_common.cpp"
+#include "common.hpp"
 
 void chooseRandomColor(float *r, float *g, float *b);
 void parseObjData();
@@ -50,43 +47,4 @@ int main(int argc, char *argv[])
     Coin3dTools::mainLoop();
 
     return 0;
-}
-
-
-void chooseRandomColor(float *r, float *g, float *b)
-{
-    do {
-        *r = drand48();
-        *g = drand48();
-        *b = drand48();
-    } while (*r * *g * *b < 0.01f); // eliminate black dark colors
-}
-
-void parseObjData()
-{
-    Parser *parser;
-    ObjData *data;
-    Viewer *viewer;
-    float r, g, b;
-
-    parser = Parser::instance();
-    viewer = Coin3dTools::viewer();
-
-    while ((data = parser->parse()) != 0){
-        viewer->addObjData(data);
-
-        // colour elemets if requested
-        if (colour_points){
-            chooseRandomColor(&r, &g, &b);
-            data->material_points->diffuseColor.setValue(r, g, b);
-        }
-        if (colour_edges){
-            chooseRandomColor(&r, &g, &b);
-            data->material_edges->diffuseColor.setValue(r, g, b);
-        }
-        if (colour_faces){
-            chooseRandomColor(&r, &g, &b);
-            data->material_faces->diffuseColor.setValue(r, g, b);
-        }
-    }
 }
