@@ -34,7 +34,6 @@ class Coin3dTools {
   private:
     static MainWindow *_mainwin;
     static QWidget *_win;
-    static QStatusBar *_status_bar;
     static Viewer *_viewer;
 
   public:
@@ -57,7 +56,12 @@ class Coin3dTools {
      * Creates and return Viewer instance. If Viewer is already created it
      * only returns pointer to it.
      */
-    static Viewer *viewer();
+    inline static Viewer *viewer()
+        { return _viewer; }
+
+    inline static void showMessageInStatusBar(const QString &msg,
+                                              int timeout = 0)
+        { _mainwin->showMessageInStatusBar(msg, timeout); }
 };
 
 #endif

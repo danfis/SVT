@@ -95,13 +95,16 @@ void thParse(Viewer *viewer, long *frame)
 {
     ObjData *data;
     Parser *parser = Parser::instance();
+    QString msg_template, msg;
 
+    msg_template = QString("Frame %1, %2 points %3 edges %4 faces");
     while ((data = parser->parse()) != 0){
-        cout << " Frame " << *frame << ", "
-            << data->numPoints() << " points, "
-            << data->numEdges() << " edges, "
-            << data->numFaces() << " faces" << "\r";
-        cout.flush();
+        msg = msg_template
+                .arg(*frame, 5)
+                .arg(data->numPoints(), 8)
+                .arg(data->numEdges(), 8)
+                .arg(data->numFaces(), 8);
+        Coin3dTools::showMessageInStatusBar(msg);
 
         viewer->clear();
         viewer->addDynObjData(data);

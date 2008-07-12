@@ -32,7 +32,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
                    QMainWindow::AllowNestedDocks |
                    QMainWindow::AllowTabbedDocks);
 
+    _status_bar = new QStatusBar();
+    setStatusBar(_status_bar);
+    connect(this, SIGNAL(_showMessageInStatusBar(const QString &, int)),
+            _status_bar, SLOT(showMessage(const QString &, int)));
 
+    _status_bar->showMessage("test");
     resize(800, 600);
 }
 

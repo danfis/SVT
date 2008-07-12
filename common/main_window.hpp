@@ -25,6 +25,7 @@
 
 #include <QMainWindow>
 #include <QDockWidget>
+#include <QStatusBar>
 #include "config_dialog.hpp"
 #include "viewer.hpp"
 
@@ -33,6 +34,10 @@ class MainWindow : public QMainWindow {
 
     ConfigDialog *_config_dialog;
     QDockWidget *_right_dock;
+    QStatusBar *_status_bar;
+
+  signals:
+    void _showMessageInStatusBar(const QString &msg, int timeout);
 
   public:
     MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
@@ -42,6 +47,9 @@ class MainWindow : public QMainWindow {
 
   public slots:
     void showInRightDock(QWidget *widg, const char *title = "");
+
+    inline void showMessageInStatusBar(const QString &msg, int timeout = 0)
+        { emit _showMessageInStatusBar(msg, timeout); }
 };
 
 #endif
