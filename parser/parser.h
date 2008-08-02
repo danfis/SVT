@@ -38,8 +38,53 @@ struct _svt_parser_t {
 };
 typedef struct _svt_parser_t svt_parser_t;
 
+/**
+ * Allocates memory and initialize svt_parser_t struct.
+ *
+ * Input stream is set as stdin.
+ */
 svt_parser_t *svtParserNew();
+
+/**
+ * Delete all allocated memory.
+ *
+ * This function also delete list of objs stored inside parser struct, so
+ * if you want to you returned objs after this call or you want to delete
+ * them by yourself, use svtParserObjsSteal() instead of svtParserObjs()
+ * for getting list of objs.
+ */
 void svtParserDelete(svt_parser_t *);
 
+/**
+ * Changes input stream.
+ */
 void svtParserSetInput(svt_parser_t *parser, FILE *input);
+
+/**
+ * Returns head of list of objects previously parsed.
+ *
+ * If len is not NULL, there is returned length of list.
+ * This function only returns head of list, but - after this call - parser
+ * still internaly manage this list, so it shouldn't be deleted or
+ * modified.
+ */
+svt_obj_t *svtParserObjs(svt_parser_t *parser, int *len);
+
+/**
+ * Similary function to svtParserObjs() but this function also steals
+ * pointer from parser.
+ *
+ * The difference is that after calling this function parser no more manage
+ * list of objs, so this list _must_ be deleted by caller
+ * (see svtObjDelete()).
+ */
+svt_obj_t *svtParserObjsSteal(svt_parser_t *parser, int *len);
+
+
+/**
+ * Parse input stream into svt_obj_t structs stored internaly by parser.
+ *
+ * See svtParserObjs() and svtParserObjsSteal()
+ */
+void svtParserParse(svt_parser_t *parser);
 #endif

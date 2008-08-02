@@ -30,6 +30,8 @@ struct _svt_obj_t {
 };
 typedef struct _svt_obj_t svt_obj_t;
 
+#define svtObjNext(obj) (obj)->next
+
 /**
  * Create and initialize new obj structure.
  */
@@ -59,4 +61,5 @@ void svtObjTruncate(svt_obj_t *);
 const svt_point_t *svtObjPoints(svt_obj_t *, int *len);
 const svt_edge_t *svtObjEdges(svt_obj_t *, int *len);
 const svt_face_t *svtObjFaces(svt_obj_t *, int *len);
+
 #endif
