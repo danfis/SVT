@@ -14,16 +14,13 @@
 
 #define BUFSIZE 1000
 
-typedef struct _yylval_t {
+struct _svt_yylval_t {
     float flt_num;
     int int_num;
     int lineno;
     char c;
     char buffer[BUFSIZE];
-} yylval_t;
-
-extern yylval_t yylval;
-
-extern FILE *yyin;
+};
+typedef struct _svt_yylval_t svt_yylval_t;
 
 #endif

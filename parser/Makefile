@@ -16,7 +16,7 @@ libsvtparser.a: $(OBJS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 lexer.c: lexer.l
-	$(FLEX) -o $@ $<
+	$(FLEX) --nounput --header-file=lexer_gen.h -o $@ $<
 lexer.o: lexer.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
@@ -24,7 +24,7 @@ clean:
 	rm -f $(TARGETS)
 	rm -f *.o
 	rm -f *~
-	rm -f lexer.c
+	rm -f lexer.c lexer_gen.h
 	$(MAKE) -C testsuites clean
 
 check:

@@ -3,23 +3,25 @@
 #include "parse_func.h"
 
 #define PARSE_FLOAT(ret) \
-    if (parseFloat(yytext, &yylval.flt_num) != 0){ \
+    if (parseFloat(yytext, &yyextra->flt_num) != 0){ \
         return T_ERROR; \
     } \
-    yylval.lineno = yylineno; \
+    yyextra->lineno = yylineno; \
     return ret
 
 #define PARSE_INT(ret) \
-    if (parseInt(yytext, &yylval.int_num) != 0){ \
+    if (parseInt(yytext, &yyextra->int_num) != 0){ \
         return T_ERROR; \
     } \
-    yylval.lineno = yylineno; \
+    yyextra->lineno = yylineno; \
     return ret
 
 %}
 
 %option noyywrap
 %option yylineno
+%option reentrant
+%option extra-type="svt_yylval_t *"
 
 DIGIT [0-9]
 NONZERO [1-9]
@@ -54,46 +56,46 @@ EXP [eE]
 
 [Pp][Oo][Ii][Nn][Tt][Ss]: {
     BEGIN(points);
-    yylval.lineno = yylineno;
+    yyextra->lineno = yylineno;
     return T_POINTS;
 }
 [Pp][Oo][Ii][Nn][Tt][Ss][2][Dd]: {
     BEGIN(points2d);
-    yylval.lineno = yylineno;
+    yyextra->lineno = yylineno;
     return T_POINTS2D;
 }
 
 [Ee][Dd][Gg][Ee][Ss]: {
     BEGIN(edges);
-    yylval.lineno = yylineno;
+    yyextra->lineno = yylineno;
     return T_EDGES;
 }
 [Ff][Aa][Cc][Ee][Ss]: {
     BEGIN(faces);
-    yylval.lineno = yylineno;
+    yyextra->lineno = yylineno;
     return T_FACES;
 }
 
 [Nn][Aa][Mm][Ee]:[ \t]* {
     BEGIN(name);
-    yylval.lineno = yylineno;
-    yylval.buffer[0] = 0x0;
+    yyextra->lineno = yylineno;
+    yyextra->buffer[0] = 0x0;
 }
 <name>[^\n]* {
     BEGIN(INITIAL);
-    strncpy(yylval.buffer, yytext, BUFSIZE);
+    strncpy(yyextra->buffer, yytext, BUFSIZE);
     return T_NAME;
 }
 
 {DELIM}+\n {
     BEGIN(INITIAL);
-    yylval.lineno = yylineno;
+    yyextra->lineno = yylineno;
     return T_DELIM;
 }
 
 . {
-    yylval.lineno = yylineno;
-    yylval.c = yytext[0];
+    yyextra->lineno = yylineno;
+    yyextra->c = yytext[0];
     return T_ERROR;
 }
 %%

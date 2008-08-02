@@ -5,18 +5,17 @@ CHECK_REG=$(CUDIR)/check-regressions
 
 CFLAGS = -g -Wall -pedantic -std=gnu99 \
 		 -I./ -I../ -I$(CUDIR)
-LDFLAGS = -L./ -L$(CUDIR) -lcu
+LDFLAGS = -L./ -L../ -L$(CUDIR) -lcu -lsvtparser -lm
 
-SVT_OBJS = objs/obj.o
-OBJS = obj.o
+OBJS = obj.o parser.o
 
 all: test
 
-test: $(OBJS) $(SVT_OBJS)
-	$(CC) $(CFLAGS) -o $@ main.c $^ $(LDFLAGS)
+test: ../libsvtparser.a $(OBJS)
+	$(CC) $(CFLAGS) -o $@ main.c $(OBJS) $(LDFLAGS)
 
-main.o: main.c $(TEST_SUITES)
-	$(CC) $(CFLAGS) -c -o $@ $<
+../libsvtparser.a:
+	$(MAKE) -C ../ libsvtparser.a
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $<

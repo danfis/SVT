@@ -1,3 +1,6 @@
+#ifndef OBJ_H
+#define OBJ_H
+
 #include "cu.h"
 
 TEST(ObjSetUp);
@@ -13,3 +16,5 @@ TEST_SUITE(TSObj){
     TEST_ADD(ObjTearDown),
     TEST_SUITE_CLOSURE
 };
+
+#endif

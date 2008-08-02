@@ -45,6 +45,14 @@ svt_obj_t *svtParserObjsSteal(svt_parser_t *parser, int *len)
     return objs;
 }
 
-void svtParserParse(svt_parser_t *parser)
+int svtParserParse(svt_parser_t *parser)
 {
+    if (yylex_init_extra(&parser->yylval, &parser->scanner) != 0){
+        perror("Can't initialize scanner");
+        return -1;
+    }
+
+    yylex_destroy(&parser->scanner);
+
+    return 0;
 }

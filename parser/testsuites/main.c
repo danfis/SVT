@@ -1,7 +1,9 @@
 #include "obj.h"
+#include "parser.h"
 
 TEST_SUITES {
     TEST_SUITE_ADD(TSObj),
+    TEST_SUITE_ADD(TSParser),
     TEST_SUITES_CLOSURE
 };
 

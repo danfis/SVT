@@ -25,6 +25,8 @@
 
 #include <stdio.h>
 
+#include "lexer.h"
+#include "lexer_gen.h"
 #include "obj.h"
 
 /**
@@ -32,6 +34,8 @@
  */
 struct _svt_parser_t {
     FILE *input;
+    svt_yylval_t yylval;
+    yyscan_t scanner;
 
     svt_obj_t *objs;
     int objs_len;
@@ -86,5 +90,5 @@ svt_obj_t *svtParserObjsSteal(svt_parser_t *parser, int *len);
  *
  * See svtParserObjs() and svtParserObjsSteal()
  */
-void svtParserParse(svt_parser_t *parser);
+int svtParserParse(svt_parser_t *parser);
 #endif
