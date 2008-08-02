@@ -1,5 +1,5 @@
 %{
-#include "parser_lexer_common.h"
+#include "lexer.h"
 #include "parse_func.h"
 
 #define PARSE_FLOAT(ret) \

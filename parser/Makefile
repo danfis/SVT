@@ -1,29 +1,36 @@
-CXXFLAGS += -I../common $(QT_CXXFLAGS)
+CC = gcc
+FLEX = flex
 
-TARGETS = libparser.a
-OBJS = parser.o lexer.o parse_func.o
+CFLAGS = -g -Wall -pedantic -std=gnu99
+
+TARGETS = libsvtparser.a
+OBJS = lexer.o parse_func.o parser.o obj.o
 
 all: $(TARGETS)
 
-libparser.a: $(OBJS)
+libsvtparser.a: $(OBJS)
 	ar cr $@ $^
 	ranlib $@
-	touch ../apps/*.cpp
 
-%.o: %.cpp %.hpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
 %.o: %.c %.h
-	$(CC) $(CXXFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 lexer.c: lexer.l
 	$(FLEX) -o $@ $<
 lexer.o: lexer.c
-	$(CC) $(CXXFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(TARGETS)
 	rm -f *.o
 	rm -f *~
 	rm -f lexer.c
+	$(MAKE) -C testsuites clean
 
-.PHONY: all clean
+check:
+	$(MAKE) -C testsuites check
+
+check-valgrind:
+	$(MAKE) -C testuitest check-valgrind
+
+.PHONY: all clean check check-valgrind

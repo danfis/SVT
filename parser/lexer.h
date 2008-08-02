@@ -1,5 +1,5 @@
-#ifndef _PARSER_LEXER_COMMON_H_
-#define _PARSER_LEXER_COMMON_H_
+#ifndef _LEXER_H_
+#define _LEXER_H_
 
 /* Defined tokens */
 #define T_INT_NUM 258

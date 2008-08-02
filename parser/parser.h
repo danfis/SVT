@@ -20,39 +20,26 @@
  * along with Coin3dTools.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _PARSER_HPP_
-#define _PARSER_HPP_
+#ifndef _SVT_PARSER_H_
+#define _SVT_PARSER_H_
 
 #include <stdio.h>
-#include "parser_lexer_common.h"
-#include "objdata.hpp"
 
-extern "C" {
-    int yylex(void);
-}
+#include "obj.h"
 
+/**
+ * Main structure of parser.
+ */
+struct _svt_parser_t {
+    FILE *input;
 
-class Parser {
-  private:
-    int _cur_token;
-    ObjData *_cur_obj;
-    bool _parsed;
-    FILE *_input;
-
-    void _parsePoints();
-    void _parsePoints2d();
-    void _parseEdges();
-    void _parseFaces();
-    void _parseName();
-    void _parseDelim();
-    void _parseError();
-
-    Parser() : _cur_token(-1), _cur_obj(0), _input(stdin){}
-    ~Parser();
-  public:
-    static Parser *instance();
-
-    bool setInput(const char *filename = 0);
-    ObjData *parse();
+    svt_obj_t *objs;
+    int objs_len;
 };
+typedef struct _svt_parser_t svt_parser_t;
+
+svt_parser_t *svtParserNew();
+void svtParserDelete(svt_parser_t *);
+
+void svtParserSetInput(svt_parser_t *parser, FILE *input);
 #endif
