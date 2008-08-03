@@ -10,6 +10,7 @@ typedef int svt_face_t[3];
 # define SVT_OBJ_ALLOC_PORTION 100
 #endif
 
+
 /**
  * Structure representing one graphical object.
  */
@@ -25,6 +26,9 @@ struct _svt_obj_t {
     svt_face_t *faces;
     int faces_len;
     int faces_alloc;
+
+    char *name;
+    int name_alloc;
 
     struct _svt_obj_t *next;
 };
@@ -51,6 +55,7 @@ void svtObjPush(svt_obj_t *obj, svt_obj_t *head);
 void svtObjAddPoint(svt_obj_t *, double x, double y, double z);
 void svtObjAddEdge(svt_obj_t *, int a, int b);
 void svtObjAddFace(svt_obj_t *, int a, int b, int c);
+void svtObjSetName(svt_obj_t *, const char *name);
 
 /**
  * Truncate all internaly managed lists to occupy only necessary amount of

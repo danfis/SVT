@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "obj.h"
 #include "utils.h"
 
@@ -17,6 +19,8 @@ svt_obj_t *svtObjNew()
     obj->faces_len = 0;
     obj->faces_alloc = 0;
 
+    obj->name = NULL;
+
     obj->next = NULL;
 
     return obj;
@@ -34,6 +38,8 @@ svt_obj_t *svtObjDelete(svt_obj_t *obj)
         free(obj->edges);
     if (obj->faces != NULL)
         free(obj->faces);
+    if (obj->name != NULL)
+        free(obj->name);
     free(obj);
 
     return next;
@@ -77,6 +83,25 @@ void svtObjAddFace(svt_obj_t *obj, int a, int b, int c)
     obj->faces[obj->faces_len][1] = b;
     obj->faces[obj->faces_len][2] = c;
     obj->faces_len++;
+}
+
+void svtObjSetName(svt_obj_t *obj, const char *name)
+{
+    int len = strlen(name);
+
+    if (obj->name == NULL){
+        obj->name = ALLOC_ARR(char, len);
+        obj->name_alloc = len;
+    }
+
+    if (obj->name_alloc >= len){
+        strncpy(obj->name, name, len);
+    }else{
+        free(obj->name);
+        obj->name = ALLOC_ARR(char, len);
+        obj->name_alloc = len;
+        strncpy(obj->name, name, len);
+    }
 }
 
 void svtObjTruncate(svt_obj_t *obj)

@@ -37,6 +37,9 @@ struct _svt_parser_t {
     svt_yylval_t yylval;
     yyscan_t scanner;
 
+    int cur_tok;
+    svt_obj_t *cur_obj;
+
     svt_obj_t *objs;
     int objs_len;
 };
