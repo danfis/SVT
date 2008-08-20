@@ -67,6 +67,9 @@ void svtParserDelete(svt_parser_t *);
  */
 void svtParserSetInput(svt_parser_t *parser, FILE *input);
 
+#define svtParserNumObjs(parser) \
+    (parser)->objs_len
+
 /**
  * Returns head of list of objects previously parsed.
  *

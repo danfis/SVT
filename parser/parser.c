@@ -1,6 +1,13 @@
 #include "parser.h"
 #include "utils.h"
 
+#define DBG(format, ...) \
+    fprintf(stderr, "%s: " format "\n", __func__, __VA_ARGS__); \
+    fflush(stderr)
+#define DBG2(str) \
+    fprintf(stderr, "%s: " str "\n", __func__); \
+    fflush(stderr)
+
 svt_parser_t *svtParserNew()
 {
     svt_parser_t *parser = ALLOC(svt_parser_t);
@@ -73,6 +80,7 @@ int svtParserParse(svt_parser_t *parser)
         perror("Can't initialize scanner");
         return -1;
     }
+    yyset_in(parser->input, parser->scanner);
 
     if (parser->cur_tok == -1 || parser->cur_tok == T_DELIM){
         SKIP_DELIMS;
@@ -126,11 +134,10 @@ static void svtParserParseObj(svt_parser_t *parser)
                 svtParserParseError(parser);
                 break;
             case T_DELIM:
-                //_parseDelim();
                 end = 1;
                 break;
             default:
-                //cout << "Token: " << _cur_token << endl;
+                fprintf(stderr, "Uknown token: %d\n", parser->cur_tok);
                 NEXT;
         }
     }
@@ -158,15 +165,15 @@ static void svtParserParsePoints(svt_parser_t *parser)
         NEXT;
     }
 
-    /* TODO
     if (i != 0){
-        cerr << "Some numbers unparsed: ";
+        fprintf(stderr, "In section Points unparsed numbers on line %d: ",
+                parser->yylval.lineno);
         if (i == 1)
-            cerr << coords[0] << endl;
+            fprintf(stderr, "%f", coords[0]);
         if (i == 2)
-            cerr << coords[0] << " " << coords[1] << endl;
+            fprintf(stderr, "%f %f", coords[0], coords[1]);
+        fprintf(stderr, "\n");
     }
-    */
 }
 
 static void svtParserParsePoints2d(svt_parser_t *parser)
@@ -191,13 +198,13 @@ static void svtParserParsePoints2d(svt_parser_t *parser)
         NEXT;
     }
 
-    /* TODO
     if (i != 0){
-        cerr << "Some numbers unparsed: ";
+        fprintf(stderr, "In section Points2d unparsed numbers on line %d: ",
+                parser->yylval.lineno);
         if (i == 1)
-            cerr << coords[0] << endl;
+            fprintf(stderr, "%f", coords[0]);
+        fprintf(stderr, "\n");
     }
-    */
 }
 
 static void svtParserParseEdges(svt_parser_t *parser)
@@ -220,11 +227,10 @@ static void svtParserParseEdges(svt_parser_t *parser)
         NEXT;
     }
 
-    /* TODO
     if (i != 0){
-        cerr << "Some numbers unparsed: " << nums[0] << endl;
+        fprintf(stderr, "In section Edges unparsed numbers on line %d: %d\n",
+                parser->yylval.lineno, nums[0]);
     }
-    */
 }
 
 static void svtParserParseFaces(svt_parser_t *parser)
@@ -247,15 +253,15 @@ static void svtParserParseFaces(svt_parser_t *parser)
         NEXT;
     }
 
-    /* TODO
     if (i != 0){
-        cerr << "Some numbers unparsed: ";
+        fprintf(stderr, "In section Faces unparsed numbers on line %d: ",
+                parser->yylval.lineno);
         if (i == 1)
-            cerr << nums[0] << endl;
+            fprintf(stderr, "%d", nums[0]);
         if (i == 2)
-            cerr << nums[0] << " " << nums[1] << endl;
+            fprintf(stderr, "%d %d", nums[0], nums[1]);
+        fprintf(stderr, "\n");
     }
-    */
 }
 
 static void svtParserParseName(svt_parser_t *parser)
@@ -293,7 +299,7 @@ static void svtParserParseError(svt_parser_t *parser)
     if (i != 0){
         fprintf(stderr, "%s", buffer);
     }
-    fprintf(stderr, "\n");
+    fprintf(stderr, "'\n");
     fflush(stderr);
 }
 

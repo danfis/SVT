@@ -17,7 +17,7 @@ test: ../libsvtparser.a $(OBJS)
 ../libsvtparser.a:
 	$(MAKE) -C ../ libsvtparser.a
 
-%.o: %.c %.h
+%.o: %.c %.h ../%.c ../%.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 objs/%.o: ../%.c ../%.h
 	$(CC) $(CFLAGS) -c -o $@ $<
