@@ -83,7 +83,7 @@ EXP [eE]
 }
 <name>[^\n]* {
     BEGIN(INITIAL);
-    strncpy(yyextra->buffer, yytext, BUFSIZE);
+    strncpy(yyextra->buffer, yytext, YY_BUFSIZE);
     return T_NAME;
 }
 
