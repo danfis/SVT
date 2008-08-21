@@ -32,7 +32,7 @@ static void *xrealloc(void *ptr, size_t size)
     void *ret = realloc(ptr, size);
     if (ret == NULL && size != 0){
         fprintf(stderr, "Allocation of memory of size %ld failed, exiting...",
-                size);
+                (long int)size);
         exit(-1);
     }
 
