@@ -1,7 +1,6 @@
-CC = gcc
-FLEX = flex
+include ../Makefile.include
 
-CFLAGS = -g -Wall -pedantic -std=gnu99
+CFLAGS += -Wall -pedantic -std=gnu99
 
 TARGETS = libsvtparser.a
 OBJS = lexer.o parse_func.o parser.o obj.o

@@ -1,0 +1,20 @@
+CXX ?= g++
+CC ?= gcc
+MOC ?= moc
+FLEX ?= flex
+
+ifeq '$(NDEBUG)' 'yes'
+  CXXFLAGS +=
+  CFLAGS +=
+else
+  CXXFLAGS = -g
+  CFLAGS = -g
+endif
+
+QT_CXXFLAGS = $(shell pkg-config QtGui --cflags)
+QT_LDFLAGS = $(shell pkg-config QtGui --libs)
+COIN_CXXFLAGS = $(shell coin-config --cppflags)
+COIN_LDFLAGS = $(shell coin-config --ldflags --libs)
+SOQT_CXXFLAGS = $(shell soqt-config --cppflags)
+SOQT_LDFLAGS = $(shell soqt-config --ldflags --libs)
+

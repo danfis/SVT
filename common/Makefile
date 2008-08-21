@@ -1,3 +1,5 @@
+include ../Makefile.include
+
 CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
 
 TARGETS = libcommon.a
