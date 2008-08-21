@@ -40,7 +40,7 @@ struct _svt_parser_t {
     int cur_tok;
     svt_obj_t *cur_obj;
 
-    svt_obj_t *objs;
+    svt_obj_t *objs_head, *objs_tail;
     int objs_len;
 };
 typedef struct _svt_parser_t svt_parser_t;

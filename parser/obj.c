@@ -45,9 +45,15 @@ svt_obj_t *svtObjDelete(svt_obj_t *obj)
     return next;
 }
 
-void svtObjPush(svt_obj_t *obj, svt_obj_t *head)
+void svtObjPush(svt_obj_t *obj, svt_obj_t **head, svt_obj_t **tail)
 {
-    obj->next = head;
+    obj->next = NULL;
+    if (*head == NULL || *tail == NULL){
+        *head = *tail = obj;
+    }else{
+        (*tail)->next = obj;
+        *tail = obj;
+    }
 }
 
 void svtObjAddPoint(svt_obj_t *obj, double x, double y, double z)

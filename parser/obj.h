@@ -48,9 +48,14 @@ svt_obj_t *svtObjNew();
 svt_obj_t *svtObjDelete(svt_obj_t *);
 
 /**
- * This function pushes obj on top of head, so obj will become head.
+ * This function pushes obj to the end of list which is specified by its
+ * head and tail. This function also properly set up head and tail, so the
+ * common use of this function should be:
+ *      svt_obj_t *head, *tail, *obj;
+ *      obj = ...
+ *      svtObjPush(obj, &head, &tail);
  */
-void svtObjPush(svt_obj_t *obj, svt_obj_t *head);
+void svtObjPush(svt_obj_t *obj, svt_obj_t **head, svt_obj_t **tail);
 
 void svtObjAddPoint(svt_obj_t *, double x, double y, double z);
 void svtObjAddEdge(svt_obj_t *, int a, int b);

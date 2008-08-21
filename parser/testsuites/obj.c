@@ -6,9 +6,9 @@ static svt_obj_t *head, *tail;
 
 TEST(ObjSetUp)
 {
-    tail = svtObjNew();
-    head = svtObjNew();
-    svtObjPush(head, tail);
+    head = tail = NULL;
+    svtObjPush(svtObjNew(), &head, &tail);
+    svtObjPush(svtObjNew(), &head, &tail);
 }
 
 TEST(ObjTearDown)

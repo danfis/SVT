@@ -13,7 +13,8 @@ svt_parser_t *svtParserNew()
     svt_parser_t *parser = ALLOC(svt_parser_t);
 
     parser->input = stdin;
-    parser->objs = NULL;
+    parser->objs_head = NULL;
+    parser->objs_tail = NULL;
     parser->objs_len = 0;
 
     parser->cur_tok = -1;
@@ -24,8 +25,8 @@ svt_parser_t *svtParserNew()
 
 void svtParserDelete(svt_parser_t *parser)
 {
-    while (parser->objs != NULL)
-        parser->objs = svtObjDelete(parser->objs);
+    while (parser->objs_head != NULL)
+        parser->objs_head = svtObjDelete(parser->objs_head);
     free(parser);
 }
 
@@ -38,7 +39,7 @@ svt_obj_t *svtParserObjs(svt_parser_t *parser, int *len)
 {
     if (len != NULL)
         *len = parser->objs_len;
-    return parser->objs;
+    return parser->objs_head;
 }
 
 svt_obj_t *svtParserObjsSteal(svt_parser_t *parser, int *len)
@@ -47,9 +48,9 @@ svt_obj_t *svtParserObjsSteal(svt_parser_t *parser, int *len)
 
     if (len != NULL)
         *len = parser->objs_len;
-    objs = parser->objs;
+    objs = parser->objs_head;
 
-    parser->objs = NULL;
+    parser->objs_head = parser->objs_tail = NULL;
     parser->objs_len = 0;
 
     return objs;
@@ -94,8 +95,8 @@ int svtParserParse(svt_parser_t *parser)
         if (parser->cur_obj != NULL){
             // there was parsed some object (by svtParserParseObj()) -> push
             // it to list
-            svtObjPush(parser->cur_obj, parser->objs);
-            parser->objs = parser->cur_obj;
+            svtObjPush(parser->cur_obj,
+                       &parser->objs_head, &parser->objs_tail);
             parser->objs_len++;
         }
     } while (parser->cur_obj != NULL && parser->cur_tok != 0);
