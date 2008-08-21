@@ -85,7 +85,8 @@ void parseObjData()
 
     objs = svtParserObjsSteal(parser, NULL);
     while (objs != NULL){
-        viewer->addObjData(new ObjData(objs));
+        data = new ObjData(objs);
+        viewer->addObjData(data);
 
         // colour elemets if requested
         if (colour_points){

@@ -127,6 +127,7 @@ ObjData::ObjData(svt_obj_t *obj)
     const svt_point_t *opoints;
     const svt_edge_t *oedges;
     const svt_face_t *ofaces;
+    const char *oname;
     int *ilist;
     int len;
 
@@ -167,6 +168,10 @@ ObjData::ObjData(svt_obj_t *obj)
 
         delete ilist;
     }
+
+    oname = svtObjName(obj);
+    if (oname != NULL)
+        name = oname;
 }
 
 ObjData::~ObjData()

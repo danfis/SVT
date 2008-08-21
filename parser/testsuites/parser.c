@@ -18,6 +18,7 @@ static void dumpObj(svt_obj_t *obj)
     const svt_point_t *points;
     const svt_edge_t *edges;
     const svt_face_t *faces;
+    const char *name;
     int len, i;
 
     points = svtObjPoints(obj, &len);
@@ -38,6 +39,10 @@ static void dumpObj(svt_obj_t *obj)
         printf("%d %d %d\n", faces[i][0], faces[i][1], faces[i][2]);
     }
 
+    name = svtObjName(obj);
+    if (name != NULL){
+        printf("Name: %s\n", name);
+    }
     printf("==========\n");
 }
 

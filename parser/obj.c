@@ -100,13 +100,14 @@ void svtObjSetName(svt_obj_t *obj, const char *name)
         obj->name_alloc = len;
     }
 
-    if (obj->name_alloc >= len){
+    if (obj->name_alloc > len){
         strncpy(obj->name, name, len);
+        obj->name[len] = 0;
     }else{
-        free(obj->name);
-        obj->name = ALLOC_ARR(char, len);
-        obj->name_alloc = len;
+        obj->name = REALLOC_ARR(char, obj->name, len + 1);
+        obj->name_alloc = len + 1;
         strncpy(obj->name, name, len);
+        obj->name[len] = 0;
     }
 }
 
@@ -138,4 +139,9 @@ const svt_face_t *svtObjFaces(svt_obj_t *obj, int *len)
 {
     *len = obj->faces_len;
     return (const svt_face_t *)obj->faces;
+}
+
+const char *svtObjName(svt_obj_t *obj)
+{
+    return obj->name;
 }

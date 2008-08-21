@@ -16,6 +16,7 @@ Poly:
 2 4
 8 -2
 -----------------
+Name: This name should be ignored
 Name: Polyline
 Points2d:
 8 5

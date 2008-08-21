@@ -84,6 +84,7 @@ void svtObjTruncate(svt_obj_t *);
 const svt_point_t *svtObjPoints(svt_obj_t *, int *len);
 const svt_edge_t *svtObjEdges(svt_obj_t *, int *len);
 const svt_face_t *svtObjFaces(svt_obj_t *, int *len);
+const char *svtObjName(svt_obj_t *obj);
 
 
 #ifdef __cplusplus
