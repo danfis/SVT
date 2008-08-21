@@ -15,6 +15,8 @@ extern "C" {
 #define T_ERROR 264
 #define T_POINTS2D 265
 #define T_NAME 267
+#define T_POLY 268
+#define T_POLYLINE 269
 
 #define YY_BUFSIZE 1000
 

@@ -1,0 +1,31 @@
+Name: Poly
+Points2d:
+1 0
+2 0
+Edges:
+0 1
+Poly:
+0 0
+1 1
+3 1
+4 0
+3 -1
+1 -1
+Poly:
+-3 -2
+2 4
+8 -2
+-----------------
+Name: Polyline
+Points2d:
+8 5
+10 5
+11 6
+Edges:
+1 2
+Polyline:
+5 4
+7 4
+7 6
+9 6
+9 4

@@ -33,13 +33,13 @@ COMMENT "#"
 DELIM [-=+]
 EXP [eE]
 
-%s points points2d edges faces name
+%s points points2d edges faces name poly polyline
 %%
-<points,points2d>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
+<points,points2d,poly,polyline>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
     PARSE_FLOAT(T_FLT_NUM);
 }
 
-<points,points2d>{SIGN}?{NONZERO}{DIGIT}*({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -1043.1234e-23 */
+<points,points2d,poly,polyline>{SIGN}?{NONZERO}{DIGIT}*({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -1043.1234e-23 */
     PARSE_FLOAT(T_FLT_NUM);
 }
 
@@ -74,6 +74,18 @@ EXP [eE]
     BEGIN(faces);
     yyextra->lineno = yylineno;
     return T_FACES;
+}
+
+[Pp][Oo][Ll][Yy]: {
+    BEGIN(poly);
+    yyextra->lineno = yylineno;
+    return T_POLY;
+}
+
+[Pp][Oo][Ll][Yy][Ll][Ii][Nn][Ee]: {
+    BEGIN(polyline);
+    yyextra->lineno = yylineno;
+    return T_POLYLINE;
 }
 
 [Nn][Aa][Mm][Ee]:[ \t]* {

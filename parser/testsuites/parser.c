@@ -151,3 +151,24 @@ TEST(ParserParseHunk)
 
     fclose(fin);
 }
+
+TEST(ParserParsePoly)
+{
+    FILE *fin;
+    svt_obj_t *objs;
+
+    printf("\n++++++++++++++++\n\n");
+    printf("# Polys:\n");
+
+    fin = fopen("polys.txt", "r");
+    svtParserSetInput(parser, fin);
+    svtParserParse(parser);
+
+    objs = svtParserObjsSteal(parser, NULL);
+    while (objs != NULL){
+        dumpObj(objs);
+        objs = svtObjDelete(objs);
+    }
+
+    fclose(fin);
+}

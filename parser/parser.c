@@ -76,6 +76,8 @@ static void svtParserParsePoints2d(svt_parser_t *parser);
 static void svtParserParseEdges(svt_parser_t *parser);
 static void svtParserParseFaces(svt_parser_t *parser);
 static void svtParserParseName(svt_parser_t *parser);
+static void svtParserParsePoly(svt_parser_t *parser);
+static void svtParserParsePolyline(svt_parser_t *parser);
 static void svtParserParseError(svt_parser_t *parser);
 
 int svtParserParse(svt_parser_t *parser)
@@ -184,6 +186,12 @@ static void svtParserParseObj(svt_parser_t *parser)
                 break;
             case T_NAME:
                 svtParserParseName(parser);
+                break;
+            case T_POLY:
+                svtParserParsePoly(parser);
+                break;
+            case T_POLYLINE:
+                svtParserParsePolyline(parser);
                 break;
             case T_ERROR:
                 svtParserParseError(parser);
@@ -329,6 +337,88 @@ static void svtParserParseName(svt_parser_t *parser)
     }
 
     NEXT;
+}
+
+static void svtParserParsePoly(svt_parser_t *parser)
+{
+    float coords[2];
+    int edge = -1, pos, start = -1;
+    int i = 0;
+
+    NEXT;
+    while (parser->cur_tok == T_FLT_NUM){
+        coords[i] = parser->yylval.flt_num;
+        i = (i + 1) % 2;
+
+        // three coords already read
+        if (i == 0){
+            if (parser->cur_obj == NULL)
+                parser->cur_obj = svtObjNew();
+
+            pos = svtObjAddPoint(parser->cur_obj,
+                                 coords[0], coords[1], 0.);
+            if (start == -1)
+                start = pos;
+
+            if (edge == -1){
+                edge = pos;
+            }else{
+                svtObjAddEdge(parser->cur_obj, edge, pos);
+                edge = pos;
+            }
+        }
+
+        NEXT;
+    }
+
+    if (start != edge)
+        svtObjAddEdge(parser->cur_obj, edge, start);
+
+    if (i != 0){
+        fprintf(stderr, "In section Poly unparsed numbers on line %d: ",
+                parser->yylval.lineno);
+        if (i == 1)
+            fprintf(stderr, "%f", coords[0]);
+        fprintf(stderr, "\n");
+    }
+}
+
+static void svtParserParsePolyline(svt_parser_t *parser)
+{
+    float coords[2];
+    int edge = -1, pos;
+    int i = 0;
+
+    NEXT;
+    while (parser->cur_tok == T_FLT_NUM){
+        coords[i] = parser->yylval.flt_num;
+        i = (i + 1) % 2;
+
+        // three coords already read
+        if (i == 0){
+            if (parser->cur_obj == NULL)
+                parser->cur_obj = svtObjNew();
+
+            pos = svtObjAddPoint(parser->cur_obj,
+                                 coords[0], coords[1], 0.);
+            if (edge == -1){
+                edge = pos;
+            }else{
+                svtObjAddEdge(parser->cur_obj, edge, pos);
+                edge = pos;
+            }
+        }
+
+        NEXT;
+    }
+
+    if (i != 0){
+        fprintf(stderr, "In section Polyline unparsed numbers on line %d: ",
+                parser->yylval.lineno);
+        if (i == 1)
+            fprintf(stderr, "%f", coords[0]);
+        fprintf(stderr, "\n");
+    }
 }
 
 static void svtParserParseError(svt_parser_t *parser)

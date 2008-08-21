@@ -56,7 +56,7 @@ void svtObjPush(svt_obj_t *obj, svt_obj_t **head, svt_obj_t **tail)
     }
 }
 
-void svtObjAddPoint(svt_obj_t *obj, float x, float y, float z)
+int svtObjAddPoint(svt_obj_t *obj, float x, float y, float z)
 {
     if (obj->points_len >= obj->points_alloc){
         obj->points_alloc += SVT_OBJ_ALLOC_PORTION;
@@ -65,7 +65,7 @@ void svtObjAddPoint(svt_obj_t *obj, float x, float y, float z)
     obj->points[obj->points_len][0] = x;
     obj->points[obj->points_len][1] = y;
     obj->points[obj->points_len][2] = z;
-    obj->points_len++;
+    return obj->points_len++;
 }
 
 void svtObjAddEdge(svt_obj_t *obj, int a, int b)

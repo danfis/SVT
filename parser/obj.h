@@ -66,7 +66,11 @@ svt_obj_t *svtObjDelete(svt_obj_t *);
  */
 void svtObjPush(svt_obj_t *obj, svt_obj_t **head, svt_obj_t **tail);
 
-void svtObjAddPoint(svt_obj_t *, float x, float y, float z);
+/**
+ * Add point to object.
+ * Return value is position of new point in list
+ */
+int svtObjAddPoint(svt_obj_t *, float x, float y, float z);
 void svtObjAddEdge(svt_obj_t *, int a, int b);
 void svtObjAddFace(svt_obj_t *, int a, int b, int c);
 void svtObjSetName(svt_obj_t *, const char *name);
