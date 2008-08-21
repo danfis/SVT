@@ -40,6 +40,11 @@ typedef struct _svt_obj_t svt_obj_t;
 
 #define svtObjNext(obj) (obj)->next
 
+#define svtObjNumPoints(obj) (obj)->points_len
+#define svtObjNumEdges(obj) (obj)->edges_len
+#define svtObjNumFaces(obj) (obj)->faces_len
+
+
 /**
  * Create and initialize new obj structure.
  */
