@@ -102,6 +102,43 @@ svt_obj_t *svtParserObjsSteal(svt_parser_t *parser, int *len);
  */
 int svtParserParse(svt_parser_t *parser);
 
+/**
+ * Start parsing in hunks. Returns 0 on success.
+ */
+int svtParserParseBegin(svt_parser_t *parser);
+
+/**
+ * Finish parsing in hunks.
+ */
+void svtParserParseEnd(svt_parser_t *parser);
+
+/**
+ * Parse one hunk of size num_objs. Parsing in hunks means that each call
+ * of svtParserParseHunk will try to parse next num_objs objs and store
+ * them in internal list of objs.
+ * Returns number of parsed objects or -1 on failure.
+ *
+ * When you want to use parsing in hunks you should do it somehow in this
+ * way:
+ *      svt_parser_t *parser;
+ *      svt_obj_t *objs;
+ *
+ *      parser = svtParserNew();
+ *
+ *      svtParserSetInput(parser, input);
+ *
+ *      if (svtParserParseBegin(parser) != 0){
+ *          ....
+ *      }
+ *      if (svtParserParseHunk(parser, 10) < 0){ ... }
+ *      svtParserParseEnd(parser);
+ *
+ *      objs = svtParserObjsSteal(parser, NULL);
+ *      svtParserDelete(parser);
+ */
+int svtParserParseHunk(svt_parser_t *parser, int num_objs);
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

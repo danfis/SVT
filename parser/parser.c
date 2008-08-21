@@ -66,6 +66,9 @@ svt_obj_t *svtParserObjsSteal(svt_parser_t *parser, int *len)
 
 #define NEXT parser->cur_tok = yylex(parser->scanner)
 
+static int svtParserParseInit(svt_parser_t *parser);
+static void svtParserParseClean(svt_parser_t *parser);
+
 static void svtParserParseObj(svt_parser_t *parser);
 
 static void svtParserParsePoints(svt_parser_t *parser);
@@ -77,15 +80,11 @@ static void svtParserParseError(svt_parser_t *parser);
 
 int svtParserParse(svt_parser_t *parser)
 {
-    if (yylex_init_extra(&parser->yylval, &parser->scanner) != 0){
-        perror("Can't initialize scanner");
-        return -1;
-    }
-    yyset_in(parser->input, parser->scanner);
+    int ret;
 
-    // init internal data
-    parser->cur_tok = -1;
-    parser->cur_obj = NULL;
+    ret = svtParserParseInit(parser);
+    if (ret != 0)
+        return ret;
 
     do {
         parser->cur_obj = NULL;
@@ -101,9 +100,64 @@ int svtParserParse(svt_parser_t *parser)
         }
     } while (parser->cur_obj != NULL && parser->cur_tok != 0);
 
-    yylex_destroy(parser->scanner);
+    svtParserParseClean(parser);
 
     return 0;
+}
+
+int svtParserParseBegin(svt_parser_t *parser)
+{
+    return svtParserParseInit(parser);
+}
+
+void svtParserParseEnd(svt_parser_t *parser)
+{
+    svtParserParseClean(parser);
+}
+
+
+int svtParserParseHunk(svt_parser_t *parser, int num_objs)
+{
+    int parsed = 0;
+
+    do {
+        parser->cur_obj = NULL;
+
+        svtParserParseObj(parser);
+
+        if (parser->cur_obj != NULL){
+            // there was parsed some object (by svtParserParseObj()) -> push
+            // it to list
+            svtObjPush(parser->cur_obj,
+                       &parser->objs_head, &parser->objs_tail);
+            parser->objs_len++;
+            parsed++;
+        }
+    } while (parser->cur_obj != NULL
+             && parser->cur_tok != 0
+             && parsed < num_objs);
+
+    return parsed;
+}
+
+
+static int svtParserParseInit(svt_parser_t *parser)
+{
+    if (yylex_init_extra(&parser->yylval, &parser->scanner) != 0){
+        perror("Can't initialize scanner");
+        return -1;
+    }
+    yyset_in(parser->input, parser->scanner);
+
+    parser->cur_tok = -1;
+    parser->cur_obj = NULL;
+
+    return 0;
+}
+
+static void svtParserParseClean(svt_parser_t *parser)
+{
+    yylex_destroy(parser->scanner);
 }
 
 static void svtParserParseObj(svt_parser_t *parser)
