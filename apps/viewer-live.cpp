@@ -36,15 +36,28 @@ using namespace std;
 #include "coin3dtools.hpp"
 #include "common.hpp"
 
-static void *thStart(void *arg);
-static void thParse(Viewer *viewer, long *frame);
+#define READER_HUNKS 5
+
+static void *thViewer(void *arg);
+static void *thReader(void *arg);
 
 svt_parser_t *parser;
+Viewer *viewer;
+
+useconds_t sleep_time = 50000;
+
+svt_obj_t *objs = NULL, *objs_buf = NULL;
+pthread_mutex_t lock_rq = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock_objs = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock_end = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock_wakeup = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock_wakeup2 = PTHREAD_MUTEX_INITIALIZER;
+int rq = -1;
+int end = 0;
 
 int main(int argc, char *argv[])
 {
-    Viewer *viewer;
-    pthread_t th;
+    pthread_t th[2];
 
     Coin3dTools::init("viewer");
 
@@ -75,12 +88,18 @@ int main(int argc, char *argv[])
     }
 
     // start reading thread
-    pthread_create(&th, 0, thStart, (void *)viewer);
+    pthread_create(th + 0, 0, thReader, NULL);
+    pthread_create(th + 1, 0, thViewer, (void *)viewer);
 
     Coin3dTools::mainLoop();
 
-    //pthread_join(th, 0);
-    pthread_kill(th, SIGINT);
+    pthread_mutex_lock(&lock_end);
+    end = 1;
+    pthread_mutex_unlock(&lock_end);
+    pthread_mutex_unlock(&lock_wakeup);
+    pthread_mutex_unlock(&lock_wakeup2);
+    pthread_join(th[1], 0);
+    pthread_join(th[0], 0);
 
     cout << endl;
 
@@ -89,40 +108,115 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void *thStart(void *arg)
+void *thViewer(void *arg)
 {
     long frame = 1;
-    Viewer *viewer = (Viewer *)arg;
-    Parser *parser = Parser::instance();
+    QString msg_template = QString("Frame %1, %2 points %3 edges %4 faces");
+    QString msg;
 
-    parser->setInput(0);// set input to stdin
+    pthread_mutex_lock(&lock_wakeup);
 
-    thParse(viewer, &frame);
+    while (true){
+        pthread_mutex_lock(&lock_end);
+        if (end == 1){
+            pthread_mutex_unlock(&lock_end);
+            pthread_exit(NULL);
+        }
+        pthread_mutex_unlock(&lock_end);
 
-    return 0;
+        usleep(sleep_time);
+
+        if (objs == NULL){
+            pthread_mutex_lock(&lock_rq);
+            rq = 1;
+            pthread_mutex_unlock(&lock_wakeup2);
+            pthread_mutex_unlock(&lock_rq);
+            pthread_mutex_lock(&lock_wakeup);
+
+            pthread_mutex_lock(&lock_objs);
+            objs = objs_buf;
+            objs_buf = NULL;
+            pthread_mutex_unlock(&lock_objs);
+        }else{
+            // show message
+            msg = msg_template
+                    .arg(frame, 5)
+                    .arg(svtObjNumPoints(objs), 8)
+                    .arg(svtObjNumEdges(objs), 8)
+                    .arg(svtObjNumFaces(objs), 8);
+            Coin3dTools::showMessageInStatusBar(msg);
+            frame++;
+
+            // set up object
+            viewer->clear();
+            viewer->addDynObjData(new ObjData(objs));
+            viewer->rebuildSceneGraph();
+
+            // shift list of objects
+            objs = svtObjDelete(objs);
+        }
+    }
+
+    return NULL;
 }
 
-void thParse(Viewer *viewer, long *frame)
+void *thReader(void *arg)
 {
-    ObjData *data;
-    Parser *parser = Parser::instance();
-    QString msg_template, msg;
+    int request;
+    bool parse = true;
 
-    msg_template = QString("Frame %1, %2 points %3 edges %4 faces");
-    while ((data = parser->parse()) != 0){
-        msg = msg_template
-                .arg(*frame, 5)
-                .arg(data->numPoints(), 8)
-                .arg(data->numEdges(), 8)
-                .arg(data->numFaces(), 8);
-        Coin3dTools::showMessageInStatusBar(msg);
+    pthread_mutex_lock(&lock_wakeup2);
 
-        viewer->clear();
-        viewer->addDynObjData(data);
-        viewer->rebuildSceneGraph();
-        //usleep(50000);
+    svtParserSetInput(parser, stdin);
 
-        (*frame)++;
+    if (svtParserParseBegin(parser) != 0){
+        pthread_mutex_lock(&lock_end);
+        end = 1;
+        pthread_mutex_unlock(&lock_end);
+        pthread_exit(NULL);
     }
+    
+    while (true){
+        pthread_mutex_lock(&lock_end);
+        // should I exit?
+        if (end == 1){
+            pthread_mutex_unlock(&lock_end);
+            pthread_exit(NULL);
+        }
+        pthread_mutex_unlock(&lock_end);
+
+        // parse next hunk of objects
+        if (parse && svtParserParseHunk(parser, READER_HUNKS) <= 0)
+            parse = false;
+        if (!parse){
+            pthread_mutex_lock(&lock_wakeup2);
+        }
+
+        pthread_mutex_lock(&lock_rq);
+        // recognise request
+        request = rq;
+        // and reset rq
+        rq = -1;
+        pthread_mutex_unlock(&lock_rq);
+
+        if (request == 1){
+            pthread_mutex_lock(&lock_objs);
+
+            // delete unused objects
+            if (objs_buf != NULL)
+                while (objs_buf != NULL)
+                    objs_buf = svtObjDelete(objs_buf);
+
+            // take objects from parser
+            objs_buf = svtParserObjsSteal(parser, NULL);
+
+            pthread_mutex_unlock(&lock_objs);
+
+            // wake up viewer thread
+            pthread_mutex_unlock(&lock_wakeup);
+        }
+    }
+
+    return NULL;
 }
 

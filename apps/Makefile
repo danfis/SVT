@@ -1,7 +1,7 @@
 CXXFLAGS += -I../common -I../parser $(COIN_CXXFLAGS) $(SOQT_CXXFLAGS) $(QT_CXXFLAGS)
 LDFLAGS += -L../common -L../parser -lsvtparser -lcommon -lfl $(COIN_LDFLAGS) $(SOQT_LDFLAGS) $(QT_LDFLAGS)
 
-TARGETS = coin-viewer coin-iv-viewer #coin-viewer-live
+TARGETS = coin-viewer coin-iv-viewer coin-viewer-live
 VIEWER_OBJS = common-viewer.o viewer.o
 IV_VIEWER_OBJS = iv-viewer.o
 VIEWER_LIVE_OBJS = common-viewer-live.o viewer-live.o
