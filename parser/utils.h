@@ -1,6 +1,10 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -38,4 +42,9 @@ static void *xrealloc(void *ptr, size_t size)
 
     return ret;
 }
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 #endif

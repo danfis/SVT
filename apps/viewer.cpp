@@ -32,7 +32,7 @@ using namespace std;
 
 #include "objdata.hpp"
 #include "viewer.hpp"
-#include "parser.hpp"
+#include "parser.h"
 #include "msg.hpp"
 #include "coin3dtools.hpp"
 #include "common.hpp"
@@ -40,9 +40,10 @@ using namespace std;
 void chooseRandomColor(float *r, float *g, float *b);
 void parseObjData();
 
+svt_parser_t *parser;
+
 int main(int argc, char *argv[])
 {
-    Parser *parser;
     Viewer *viewer;
 
     Coin3dTools::init("viewer");
@@ -50,21 +51,29 @@ int main(int argc, char *argv[])
 
 #include "viewer_common_main.cpp"
 
-    parser = Parser::instance();
+    parser = svtParserNew();
 
     if (args != 0){
+        FILE *fin;
+
         for (int i=0; i < num_args; i++){
             cerr << "Parsing file " << args[i] << " ..." << endl;
-            if (!parser->setInput(args[i])){
+            fin = fopen(args[i], "r");
+            if (fin == NULL){
                 ERR("Can't read file " << args[i]);
                 continue;
             }
+            svtParserSetInput(parser, fin);
 
             parseObjData();
+
+            fclose(fin);
         }
     }else{
         parseObjData();
     }
+
+    svtParserDelete(parser);
 
     Coin3dTools::mainLoop();
 

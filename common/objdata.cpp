@@ -23,7 +23,7 @@
 #include "objdata.hpp"
 #include "msg.hpp"
 
-ObjData::ObjData()
+ObjData::ObjData(svt_obj_t *obj)
     : num_coords(0), num_points(0), num_edges(0), num_faces(0)
 {
     coords = new SoCoordinate3;
@@ -121,6 +121,52 @@ ObjData::ObjData()
     sw_faces->addChild(faces);
 
     sw->addChild(sw_faces);
+
+
+    /* Set up data from obj */
+    const svt_point_t *opoints;
+    const svt_edge_t *oedges;
+    const svt_face_t *ofaces;
+    int *ilist;
+    int len;
+
+    opoints = svtObjPoints(obj, &len);
+    if (len > 0){
+        coords->point.setValues(0, len, opoints);
+        num_coords = len;
+        num_points = len;
+    }
+
+    oedges = svtObjEdges(obj, &len);
+    if (len > 0){
+        ilist = new int[len * 3];
+        for (int i=0; i < len; i++){
+            ilist[i * 3] = oedges[i][0];
+            ilist[i * 3 + 1] = oedges[i][1];
+            ilist[i * 3 + 2] = -1;
+        }
+
+        edges->coordIndex.setValues(0, len * 3, ilist);
+        num_edges = len;
+
+        delete ilist;
+    }
+
+    ofaces = svtObjFaces(obj, &len);
+    if (len > 0){
+        ilist = new int[len * 4];
+        for (int i=0; i < len; i++){
+            ilist[i * 3] = ofaces[i][0];
+            ilist[i * 3 + 1] = ofaces[i][1];
+            ilist[i * 3 + 2] = ofaces[i][2];
+            ilist[i * 3 + 3] = -1;
+        }
+
+        faces->coordIndex.setValues(0, len * 4, ilist);
+        num_edges = len;
+
+        delete ilist;
+    }
 }
 
 ObjData::~ObjData()
@@ -156,34 +202,5 @@ ObjData::~ObjData()
         sw_edges->unref();
     if (sw_faces != 0)
         sw_faces->unref();
-}
-
-void ObjData::addVertex(float x, float y, float z)
-{
-    coords->point.insertSpace(num_coords, 1);
-    coords->point.set1Value(num_coords, x, y, z);
-    num_coords++;
-    num_points++;
-
-    points->numPoints = num_points;
-}
-
-void ObjData::addEdge(int from, int to)
-{
-    edges->coordIndex.insertSpace(num_edges * 3, 3);
-    edges->coordIndex.set1Value(num_edges * 3, from);
-    edges->coordIndex.set1Value(num_edges * 3 + 1, to);
-    edges->coordIndex.set1Value(num_edges * 3 + 2, -1);
-    num_edges++;
-}
-
-void ObjData::addFace(int a, int b, int c)
-{
-    faces->coordIndex.insertSpace(num_faces * 4, 4);
-    faces->coordIndex.set1Value(num_faces * 4, a);
-    faces->coordIndex.set1Value(num_faces * 4 + 1, b);
-    faces->coordIndex.set1Value(num_faces * 4 + 2, c);
-    faces->coordIndex.set1Value(num_faces * 4 + 3, -1);
-    num_faces++;
 }
 

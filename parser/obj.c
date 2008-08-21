@@ -56,7 +56,7 @@ void svtObjPush(svt_obj_t *obj, svt_obj_t **head, svt_obj_t **tail)
     }
 }
 
-void svtObjAddPoint(svt_obj_t *obj, double x, double y, double z)
+void svtObjAddPoint(svt_obj_t *obj, float x, float y, float z)
 {
     if (obj->points_len >= obj->points_alloc){
         obj->points_alloc += SVT_OBJ_ALLOC_PORTION;

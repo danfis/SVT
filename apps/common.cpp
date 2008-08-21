@@ -23,10 +23,12 @@
 #include <cstdlib>
 #include "objdata.hpp"
 #include "viewer.hpp"
-#include "parser.hpp"
+#include "parser.h"
 #include "coin3dtools.hpp"
 
 #include "common.hpp"
+
+extern svt_parser_t *parser;
 
 bool colour_points = false;
 bool colour_edges = false;
@@ -69,16 +71,21 @@ void chooseRandomColor(float *r, float *g, float *b)
 
 void parseObjData()
 {
-    Parser *parser;
+    svt_obj_t *objs;
     ObjData *data;
     Viewer *viewer;
     float r, g, b;
 
-    parser = Parser::instance();
     viewer = Coin3dTools::viewer();
 
-    while ((data = parser->parse()) != 0){
-        viewer->addObjData(data);
+    if (svtParserParse(parser) != 0){
+        ERR("Can't parse input");
+        return;
+    }
+
+    objs = svtParserObjsSteal(parser, NULL);
+    while (objs != NULL){
+        viewer->addObjData(new ObjData(objs));
 
         // colour elemets if requested
         if (colour_points){
@@ -93,6 +100,8 @@ void parseObjData()
             chooseRandomColor(&r, &g, &b);
             data->material_faces->diffuseColor.setValue(r, g, b);
         }
+
+        objs = svtObjDelete(objs);
     }
 }
 

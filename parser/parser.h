@@ -23,6 +23,10 @@
 #ifndef _SVT_PARSER_H_
 #define _SVT_PARSER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include <stdio.h>
 
 #include "lexer.h"
@@ -97,4 +101,9 @@ svt_obj_t *svtParserObjsSteal(svt_parser_t *parser, int *len);
  * See svtParserObjs() and svtParserObjsSteal()
  */
 int svtParserParse(svt_parser_t *parser);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 #endif

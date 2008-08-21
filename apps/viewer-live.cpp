@@ -31,13 +31,15 @@ using namespace std;
 
 #include "objdata.hpp"
 #include "viewer.hpp"
-#include "parser.hpp"
+#include "parser.h"
 #include "msg.hpp"
 #include "coin3dtools.hpp"
 #include "common.hpp"
 
 static void *thStart(void *arg);
 static void thParse(Viewer *viewer, long *frame);
+
+svt_parser_t *parser;
 
 int main(int argc, char *argv[])
 {
@@ -49,19 +51,26 @@ int main(int argc, char *argv[])
     viewer = Coin3dTools::viewer();
 
 #include "viewer_common_main.cpp"
+    parser = svtParserNew();
 
     // first parse static objects
     if (args != 0){
-        Parser *parser = Parser::instance();
+        FILE *fin;
 
         for (int i=0; i < num_args; i++){
             cerr << "Parsing file " << args[i] << " ..." << endl;
-            if (!parser->setInput(args[i])){
+
+            fin = fopen(args[i], "r");
+            if (fin == NULL){
                 ERR("Can't read file " << args[i]);
                 continue;
             }
 
+            svtParserSetInput(parser, fin);
+
             parseObjData();
+
+            fclose(fin);
         }
     }
 
@@ -74,6 +83,8 @@ int main(int argc, char *argv[])
     pthread_kill(th, SIGINT);
 
     cout << endl;
+
+    svtParserDelete(parser);
 
     return 0;
 }

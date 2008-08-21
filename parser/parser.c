@@ -83,9 +83,9 @@ int svtParserParse(svt_parser_t *parser)
     }
     yyset_in(parser->input, parser->scanner);
 
-    if (parser->cur_tok == -1 || parser->cur_tok == T_DELIM){
-        SKIP_DELIMS;
-    }
+    // init internal data
+    parser->cur_tok = -1;
+    parser->cur_obj = NULL;
 
     do {
         parser->cur_obj = NULL;
@@ -146,7 +146,7 @@ static void svtParserParseObj(svt_parser_t *parser)
 
 static void svtParserParsePoints(svt_parser_t *parser)
 {
-    double coords[3];
+    float coords[3];
     int i = 0;
 
     NEXT;

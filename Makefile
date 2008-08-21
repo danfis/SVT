@@ -24,13 +24,13 @@ export SOQT_CXXFLAGS
 export SOQT_LDFLAGS
 
 all:
-	$(MAKE) -C common
 	$(MAKE) -C parser
+	$(MAKE) -C common
 	$(MAKE) -C apps
 
 clean:
-	$(MAKE) -C common clean
 	$(MAKE) -C parser clean
+	$(MAKE) -C common clean
 	$(MAKE) -C apps clean
 
 .PHONY: all clean

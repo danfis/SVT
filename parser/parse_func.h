@@ -19,4 +19,5 @@ int parseInt(const char *str, int *val);
 #ifdef __cplusplus
 }
 #endif
+
 #endif

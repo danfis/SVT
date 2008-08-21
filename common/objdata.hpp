@@ -32,6 +32,8 @@
 #include <Inventor/nodes/SoMaterial.h>
 #include <string>
 
+#include "../parser/parser.h"
+
 /**
  * Class which describes visualisable object by Coin3d library.
  * All attributes are public, becuase this should be only object which
@@ -62,21 +64,8 @@ struct ObjData {
     /**
      * Constructor which only inicialize empty attrinutes
      */
-    ObjData();
+    ObjData(svt_obj_t *obj);
     virtual ~ObjData();
-
-    /**
-     * Set up name of object.
-     */
-    void setName(const char *str) { name = str; }
-
-    /**
-     * Add one coordinate to object and also incerement number of points
-     */
-    void addVertex(float x, float y, float z);
-
-    void addEdge(int from, int to);
-    void addFace(int a, int b, int c);
 
     int numPoints() const { return points->numPoints.getValue(); }
     int numEdges() const { return edges->coordIndex.getNum() / 3; }

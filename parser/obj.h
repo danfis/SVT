@@ -1,7 +1,11 @@
 #ifndef _OBJ_H_
 #define _OBJ_H_
 
-typedef double svt_point_t[3];
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+typedef float svt_point_t[3];
 typedef int svt_edge_t[2];
 typedef int svt_face_t[3];
 
@@ -57,7 +61,7 @@ svt_obj_t *svtObjDelete(svt_obj_t *);
  */
 void svtObjPush(svt_obj_t *obj, svt_obj_t **head, svt_obj_t **tail);
 
-void svtObjAddPoint(svt_obj_t *, double x, double y, double z);
+void svtObjAddPoint(svt_obj_t *, float x, float y, float z);
 void svtObjAddEdge(svt_obj_t *, int a, int b);
 void svtObjAddFace(svt_obj_t *, int a, int b, int c);
 void svtObjSetName(svt_obj_t *, const char *name);
@@ -71,5 +75,10 @@ void svtObjTruncate(svt_obj_t *);
 const svt_point_t *svtObjPoints(svt_obj_t *, int *len);
 const svt_edge_t *svtObjEdges(svt_obj_t *, int *len);
 const svt_face_t *svtObjFaces(svt_obj_t *, int *len);
+
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif
