@@ -35,6 +35,7 @@ using namespace std;
 #include "msg.hpp"
 #include "coin3dtools.hpp"
 #include "common.hpp"
+#include "common_coin.hpp"
 
 #define READER_HUNKS 5
 

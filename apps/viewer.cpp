@@ -36,6 +36,7 @@ using namespace std;
 #include "msg.hpp"
 #include "coin3dtools.hpp"
 #include "common.hpp"
+#include "common_coin.hpp"
 
 void chooseRandomColor(float *r, float *g, float *b);
 void parseObjData();
