@@ -17,6 +17,13 @@ struct Settings {
     static bool colour_points;
     static bool colour_edges;
     static bool colour_faces;
+
+#ifdef TO_SVG
+    static int svg_width;
+    static bool svg_view_box_enabled;
+    static float svg_view_box[4];
+    static int svg_precision;
+#endif
 };
 
 #endif

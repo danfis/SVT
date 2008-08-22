@@ -54,6 +54,16 @@ enum Options {
     COLOUR_POINTS,
     COLOUR_EDGES,
     COLOUR_FACES,
+
+#ifdef TO_SVG
+    OUTPUT_WIDTH,
+    VIEW_BOX_X,
+    VIEW_BOX_Y,
+    VIEW_BOX_WIDTH,
+    VIEW_BOX_HEIGHT,
+    PRECISION,
+#endif
+
     OPTIONS_END
 };
 
@@ -78,6 +88,16 @@ struct option options[] = {
     { "colour-points", no_argument, NULL, COLOUR_POINTS },
     { "colour-edges",  no_argument, NULL, COLOUR_EDGES },
     { "colour-faces",  no_argument, NULL, COLOUR_FACES },
+
+#ifdef TO_SVG
+    { "output-width", required_argument, NULL, OUTPUT_WIDTH },
+    { "view-box-x", required_argument, NULL, VIEW_BOX_X },
+    { "view-box-y", required_argument, NULL, VIEW_BOX_Y },
+    { "view-box-width", required_argument, NULL, VIEW_BOX_WIDTH },
+    { "view-box-height", required_argument, NULL, VIEW_BOX_HEIGHT },
+    { "precision", required_argument, NULL, PRECISION },
+#endif
+
     { NULL, 0, NULL, 0 }
 };
 
@@ -168,6 +188,17 @@ void usage(int argc, char *argv[], const char *optstr)
     std::cout << "  --colour-points             Colour points from different objects by different color." << std::endl;
     std::cout << "  --colour-edges              Colour edges from different objects by different color." << std::endl;
     std::cout << "  --colour-faces              Colour faces from different objects by different color." << std::endl;
+
+#ifdef TO_SVG
+    std::cout << std::endl;
+    std::cout << "  --output-width     int    Width of resulting picture.  Heigh is computed from viewbox." << std::endl;
+    std::cout << "  --view-box-x       float  Proportions of viewbox." << std::endl;
+    std::cout << "  --view-box-y       float" << std::endl;
+    std::cout << "  --view-box-width   float" << std::endl;
+    std::cout << "  --view-box-height  float" << std::endl;
+    std::cout << "  --precision        int    Set up precision of floating point numbers when priting them out." << std::endl;
+#endif
+
     exit(-1);
 }
 
@@ -175,6 +206,7 @@ char **processOptions(int argc, char *argv[], int *len)
 {
     int c, option_index;
     float f;
+    int i;
     char **args;
 
     while ((c = getopt_long(argc, argv, "h", options, &option_index)) != -1){
@@ -296,6 +328,49 @@ char **processOptions(int argc, char *argv[], int *len)
             case COLOUR_FACES:
                 Settings::colour_faces = true;
                 break;
+
+#ifdef TO_SVG
+            case OUTPUT_WIDTH:
+                if (parseInt(optarg, &i) != 0)
+                    usage(argc, argv, "Error: option \"--output-width\""
+                                      " requires int argument.");
+                Settings::svg_width = i;
+                break;
+            case VIEW_BOX_X:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--view-box-x\""
+                                      " requires float argument.");
+                Settings::svg_view_box_enabled = true;
+                Settings::svg_view_box[0] = f;
+                break;
+            case VIEW_BOX_Y:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--view-box-y\""
+                                      " requires float argument.");
+                Settings::svg_view_box_enabled = true;
+                Settings::svg_view_box[1] = f;
+                break;
+            case VIEW_BOX_WIDTH:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--view-box-width\""
+                                      " requires float argument.");
+                Settings::svg_view_box_enabled = true;
+                Settings::svg_view_box[2] = f;
+                break;
+            case VIEW_BOX_HEIGHT:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--view-box-height\""
+                                      " requires float argument.");
+                Settings::svg_view_box_enabled = true;
+                Settings::svg_view_box[3] = f;
+                break;
+            case PRECISION:
+                if (parseInt(optarg, &i) != 0)
+                    usage(argc, argv, "Error: option \"--precision\""
+                                      " requires int argument.");
+                Settings::svg_precision = i;
+                break;
+#endif
             default:
                 usage(argc, argv);
         }

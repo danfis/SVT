@@ -17,3 +17,10 @@ float Settings::face_color[]  = { 0., 1., 0. };
 bool Settings::colour_points = false;
 bool Settings::colour_edges  = false;
 bool Settings::colour_faces  = false;
+
+#ifdef TO_SVG
+int Settings::svg_width = 500;
+bool Settings::svg_view_box_enabled = false;
+float Settings::svg_view_box[] = { 0., 0., 100., 100. };
+int Settings::svg_precision = 5;
+#endif
