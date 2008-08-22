@@ -147,6 +147,28 @@ void usage(int argc, char *argv[], const char *optstr)
     exit(-1);
 }
 
+
+#define FLOAT(option_name) \
+    if (!parseFloat(optarg, &f)) \
+        usage(argc, argv, \
+              "Error: option \"" option_name "\" requires float argument")
+
+#define FLOAT3(option_name) \
+    if (!parseFloatList(optarg, 3, fl)) \
+        usage(argc, argv, \
+              "Error: option \"" option_name "\" requires triplet of floats as argument.")
+
+#define FLOAT4(option_name) \
+    if (!parseFloatList(optarg, 4, fl)) \
+        usage(argc, argv, \
+              "Error: option \"" option_name "\" requires four floats as argument.")
+
+#define INT(option_name) \
+    if (!parseInt(optarg, &i)) \
+        usage(argc, argv, \
+              "Error: option \"" option_name "\"  requires int argument.")
+
+
 char **processOptions(int argc, char *argv[], int *len)
 {
     int c, option_index;
@@ -173,37 +195,27 @@ char **processOptions(int argc, char *argv[], int *len)
                 Settings::faces_off = true;
                 break;
             case POINT_SIZE:
-                if (!parseFloat(optarg, &f))
-                    usage(argc, argv, "Error: option \"--point-size\" require"
-                                      " float argument");
+                FLOAT("--point-size");
                 Settings::point_size = f;
                 break;
             case EDGE_WIDTH:
-                if (!parseFloat(optarg, &f))
-                    usage(argc, argv, "Error: option \"--edge-width\" require"
-                                      " float argument");
+                FLOAT("--edge-width");
                 Settings::edge_width = f;
                 break;
             case POINT_COLOR:
-                if (!parseFloatList(optarg, 3, fl))
-                    usage(argc, argv, "Error: option \"--point-color\""
-                                      " requires triplet of floats as argument.");
+                FLOAT3("--point-color");
                 Settings::point_color[0] = fl[0];
                 Settings::point_color[1] = fl[1];
                 Settings::point_color[2] = fl[2];
                 break;
             case EDGE_COLOR:
-                if (!parseFloatList(optarg, 3, fl))
-                    usage(argc, argv, "Error: option \"--edge-color\""
-                                      " requires triplet of floats as argument.");
+                FLOAT3("--edge-color");
                 Settings::edge_color[0] = fl[0];
                 Settings::edge_color[1] = fl[1];
                 Settings::edge_color[2] = fl[2];
                 break;
             case FACE_COLOR:
-                if (!parseFloatList(optarg, 3, fl))
-                    usage(argc, argv, "Error: option \"--face-color\""
-                                      " requires triplet of floats as argument.");
+                FLOAT3("--face-color");
                 Settings::face_color[0] = fl[0];
                 Settings::face_color[1] = fl[1];
                 Settings::face_color[2] = fl[2];
@@ -220,15 +232,11 @@ char **processOptions(int argc, char *argv[], int *len)
 
 #ifdef TO_SVG
             case OUTPUT_WIDTH:
-                if (!parseInt(optarg, &i))
-                    usage(argc, argv, "Error: option \"--output-width\""
-                                      " requires int argument.");
+                INT("--output-width");
                 Settings::svg_width = i;
                 break;
             case VIEW_BOX:
-                if (!parseFloatList(optarg, 4, fl))
-                    usage(argc, argv, "Error: option \"--view-box\""
-                                      " requires four floats as argument.");
+                FLOAT4("--view-box");
                 Settings::svg_view_box_enabled = true;
                 Settings::svg_view_box[0] = fl[0];
                 Settings::svg_view_box[1] = fl[1];
@@ -236,9 +244,7 @@ char **processOptions(int argc, char *argv[], int *len)
                 Settings::svg_view_box[3] = fl[3];
                 break;
             case PRECISION:
-                if (!parseInt(optarg, &i))
-                    usage(argc, argv, "Error: option \"--precision\""
-                                      " requires int argument.");
+                INT("--precision");
                 Settings::svg_precision = i;
                 break;
 #endif
