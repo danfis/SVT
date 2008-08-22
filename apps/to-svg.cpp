@@ -101,6 +101,7 @@ void toSvg(svt_obj_t *objs)
     int points_len, edges_len, faces_len;
     float colorf[3];
     float *col;
+    char color[7];
     int width, height;
     float view_box[4];
 
@@ -122,6 +123,17 @@ void toSvg(svt_obj_t *objs)
                          << view_box[2] << " " << view_box[2] << "\""
         << endl
         << "       xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
+
+    // background:
+    colorToHex(color, Settings::svg_bg_color);
+    out << "<rect"
+        << " x=\"" << view_box[0] << "\""
+        << " y=\"" << view_box[1] << "\""
+        << " width=\"" << view_box[2] << "\""
+        << " height=\"" << view_box[3] << "\""
+        << " fill=\"#" << color << "\""
+        << " stroke=\"none\" />" << endl << endl;
+
 
     // body:
     for (int i=0; objs != NULL; i++){

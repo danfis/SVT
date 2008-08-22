@@ -23,4 +23,5 @@ int Settings::svg_width = 500;
 bool Settings::svg_view_box_enabled = false;
 float Settings::svg_view_box[] = { 0., 0., 100., 100. };
 int Settings::svg_precision = 5;
+float Settings::svg_bg_color[3] = { 0., 0., 0. };
 #endif

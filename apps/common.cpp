@@ -52,6 +52,7 @@ enum Options {
     OUTPUT_WIDTH,
     VIEW_BOX,
     PRECISION,
+    BG_COLOR,
 #endif
 
     OPTIONS_END
@@ -77,6 +78,7 @@ struct option options[] = {
     { "output-width", required_argument, NULL, OUTPUT_WIDTH },
     { "view-box", required_argument, NULL, VIEW_BOX },
     { "precision", required_argument, NULL, PRECISION },
+    { "bg-color", required_argument, NULL, BG_COLOR },
 #endif
 
     { NULL, 0, NULL, 0 }
@@ -142,6 +144,7 @@ void usage(int argc, char *argv[], const char *optstr)
     std::cerr << "  --view-box     float,float,float,float  Proportions of viewbox." << std::endl;
     std::cerr << "                                          Parameters are: x, y, width, height" << std::endl;
     std::cerr << "  --precision    int    Set up precision of floating point numbers when priting them out." << std::endl;
+    std::cerr << "  --bg-color     float,float,float  Background color." << std::endl;
 #endif
 
     exit(-1);
@@ -246,6 +249,12 @@ char **processOptions(int argc, char *argv[], int *len)
             case PRECISION:
                 INT("--precision");
                 Settings::svg_precision = i;
+                break;
+            case BG_COLOR:
+                FLOAT3("--bg-color");
+                Settings::svg_bg_color[0] = fl[0];
+                Settings::svg_bg_color[1] = fl[1];
+                Settings::svg_bg_color[2] = fl[2];
                 break;
 #endif
             default:

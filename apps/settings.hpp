@@ -23,6 +23,7 @@ struct Settings {
     static bool svg_view_box_enabled;
     static float svg_view_box[4];
     static int svg_precision;
+    static float svg_bg_color[3];
 #endif
 };
 
