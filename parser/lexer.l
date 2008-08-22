@@ -3,14 +3,14 @@
 #include "parse_func.h"
 
 #define PARSE_FLOAT(ret) \
-    if (parseFloat(yytext, &yyextra->flt_num) != 0){ \
+    if (svtParseFloat(yytext, &yyextra->flt_num) != 0){ \
         return T_ERROR; \
     } \
     yyextra->lineno = yylineno; \
     return ret
 
 #define PARSE_INT(ret) \
-    if (parseInt(yytext, &yyextra->int_num) != 0){ \
+    if (svtParseInt(yytext, &yyextra->int_num) != 0){ \
         return T_ERROR; \
     } \
     yyextra->lineno = yylineno; \

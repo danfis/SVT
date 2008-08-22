@@ -23,6 +23,8 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
+#include "parser/parse_func.h"
+
 void chooseRandomColor(float *r, float *g, float *b);
 
 void usage(int argc, char *argv[], const char *optstr = 0);
@@ -31,5 +33,7 @@ char **processOptions(int argc, char *argv[], int *len);
 
 void colorToHex(char str[7], float color[3]);
 
+bool parseFloat(const char *str, float *f);
+bool parseInt(const char *str, int *i);
 bool parseFloatList(const char *str, int len, float *nums);
 #endif

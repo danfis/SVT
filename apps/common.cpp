@@ -27,7 +27,6 @@
 #include "common.hpp"
 #include "settings.hpp"
 
-#include "parser/parse_func.h"
 #include "parser/parser.h"
 #include "common/msg.hpp"
 
@@ -174,13 +173,13 @@ char **processOptions(int argc, char *argv[], int *len)
                 Settings::faces_off = true;
                 break;
             case POINT_SIZE:
-                if (parseFloat(optarg, &f) != 0)
+                if (!parseFloat(optarg, &f))
                     usage(argc, argv, "Error: option \"--point-size\" require"
                                       " float argument");
                 Settings::point_size = f;
                 break;
             case EDGE_WIDTH:
-                if (parseFloat(optarg, &f) != 0)
+                if (!parseFloat(optarg, &f))
                     usage(argc, argv, "Error: option \"--edge-width\" require"
                                       " float argument");
                 Settings::edge_width = f;
@@ -221,7 +220,7 @@ char **processOptions(int argc, char *argv[], int *len)
 
 #ifdef TO_SVG
             case OUTPUT_WIDTH:
-                if (parseInt(optarg, &i) != 0)
+                if (!parseInt(optarg, &i))
                     usage(argc, argv, "Error: option \"--output-width\""
                                       " requires int argument.");
                 Settings::svg_width = i;
@@ -237,7 +236,7 @@ char **processOptions(int argc, char *argv[], int *len)
                 Settings::svg_view_box[3] = fl[3];
                 break;
             case PRECISION:
-                if (parseInt(optarg, &i) != 0)
+                if (!parseInt(optarg, &i))
                     usage(argc, argv, "Error: option \"--precision\""
                                       " requires int argument.");
                 Settings::svg_precision = i;
@@ -292,6 +291,16 @@ void colorToHex(char str[7], float colorf[3])
     str[6] = 0;
 }
 
+bool parseFloat(const char *str, float *f)
+{
+    return svtParseFloat(str, f) == 0;
+}
+
+bool parseInt(const char *str, int *i)
+{
+    return svtParseInt(str, i) == 0;
+}
+
 bool parseFloatList(const char *str, int len, float *nums)
 {
     static char buffer[100];
@@ -312,7 +321,7 @@ bool parseFloatList(const char *str, int len, float *nums)
         if (i < 1)
             return false;
 
-        if (parseFloat(buffer, nums + j) != 0)
+        if (svtParseFloat(buffer, nums + j) != 0)
             return false;
     }
 
