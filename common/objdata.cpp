@@ -157,10 +157,10 @@ ObjData::ObjData(svt_obj_t *obj)
     if (len > 0){
         ilist = new int[len * 4];
         for (int i=0; i < len; i++){
-            ilist[i * 3] = ofaces[i][0];
-            ilist[i * 3 + 1] = ofaces[i][1];
-            ilist[i * 3 + 2] = ofaces[i][2];
-            ilist[i * 3 + 3] = -1;
+            ilist[i * 4] = ofaces[i][0];
+            ilist[i * 4 + 1] = ofaces[i][1];
+            ilist[i * 4 + 2] = ofaces[i][2];
+            ilist[i * 4 + 3] = -1;
         }
 
         faces->coordIndex.setValues(0, len * 4, ilist);
