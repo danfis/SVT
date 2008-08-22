@@ -58,12 +58,16 @@ int end = 0;
 int main(int argc, char *argv[])
 {
     pthread_t th[2];
+    char **args;
+    int num_args;
+
+    args = processOptions(argc, argv, &num_args);
 
     Coin3dTools::init("viewer");
-
     viewer = Coin3dTools::viewer();
 
-#include "viewer_common_main.cpp"
+    applySettings(viewer);
+
     parser = svtParserNew();
 
     // first parse static objects

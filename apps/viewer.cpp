@@ -45,11 +45,15 @@ svt_parser_t *parser;
 int main(int argc, char *argv[])
 {
     Viewer *viewer;
+    char **args;
+    int num_args;
+
+    args = processOptions(argc, argv, &num_args);
 
     Coin3dTools::init("viewer");
     viewer = Coin3dTools::viewer();
 
-#include "viewer_common_main.cpp"
+    applySettings(viewer);
 
     parser = svtParserNew();
 

@@ -21,21 +21,42 @@
  */
 
 #include <cstdlib>
+#include <getopt.h>
+
 #include "objdata.hpp"
 #include "viewer.hpp"
 #include "parser.h"
 #include "coin3dtools.hpp"
 
 #include "common.hpp"
+#include "settings.hpp"
+#include "parse_func.h"
 
 extern svt_parser_t *parser;
 
-bool colour_points = false;
-bool colour_edges = false;
-bool colour_faces = false;
+enum Options {
+    HELP = 'h',
+    ALL_OFF,
+    POINTS_OFF,
+    EDGES_OFF,
+    FACES_OFF,
+    POINT_SIZE,
+    EDGE_WIDTH,
+    POINT_COLOR_RED,
+    POINT_COLOR_GREEN,
+    POINT_COLOR_BLUE,
+    EDGE_COLOR_RED,
+    EDGE_COLOR_GREEN,
+    EDGE_COLOR_BLUE,
+    FACE_COLOR_RED,
+    FACE_COLOR_GREEN,
+    FACE_COLOR_BLUE,
+    COLOUR_POINTS,
+    COLOUR_EDGES,
+    COLOUR_FACES,
+    OPTIONS_END
+};
 
-char **args = 0;
-int num_args = 0;
 
 struct option options[] = {
     { "help", no_argument, NULL, HELP },
@@ -89,15 +110,15 @@ void parseObjData()
         viewer->addObjData(data);
 
         // colour elemets if requested
-        if (colour_points){
+        if (Settings::colour_points){
             chooseRandomColor(&r, &g, &b);
             data->material_points->diffuseColor.setValue(r, g, b);
         }
-        if (colour_edges){
+        if (Settings::colour_edges){
             chooseRandomColor(&r, &g, &b);
             data->material_edges->diffuseColor.setValue(r, g, b);
         }
-        if (colour_faces){
+        if (Settings::colour_faces){
             chooseRandomColor(&r, &g, &b);
             data->material_faces->diffuseColor.setValue(r, g, b);
         }
@@ -150,3 +171,164 @@ void usage(int argc, char *argv[], const char *optstr)
     exit(-1);
 }
 
+char **processOptions(int argc, char *argv[], int *len)
+{
+    int c, option_index;
+    float f;
+    char **args;
+
+    while ((c = getopt_long(argc, argv, "h", options, &option_index)) != -1){
+        switch (c){
+            case HELP:
+                usage(argc, argv);
+                break;
+            case ALL_OFF:
+                Settings::all_off = true;
+                break;
+            case POINTS_OFF:
+                Settings::points_off = true;
+                break;
+            case EDGES_OFF:
+                Settings::edges_off = true;
+                break;
+            case FACES_OFF:
+                Settings::faces_off = true;
+                break;
+            case POINT_SIZE:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--point-size\" require"
+                                      " float argument");
+                Settings::point_size = f;
+                break;
+            case EDGE_WIDTH:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--edge-width\" require"
+                                      " float argument");
+                Settings::edge_width = f;
+                break;
+            case POINT_COLOR_RED:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--point-color-red\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::point_color[0] = f;
+                break;
+            case POINT_COLOR_GREEN:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--point-color-green\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::point_color[1] = f;
+                break;
+            case POINT_COLOR_BLUE:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--point-color-blue\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::point_color[2] = f;
+                break;
+            case EDGE_COLOR_RED:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--edge-color-red\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::edge_color[0] = f;
+                break;
+            case EDGE_COLOR_GREEN:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--edge-color-green\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::edge_color[1] = f;
+                break;
+            case EDGE_COLOR_BLUE:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--edge-color-blue\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::edge_color[2] = f;
+                break;
+            case FACE_COLOR_RED:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--face-color-red\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::face_color[0] = f;
+                break;
+            case FACE_COLOR_GREEN:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--face-color-green\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::face_color[1] = f;
+                break;
+            case FACE_COLOR_BLUE:
+                if (parseFloat(optarg, &f) != 0)
+                    usage(argc, argv, "Error: option \"--face-color-blue\""
+                                      " require float argument.");
+                if (f > 1)
+                    usage(argc, argv, "Error: color can be define only"
+                                      " between 0 and 1");
+                Settings::face_color[2] = f;
+                break;
+            case COLOUR_POINTS:
+                Settings::colour_points = true;
+                break;
+            case COLOUR_EDGES:
+                Settings::colour_edges = true;
+                break;
+            case COLOUR_FACES:
+                Settings::colour_faces = true;
+                break;
+            default:
+                usage(argc, argv);
+        }
+    }
+
+    if (argc - optind > 0){
+        args = argv + optind;
+        *len = argc - optind;
+    }else{
+        args = 0;
+        *len = 0;
+    }
+
+    return args;
+}
+
+void applySettings(Viewer *viewer)
+{
+    viewer->setDefaultSwitch(!Settings::all_off);
+    viewer->setDefaultPointsSwitch(!Settings::points_off);
+    viewer->setDefaultEdgesSwitch(!Settings::edges_off);
+    viewer->setDefaultFacesSwitch(!Settings::faces_off);
+
+    viewer->setDefaultPointSize(Settings::point_size);
+    viewer->setDefaultLineWidth(Settings::edge_width);
+
+    viewer->setDefaultPointsDiffuseColorRed(Settings::point_color[0]);
+    viewer->setDefaultPointsDiffuseColorGreen(Settings::point_color[1]);
+    viewer->setDefaultPointsDiffuseColorBlue(Settings::point_color[2]);
+    viewer->setDefaultEdgesDiffuseColorRed(Settings::edge_color[0]);
+    viewer->setDefaultEdgesDiffuseColorGreen(Settings::edge_color[1]);
+    viewer->setDefaultEdgesDiffuseColorBlue(Settings::edge_color[2]);
+    viewer->setDefaultFacesDiffuseColorRed(Settings::face_color[0]);
+    viewer->setDefaultFacesDiffuseColorGreen(Settings::face_color[1]);
+    viewer->setDefaultFacesDiffuseColorBlue(Settings::face_color[2]);
+}
