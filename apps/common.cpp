@@ -349,3 +349,35 @@ char **processOptions(int argc, char *argv[], int *len)
     return args;
 }
 
+
+void colorToHex(char str[7], float colorf[3])
+{
+    int color[3];
+    int n, pos;
+    char c;
+
+    color[0] = (int)(255 * colorf[0]);
+    color[1] = (int)(255 * colorf[1]);
+    color[2] = (int)(255 * colorf[2]);
+
+    pos = 0;
+    for (int i=0; i < 3; i++){
+        n = color[i] / 16;
+        if (n > 9){
+            c = 'A' + n - 10;
+        }else{
+            c = '0' + n;
+        }
+        str[pos++] = c;
+
+        n = color[i] % 16;
+        if (n > 9){
+            c = 'A' + n - 10;
+        }else{
+            c = '0' + n;
+        }
+        str[pos++] = c;
+    }
+
+    str[6] = 0;
+}
