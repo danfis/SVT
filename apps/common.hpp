@@ -20,17 +20,13 @@
  * along with Coin3dTools.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _VIEWER_COMMON_HPP
-#define _VIEWER_COMMON_HPP
-
-#include "viewer.hpp"
+#ifndef COMMON_HPP
+#define COMMON_HPP
 
 void chooseRandomColor(float *r, float *g, float *b);
 
 void usage(int argc, char *argv[], const char *optstr = 0);
 
-
 char **processOptions(int argc, char *argv[], int *len);
-void applySettings(Viewer *viewer);
 
 #endif

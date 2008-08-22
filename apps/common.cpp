@@ -20,14 +20,16 @@
  * along with Coin3dTools.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
 #include <cstdlib>
 #include <getopt.h>
 
-#include "parser.h"
-
 #include "common.hpp"
 #include "settings.hpp"
-#include "parse_func.h"
+
+#include "parser/parse_func.h"
+#include "parser/parser.h"
+
 
 extern svt_parser_t *parser;
 

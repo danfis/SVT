@@ -1,9 +1,9 @@
 #include "common_coin.hpp"
 #include "common.hpp"
 #include "settings.hpp"
-#include "objdata.hpp"
-#include "viewer.hpp"
-#include "coin3dtools.hpp"
+#include "common/objdata.hpp"
+#include "common/viewer.hpp"
+#include "common/coin3dtools.hpp"
 
 void parseObjData()
 {

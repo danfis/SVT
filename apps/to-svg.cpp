@@ -27,10 +27,10 @@
 #include <float.h>
 using namespace std;
 
-#include "parser.h"
-#include "msg.hpp"
 #include "common.hpp"
 #include "settings.hpp"
+#include "parser/parser.h"
+#include "common/msg.hpp"
 
 static void toSvg(svt_obj_t *objs);
 static void printPoint(const svt_point_t point,

@@ -29,13 +29,14 @@
 #include "signal.h"
 using namespace std;
 
-#include "objdata.hpp"
-#include "viewer.hpp"
-#include "parser.h"
-#include "msg.hpp"
-#include "coin3dtools.hpp"
 #include "common.hpp"
 #include "common_coin.hpp"
+
+#include "common/objdata.hpp"
+#include "common/viewer.hpp"
+#include "common/msg.hpp"
+#include "common/coin3dtools.hpp"
+#include "parser/parser.h"
 
 #define READER_HUNKS 5
 

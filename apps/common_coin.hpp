@@ -23,8 +23,8 @@
 #ifndef COMMON_COIN_HPP
 #define COMMON_COIN_HPP
 
-#include "parser.h"
-#include "viewer.hpp"
+#include "parser/parser.h"
+#include "common/viewer.hpp"
 
 extern svt_parser_t *parser;
 
