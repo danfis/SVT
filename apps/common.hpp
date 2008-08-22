@@ -30,4 +30,6 @@ void usage(int argc, char *argv[], const char *optstr = 0);
 char **processOptions(int argc, char *argv[], int *len);
 
 void colorToHex(char str[7], float color[3]);
+
+bool parseFloatList(const char *str, int len, float *nums);
 #endif

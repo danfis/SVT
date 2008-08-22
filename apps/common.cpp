@@ -29,6 +29,7 @@
 
 #include "parser/parse_func.h"
 #include "parser/parser.h"
+#include "common/msg.hpp"
 
 
 extern svt_parser_t *parser;
@@ -41,25 +42,16 @@ enum Options {
     FACES_OFF,
     POINT_SIZE,
     EDGE_WIDTH,
-    POINT_COLOR_RED,
-    POINT_COLOR_GREEN,
-    POINT_COLOR_BLUE,
-    EDGE_COLOR_RED,
-    EDGE_COLOR_GREEN,
-    EDGE_COLOR_BLUE,
-    FACE_COLOR_RED,
-    FACE_COLOR_GREEN,
-    FACE_COLOR_BLUE,
+    POINT_COLOR,
+    EDGE_COLOR,
+    FACE_COLOR,
     COLOUR_POINTS,
     COLOUR_EDGES,
     COLOUR_FACES,
 
 #ifdef TO_SVG
     OUTPUT_WIDTH,
-    VIEW_BOX_X,
-    VIEW_BOX_Y,
-    VIEW_BOX_WIDTH,
-    VIEW_BOX_HEIGHT,
+    VIEW_BOX,
     PRECISION,
 #endif
 
@@ -75,25 +67,16 @@ struct option options[] = {
     { "faces-off", no_argument, NULL, FACES_OFF },
     { "point-size", required_argument, NULL, POINT_SIZE },
     { "edge-width", required_argument, NULL, EDGE_WIDTH },
-    { "point-color-red", required_argument, NULL, POINT_COLOR_RED },
-    { "point-color-green", required_argument, NULL, POINT_COLOR_GREEN },
-    { "point-color-blue", required_argument, NULL, POINT_COLOR_BLUE },
-    { "edge-color-red", required_argument, NULL, EDGE_COLOR_RED },
-    { "edge-color-green", required_argument, NULL, EDGE_COLOR_GREEN },
-    { "edge-color-blue", required_argument, NULL, EDGE_COLOR_BLUE },
-    { "face-color-red", required_argument, NULL, FACE_COLOR_RED },
-    { "face-color-green", required_argument, NULL, FACE_COLOR_GREEN },
-    { "face-color-blue", required_argument, NULL, FACE_COLOR_BLUE },
+    { "point-color", required_argument, NULL, POINT_COLOR },
+    { "edge-color", required_argument, NULL, EDGE_COLOR },
+    { "face-color", required_argument, NULL, FACE_COLOR },
     { "colour-points", no_argument, NULL, COLOUR_POINTS },
     { "colour-edges",  no_argument, NULL, COLOUR_EDGES },
     { "colour-faces",  no_argument, NULL, COLOUR_FACES },
 
 #ifdef TO_SVG
     { "output-width", required_argument, NULL, OUTPUT_WIDTH },
-    { "view-box-x", required_argument, NULL, VIEW_BOX_X },
-    { "view-box-y", required_argument, NULL, VIEW_BOX_Y },
-    { "view-box-width", required_argument, NULL, VIEW_BOX_WIDTH },
-    { "view-box-height", required_argument, NULL, VIEW_BOX_HEIGHT },
+    { "view-box", required_argument, NULL, VIEW_BOX },
     { "precision", required_argument, NULL, PRECISION },
 #endif
 
@@ -113,52 +96,53 @@ void chooseRandomColor(float *r, float *g, float *b)
 void usage(int argc, char *argv[], const char *optstr)
 {
     if (optstr != 0){
-        std::cout << optstr << std::endl;
+        std::cerr << optstr << std::endl;
     }
 
 #ifdef VIEWER
-    std::cout << "Usage: " << argv[0] << " [ Options ] <file.txt" << std::endl;
-    std::cout << "          or" << std::endl;
-    std::cout << "       " << argv[0] << " [ Options ] file1.txt file2.txt ..." << std::endl;
+    std::cerr << "Usage: " << argv[0] << " [ Options ] <file.txt" << std::endl;
+    std::cerr << "          or" << std::endl;
+    std::cerr << "       " << argv[0] << " [ Options ] file1.txt file2.txt ..." << std::endl;
 #endif /* VIEWER */
 
 #ifdef VIEWER_LIVE
-    std::cout << "Usage: " << argv[0] << " [ Options ] staticobjs1.txt staticobjs2.txt ... <dynobjs.txt" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " [ Options ] staticobjs1.txt staticobjs2.txt ... <dynobjs.txt" << std::endl;
 #endif
 
-    std::cout << std::endl;
-    std::cout << "Options:" << std::endl;
-    std::cout << "  --help                      Show this help." << std::endl;
-    std::cout << "  --all-off                   Turn off all objects." << std::endl;
-    std::cout << "  --points-off                Turn off all points." << std::endl;
-    std::cout << "  --edges-off                 Turn off all edges." << std::endl;
-    std::cout << "  --faces-off                 Turn off all faces." << std::endl;
-    std::cout << std::endl;
-    std::cout << "  --point-size         float  Set size of points to specified value." << std::endl;
-    std::cout << "  --edge-width         float  Set width of edges to specified value." << std::endl;
-    std::cout << std::endl;
-    std::cout << "  --point-color-red    float  Set color of points to specified value." << std::endl;
-    std::cout << "  --point-color-green  float  Value must be between 0 and 1." << std::endl;
-    std::cout << "  --point-color-blue   float" << std::endl;
-    std::cout << "  --edge-color-red     float  Set color of edges to specified value." << std::endl;
-    std::cout << "  --edge-color-green   float  Value must be between 0 and 1." << std::endl;
-    std::cout << "  --edge-color-blue    float" << std::endl;
-    std::cout << "  --face-color-red     float  Set color of faces to specified value." << std::endl;
-    std::cout << "  --face-color-green   float  Value must be between 0 and 1." << std::endl;
-    std::cout << "  --face-color-blue    float" << std::endl;
-    std::cout << std::endl;
-    std::cout << "  --colour-points             Colour points from different objects by different color." << std::endl;
-    std::cout << "  --colour-edges              Colour edges from different objects by different color." << std::endl;
-    std::cout << "  --colour-faces              Colour faces from different objects by different color." << std::endl;
+    std::cerr << std::endl;
+    std::cerr << "Options:" << std::endl;
+    std::cerr << "  --help                      Show this help." << std::endl;
+    std::cerr << "  --all-off                   Turn off all objects." << std::endl;
+    std::cerr << "  --points-off                Turn off all points." << std::endl;
+    std::cerr << "  --edges-off                 Turn off all edges." << std::endl;
+    std::cerr << "  --faces-off                 Turn off all faces." << std::endl;
+    std::cerr << std::endl;
+    std::cerr << "  --point-size         float  Set size of points to specified value." << std::endl;
+    std::cerr << "  --edge-width         float  Set width of edges to specified value." << std::endl;
+    std::cerr << std::endl;
+    std::cerr << "  --point-color        float,float,float  Set color of points." << std::endl;
+    std::cerr << "  --edge-color         float,float,float  Set color of edges." << std::endl;
+    std::cerr << "  --face-color         float,float,float  Set color of faces." << std::endl;
+    std::cerr << "  --point-color-red    float  Set color of points to specified value." << std::endl;
+    std::cerr << "  --point-color-green  float  Value must be between 0 and 1." << std::endl;
+    std::cerr << "  --point-color-blue   float" << std::endl;
+    std::cerr << "  --edge-color-red     float  Set color of edges to specified value." << std::endl;
+    std::cerr << "  --edge-color-green   float  Value must be between 0 and 1." << std::endl;
+    std::cerr << "  --edge-color-blue    float" << std::endl;
+    std::cerr << "  --face-color-red     float  Set color of faces to specified value." << std::endl;
+    std::cerr << "  --face-color-green   float  Value must be between 0 and 1." << std::endl;
+    std::cerr << "  --face-color-blue    float" << std::endl;
+    std::cerr << std::endl;
+    std::cerr << "  --colour-points             Colour points from different objects by different color." << std::endl;
+    std::cerr << "  --colour-edges              Colour edges from different objects by different color." << std::endl;
+    std::cerr << "  --colour-faces              Colour faces from different objects by different color." << std::endl;
 
 #ifdef TO_SVG
-    std::cout << std::endl;
-    std::cout << "  --output-width     int    Width of resulting picture.  Heigh is computed from viewbox." << std::endl;
-    std::cout << "  --view-box-x       float  Proportions of viewbox." << std::endl;
-    std::cout << "  --view-box-y       float" << std::endl;
-    std::cout << "  --view-box-width   float" << std::endl;
-    std::cout << "  --view-box-height  float" << std::endl;
-    std::cout << "  --precision        int    Set up precision of floating point numbers when priting them out." << std::endl;
+    std::cerr << std::endl;
+    std::cerr << "  --output-width int    Width of resulting picture.  Heigh is computed from viewbox." << std::endl;
+    std::cerr << "  --view-box     float,float,float,float  Proportions of viewbox." << std::endl;
+    std::cerr << "                                          Parameters are: x, y, width, height" << std::endl;
+    std::cerr << "  --precision    int    Set up precision of floating point numbers when priting them out." << std::endl;
 #endif
 
     exit(-1);
@@ -170,6 +154,7 @@ char **processOptions(int argc, char *argv[], int *len)
     float f;
     int i;
     char **args;
+    float fl[4];
 
     while ((c = getopt_long(argc, argv, "h", options, &option_index)) != -1){
         switch (c){
@@ -200,86 +185,29 @@ char **processOptions(int argc, char *argv[], int *len)
                                       " float argument");
                 Settings::edge_width = f;
                 break;
-            case POINT_COLOR_RED:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--point-color-red\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::point_color[0] = f;
+            case POINT_COLOR:
+                if (!parseFloatList(optarg, 3, fl))
+                    usage(argc, argv, "Error: option \"--point-color\""
+                                      " requires triplet of floats as argument.");
+                Settings::point_color[0] = fl[0];
+                Settings::point_color[1] = fl[1];
+                Settings::point_color[2] = fl[2];
                 break;
-            case POINT_COLOR_GREEN:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--point-color-green\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::point_color[1] = f;
+            case EDGE_COLOR:
+                if (!parseFloatList(optarg, 3, fl))
+                    usage(argc, argv, "Error: option \"--edge-color\""
+                                      " requires triplet of floats as argument.");
+                Settings::edge_color[0] = fl[0];
+                Settings::edge_color[1] = fl[1];
+                Settings::edge_color[2] = fl[2];
                 break;
-            case POINT_COLOR_BLUE:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--point-color-blue\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::point_color[2] = f;
-                break;
-            case EDGE_COLOR_RED:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--edge-color-red\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::edge_color[0] = f;
-                break;
-            case EDGE_COLOR_GREEN:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--edge-color-green\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::edge_color[1] = f;
-                break;
-            case EDGE_COLOR_BLUE:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--edge-color-blue\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::edge_color[2] = f;
-                break;
-            case FACE_COLOR_RED:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--face-color-red\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::face_color[0] = f;
-                break;
-            case FACE_COLOR_GREEN:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--face-color-green\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::face_color[1] = f;
-                break;
-            case FACE_COLOR_BLUE:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--face-color-blue\""
-                                      " require float argument.");
-                if (f > 1)
-                    usage(argc, argv, "Error: color can be define only"
-                                      " between 0 and 1");
-                Settings::face_color[2] = f;
+            case FACE_COLOR:
+                if (!parseFloatList(optarg, 3, fl))
+                    usage(argc, argv, "Error: option \"--face-color\""
+                                      " requires triplet of floats as argument.");
+                Settings::face_color[0] = fl[0];
+                Settings::face_color[1] = fl[1];
+                Settings::face_color[2] = fl[2];
                 break;
             case COLOUR_POINTS:
                 Settings::colour_points = true;
@@ -298,33 +226,15 @@ char **processOptions(int argc, char *argv[], int *len)
                                       " requires int argument.");
                 Settings::svg_width = i;
                 break;
-            case VIEW_BOX_X:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--view-box-x\""
-                                      " requires float argument.");
+            case VIEW_BOX:
+                if (!parseFloatList(optarg, 4, fl))
+                    usage(argc, argv, "Error: option \"--view-box\""
+                                      " requires four floats as argument.");
                 Settings::svg_view_box_enabled = true;
-                Settings::svg_view_box[0] = f;
-                break;
-            case VIEW_BOX_Y:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--view-box-y\""
-                                      " requires float argument.");
-                Settings::svg_view_box_enabled = true;
-                Settings::svg_view_box[1] = f;
-                break;
-            case VIEW_BOX_WIDTH:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--view-box-width\""
-                                      " requires float argument.");
-                Settings::svg_view_box_enabled = true;
-                Settings::svg_view_box[2] = f;
-                break;
-            case VIEW_BOX_HEIGHT:
-                if (parseFloat(optarg, &f) != 0)
-                    usage(argc, argv, "Error: option \"--view-box-height\""
-                                      " requires float argument.");
-                Settings::svg_view_box_enabled = true;
-                Settings::svg_view_box[3] = f;
+                Settings::svg_view_box[0] = fl[0];
+                Settings::svg_view_box[1] = fl[1];
+                Settings::svg_view_box[2] = fl[2];
+                Settings::svg_view_box[3] = fl[3];
                 break;
             case PRECISION:
                 if (parseInt(optarg, &i) != 0)
@@ -380,4 +290,33 @@ void colorToHex(char str[7], float colorf[3])
     }
 
     str[6] = 0;
+}
+
+bool parseFloatList(const char *str, int len, float *nums)
+{
+    static char buffer[100];
+    const char *c;
+    int i;
+
+    c = str;
+
+    for (int j=0; j < len; j++){
+        if (j > 0 && *c != ',')
+            return false;
+        if (j > 0 && *c != 0)
+            c++;
+
+        for (i=0; *c != ',' && *c != 0; i++, c++)
+            buffer[i] = *c;
+        buffer[i] = 0;
+        if (i < 1)
+            return false;
+
+        if (parseFloat(buffer, nums + j) != 0)
+            return false;
+    }
+
+    if (*c != 0)
+        return false;
+    return true;
 }
