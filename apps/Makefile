@@ -4,7 +4,7 @@ CXXFLAGS += -I../ $(COIN_CXXFLAGS) $(SOQT_CXXFLAGS) $(QT_CXXFLAGS)
 LDFLAGS_COIN = -L../common -L../parser -lsvtparser -lcommon -lfl $(COIN_LDFLAGS) $(SOQT_LDFLAGS) $(QT_LDFLAGS)
 LDFLAGS_TO_SVG = -L../parser -lsvtparser -lfl
 
-TARGETS = coin-viewer coin-iv-viewer coin-viewer-live svt-to-svg
+TARGETS = svt-viewer svt-iv-viewer svt-viewer-live svt-to-svg
 VIEWER_OBJS = viewer.o viewer-common.o common_coin.o settings.o
 IV_VIEWER_OBJS = iv-viewer.o
 VIEWER_LIVE_OBJS = viewer-live.o viewer-live-common.o common_coin.o settings.o
@@ -12,11 +12,11 @@ TO_SVG_OBJS = to-svg.o to-svg-common.o to-svg-settings.o
 
 all: $(TARGETS)
 
-coin-viewer: $(VIEWER_OBJS)
+svt-viewer: $(VIEWER_OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS_COIN)
-coin-iv-viewer: $(IV_VIEWER_OBJS)
+svt-iv-viewer: $(IV_VIEWER_OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS_COIN)
-coin-viewer-live: $(VIEWER_LIVE_OBJS)
+svt-viewer-live: $(VIEWER_LIVE_OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS_COIN) -lpthread
 svt-to-svg: $(TO_SVG_OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS_TO_SVG)
