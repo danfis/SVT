@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
 
 void toSvg(svt_obj_t *objs)
 {
+    svt_obj_t *objs2;
     ostream &out = cout;
     const svt_point_t *points;
     const svt_edge_t *edges;
@@ -104,6 +105,17 @@ void toSvg(svt_obj_t *objs)
     char color[7];
     int width, height;
     float view_box[4];
+    float transform_matrix[9] =
+        { 1.f, 0.f, 0.f,
+          0.f, -1.f, 0.f,
+          0.f, 0.f, 1.f };
+
+    // first transform points to fit to svg coordinate system:
+    objs2 = objs;
+    while (objs2 != NULL){
+        svtObjTransformPoints(objs2, transform_matrix);
+        objs2 = svtObjNext(objs2);
+    }
 
     size(objs, &width, &height, view_box);
 
