@@ -120,7 +120,7 @@ void toSvg(svt_obj_t *objs)
         << " width=\"" << width << "px\""
         << " height=\"" << height << "px\""
         << " viewBox=\"" << view_box[0] << " " << view_box[1] << " "
-                         << view_box[2] << " " << view_box[2] << "\""
+                         << view_box[2] << " " << view_box[3] << "\""
         << endl
         << "       xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
 
