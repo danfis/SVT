@@ -142,7 +142,7 @@ void usage(int argc, char *argv[], const char *optstr)
     std::cerr << std::endl;
     std::cerr << "  --output-width int    Width of resulting picture.  Heigh is computed from viewbox." << std::endl;
     std::cerr << "  --view-box     float,float,float,float  Proportions of viewbox." << std::endl;
-    std::cerr << "                                          Parameters are: x, y, width, height" << std::endl;
+    std::cerr << "                                          Parameters are: x, y, width, height with respect to svg coordinate system" << std::endl;
     std::cerr << "  --precision    int    Set up precision of floating point numbers when priting them out." << std::endl;
     std::cerr << "  --bg-color     float,float,float  Background color." << std::endl;
 #endif

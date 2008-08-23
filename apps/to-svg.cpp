@@ -296,7 +296,7 @@ void size(svt_obj_t *objs,
 {
     if (Settings::svg_view_box_enabled){
         view_box[0] = Settings::svg_view_box[0];
-        view_box[1] = Settings::svg_view_box[1];
+        view_box[1] = -1.f * Settings::svg_view_box[1];
         view_box[2] = Settings::svg_view_box[2];
         view_box[3] = Settings::svg_view_box[3];
     }else{
