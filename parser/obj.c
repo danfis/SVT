@@ -167,3 +167,27 @@ const char *svtObjName(svt_obj_t *obj)
 {
     return obj->name;
 }
+
+void svtObjTransformPoints(svt_obj_t *obj, float m[9])
+{
+    int i;
+    float v[3];
+
+    for (i=0; i < obj->points_len; i++){
+        v[0] = (obj->points[i][0] * m[0]) +
+               (obj->points[i][1] * m[1]) +
+               m[2];
+        v[1] = (obj->points[i][0] * m[3]) +
+               (obj->points[i][1] * m[4]) +
+               m[5];
+        v[2] = (obj->points[i][0] * m[6]) +
+               (obj->points[i][1] * m[7]) +
+               m[8];
+
+        v[0] /= v[2];
+        v[1] /= v[2];
+
+        obj->points[i][0] = v[0];
+        obj->points[i][1] = v[1];
+    }
+}

@@ -108,6 +108,11 @@ const svt_edge_t *svtObjEdges(svt_obj_t *, int *len);
 const svt_face_t *svtObjFaces(svt_obj_t *, int *len);
 const char *svtObjName(svt_obj_t *obj);
 
+/**
+ * Transform all points from obj using given transform matrix.
+ * Transform matrix is indexed by lines.
+ */
+void svtObjTransformPoints(svt_obj_t *, float transform_matrix[9]);
 
 #ifdef __cplusplus
 }
