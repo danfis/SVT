@@ -57,11 +57,11 @@ EXP [eE]
 
 %s points points2d edges faces name poly polyline
 %%
-<points,points2d,poly,polyline>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
+<INITIAL,points,points2d,poly,polyline>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
     PARSE_FLOAT(T_FLT_NUM);
 }
 
-<points,points2d,poly,polyline>{SIGN}?{NONZERO}{DIGIT}*({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -1043.1234e-23 */
+<INITIAL,points,points2d,poly,polyline>{SIGN}?{NONZERO}{DIGIT}*({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -1043.1234e-23 */
     PARSE_FLOAT(T_FLT_NUM);
 }
 
