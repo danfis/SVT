@@ -1,5 +1,5 @@
-#ifndef QT_OBJ_HPP
-#define QT_OBJ_HPP
+#ifndef QT_OBJ_WIDGET_HPP
+#define QT_OBJ_WIDGET_HPP
 
 #include <QGroupBox>
 #include <QPushButton>
@@ -20,12 +20,14 @@ class ObjWidget : public QGroupBox {
   private:
     void *_obj;
     ObjWidgetFlags _flags;
-    QPushButton *_config, *_on_off;
+    QPushButton *_conf, *_on_off;
     QString name;
 
+    void _setUpConnections();
+
   private slots:
-    void _clickedConfig(bool checked);
-    void _clickedOnOff(bool checked);
+    void _config();
+    void _onOff(bool checked);
 
 
   public:
@@ -36,8 +38,8 @@ class ObjWidget : public QGroupBox {
     void setButtonOnOff(bool checked);
 
   signals:
-    void clickedConfig(void *obj);
-    void clickedOnOff(void *obj, bool checked);
+    void config(void *obj);
+    void onOff(void *obj, bool checked);
 };
 
 };
