@@ -33,39 +33,39 @@ void ObjStyleWidget::_setUpConnections()
 {
     if ((OBJ_STYLE_WIDGET_POINTS & _flags) != 0){
         connect(_points[0], SIGNAL(valueChanged(double)),
-                this, SLOT(_pointSize(float)));
+                this, SLOT(_pointSize(double)));
         connect(_points[1], SIGNAL(valueChanged(double)),
-                this, SLOT(_pointColorRed(float)));
+                this, SLOT(_pointColorRed(double)));
         connect(_points[2], SIGNAL(valueChanged(double)),
-                this, SLOT(_pointColorGreen(float)));
+                this, SLOT(_pointColorGreen(double)));
         connect(_points[3], SIGNAL(valueChanged(double)),
-                this, SLOT(_pointColorBlue(float)));
-        connect(_points_b, SIGNAL(toggle(bool)),
+                this, SLOT(_pointColorBlue(double)));
+        connect(_points_b, SIGNAL(toggled(bool)),
                 this, SLOT(_pointOnOff(bool)));
     }
 
 
     if ((OBJ_STYLE_WIDGET_EDGES & _flags) != 0){
         connect(_edges[0], SIGNAL(valueChanged(double)),
-                this, SLOT(_edgeSize(float)));
+                this, SLOT(_edgeWidth(double)));
         connect(_edges[1], SIGNAL(valueChanged(double)),
-                this, SLOT(_edgeColorRed(float)));
+                this, SLOT(_edgeColorRed(double)));
         connect(_edges[2], SIGNAL(valueChanged(double)),
-                this, SLOT(_edgeColorGreen(float)));
+                this, SLOT(_edgeColorGreen(double)));
         connect(_edges[3], SIGNAL(valueChanged(double)),
-                this, SLOT(_edgeColorBlue(float)));
-        connect(_edges_b, SIGNAL(toggle(bool)),
+                this, SLOT(_edgeColorBlue(double)));
+        connect(_edges_b, SIGNAL(toggled(bool)),
                 this, SLOT(_edgeOnOff(bool)));
     }
 
     if ((OBJ_STYLE_WIDGET_FACES & _flags) != 0){
         connect(_faces[0], SIGNAL(valueChanged(double)),
-                this, SLOT(_faceColorRed(float)));
+                this, SLOT(_faceColorRed(double)));
         connect(_faces[1], SIGNAL(valueChanged(double)),
-                this, SLOT(_faceColorGreen(float)));
+                this, SLOT(_faceColorGreen(double)));
         connect(_faces[2], SIGNAL(valueChanged(double)),
-                this, SLOT(_faceColorBlue(float)));
-        connect(_faces_b, SIGNAL(toggle(bool)),
+                this, SLOT(_faceColorBlue(double)));
+        connect(_faces_b, SIGNAL(toggled(bool)),
                 this, SLOT(_faceOnOff(bool)));
     }
 }
@@ -86,13 +86,13 @@ void ObjStyleWidget::_buildColors(QVBoxLayout *layout, QDoubleSpinBox **refs)
     spin = new QDoubleSpinBox;
     spin->setRange(0, 1);
     spin->setSingleStep(0.05);
-    refs[2] = spin;
+    refs[1] = spin;
     hlayout->addWidget(spin);
 
     spin = new QDoubleSpinBox;
     spin->setRange(0, 1);
     spin->setSingleStep(0.05);
-    refs[3] = spin;
+    refs[2] = spin;
     hlayout->addWidget(spin);
 
     layout->addLayout(hlayout);
@@ -174,54 +174,84 @@ QWidget *ObjStyleWidget::_buildFaces()
 
 
 // PRIVATE SLOTS:
-void ObjStyleWidget::_pointSize(float val)
+void ObjStyleWidget::_pointSize(double val)
     { emit pointSize(_obj, val); }
-void ObjStyleWidget::_pointColorRed(float val)
-    { emit pointColorRed(_obj, val); }
-void ObjStyleWidget::_pointColorBlue(float val)
-    { emit pointColorBlue(_obj, val); }
-void ObjStyleWidget::_pointColorGreen(float val)
-    { emit pointColorGreen(_obj, val); }
-void ObjStyleWidget::_pointColor(float r, float g, float b)
-    { emit pointColor(_obj, r, g, b); }
+void ObjStyleWidget::_pointColorRed(double val)
+    { emit pointColorRed(_obj, val);
+      emit pointColor(_obj,
+                      _points[1]->value(),
+                      _points[2]->value(),
+                      _points[3]->value()); }
+void ObjStyleWidget::_pointColorBlue(double val)
+    { emit pointColorBlue(_obj, val);
+      emit pointColor(_obj,
+                      _points[1]->value(),
+                      _points[2]->value(),
+                      _points[3]->value()); }
+void ObjStyleWidget::_pointColorGreen(double val)
+    { emit pointColorGreen(_obj, val);
+      emit pointColor(_obj,
+                      _points[1]->value(),
+                      _points[2]->value(),
+                      _points[3]->value()); }
 void ObjStyleWidget::_pointOnOff(bool on)
     { emit pointOnOff(_obj, on); }
 
-void ObjStyleWidget::_edgeWidth(float val)
+void ObjStyleWidget::_edgeWidth(double val)
     { emit edgeWidth(_obj, val); }
-void ObjStyleWidget::_edgeColorRed(float val)
-    { emit edgeColorRed(_obj, val); }
-void ObjStyleWidget::_edgeColorBlue(float val)
-    { emit edgeColorBlue(_obj, val); }
-void ObjStyleWidget::_edgeColorGreen(float val)
-    { emit edgeColorGreen(_obj, val); }
-void ObjStyleWidget::_edgeColor(float r, float g, float b)
-    { emit edgeColor(_obj, r, g, b); }
+void ObjStyleWidget::_edgeColorRed(double val)
+    { emit edgeColorRed(_obj, val);
+      emit edgeColor(_obj,
+                      _edges[1]->value(),
+                      _edges[2]->value(),
+                      _edges[3]->value()); }
+void ObjStyleWidget::_edgeColorBlue(double val)
+    { emit edgeColorBlue(_obj, val);
+      emit edgeColor(_obj,
+                      _edges[1]->value(),
+                      _edges[2]->value(),
+                      _edges[3]->value()); }
+void ObjStyleWidget::_edgeColorGreen(double val)
+    { emit edgeColorGreen(_obj, val);
+      emit edgeColor(_obj,
+                      _edges[1]->value(),
+                      _edges[2]->value(),
+                      _edges[3]->value()); }
 void ObjStyleWidget::_edgeOnOff(bool on)
     { emit edgeOnOff(_obj, on); }
 
-void ObjStyleWidget::_faceColorRed(float val)
-    { emit faceColorRed(_obj, val); }
-void ObjStyleWidget::_faceColorBlue(float val)
-    { emit faceColorBlue(_obj, val); }
-void ObjStyleWidget::_faceColorGreen(float val)
-    { emit faceColorGreen(_obj, val); }
-void ObjStyleWidget::_faceColor(float r, float g, float b)
-    { emit faceColor(_obj, r, g, b); }
+void ObjStyleWidget::_faceColorRed(double val)
+    { emit faceColorRed(_obj, val);
+      emit faceColor(_obj,
+                      _faces[0]->value(),
+                      _faces[1]->value(),
+                      _faces[2]->value()); }
+void ObjStyleWidget::_faceColorBlue(double val)
+    { emit faceColorBlue(_obj, val);
+      emit faceColor(_obj,
+                      _faces[0]->value(),
+                      _faces[1]->value(),
+                      _faces[2]->value()); }
+void ObjStyleWidget::_faceColorGreen(double val)
+    { emit faceColorGreen(_obj, val);
+      emit faceColor(_obj,
+                      _faces[0]->value(),
+                      _faces[1]->value(),
+                      _faces[2]->value()); }
 void ObjStyleWidget::_faceOnOff(bool on)
     { emit faceOnOff(_obj, on); }
 
 // PUBLIC SLOTS
-void ObjStyleWidget::setPointSize(float val)
+void ObjStyleWidget::setPointSize(double val)
 {
     if ((OBJ_STYLE_WIDGET_POINTS & _flags) != 0)
         _points[0]->setValue(val);
 }
 
-void ObjStyleWidget::setPointColor(float val[3])
+void ObjStyleWidget::setPointColor(double val[3])
 { setPointColor(val[0], val[1], val[2]); }
 
-void ObjStyleWidget::setPointColor(float r, float g, float b)
+void ObjStyleWidget::setPointColor(double r, double g, double b)
 {
     if ((OBJ_STYLE_WIDGET_POINTS & _flags) != 0){
         _points[1]->setValue(r);
@@ -230,19 +260,19 @@ void ObjStyleWidget::setPointColor(float r, float g, float b)
     }
 }
 
-void ObjStyleWidget::setPointColorRed(float val)
+void ObjStyleWidget::setPointColorRed(double val)
 {
     if ((OBJ_STYLE_WIDGET_POINTS & _flags) != 0)
         _points[1]->setValue(val);
 }
 
-void ObjStyleWidget::setPointColorGreen(float val)
+void ObjStyleWidget::setPointColorGreen(double val)
 {
     if ((OBJ_STYLE_WIDGET_POINTS & _flags) != 0)
         _points[2]->setValue(val);
 }
 
-void ObjStyleWidget::setPointColorBlue(float val)
+void ObjStyleWidget::setPointColorBlue(double val)
 {
     if ((OBJ_STYLE_WIDGET_POINTS & _flags) != 0)
         _points[3]->setValue(val);
@@ -255,16 +285,16 @@ void ObjStyleWidget::setPointOnOff(bool on)
 }
 
 
-void ObjStyleWidget::setEdgeWidth(float val)
+void ObjStyleWidget::setEdgeWidth(double val)
 {
     if ((OBJ_STYLE_WIDGET_EDGES & _flags) != 0)
         _edges[0]->setValue(val);
 }
 
-void ObjStyleWidget::setEdgeColor(float val[3])
+void ObjStyleWidget::setEdgeColor(double val[3])
 { setEdgeColor(val[0], val[1], val[2]); }
 
-void ObjStyleWidget::setEdgeColor(float r, float g, float b)
+void ObjStyleWidget::setEdgeColor(double r, double g, double b)
 {
     if ((OBJ_STYLE_WIDGET_EDGES & _flags) != 0){
         _edges[1]->setValue(r);
@@ -273,19 +303,19 @@ void ObjStyleWidget::setEdgeColor(float r, float g, float b)
     }
 }
 
-void ObjStyleWidget::setEdgeColorRed(float val)
+void ObjStyleWidget::setEdgeColorRed(double val)
 {
     if ((OBJ_STYLE_WIDGET_EDGES & _flags) != 0)
         _edges[1]->setValue(val);
 }
 
-void ObjStyleWidget::setEdgeColorGreen(float val)
+void ObjStyleWidget::setEdgeColorGreen(double val)
 {
     if ((OBJ_STYLE_WIDGET_EDGES & _flags) != 0)
         _edges[2]->setValue(val);
 }
 
-void ObjStyleWidget::setEdgeColorBlue(float val)
+void ObjStyleWidget::setEdgeColorBlue(double val)
 {
     if ((OBJ_STYLE_WIDGET_EDGES & _flags) != 0)
         _edges[3]->setValue(val);
@@ -299,10 +329,10 @@ void ObjStyleWidget::setEdgeOnOff(bool on)
 
 
 
-void ObjStyleWidget::setFaceColor(float val[3])
+void ObjStyleWidget::setFaceColor(double val[3])
 { setFaceColor(val[0], val[1], val[2]); }
 
-void ObjStyleWidget::setFaceColor(float r, float g, float b)
+void ObjStyleWidget::setFaceColor(double r, double g, double b)
 {
     if ((OBJ_STYLE_WIDGET_FACES & _flags) != 0){
         _faces[0]->setValue(r);
@@ -311,19 +341,19 @@ void ObjStyleWidget::setFaceColor(float r, float g, float b)
     }
 }
 
-void ObjStyleWidget::setFaceColorRed(float val)
+void ObjStyleWidget::setFaceColorRed(double val)
 {
     if ((OBJ_STYLE_WIDGET_FACES & _flags) != 0)
         _faces[0]->setValue(val);
 }
 
-void ObjStyleWidget::setFaceColorGreen(float val)
+void ObjStyleWidget::setFaceColorGreen(double val)
 {
     if ((OBJ_STYLE_WIDGET_FACES & _flags) != 0)
         _faces[1]->setValue(val);
 }
 
-void ObjStyleWidget::setFaceColorBlue(float val)
+void ObjStyleWidget::setFaceColorBlue(double val)
 {
     if ((OBJ_STYLE_WIDGET_FACES & _flags) != 0)
         _faces[2]->setValue(val);

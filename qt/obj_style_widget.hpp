@@ -44,70 +44,67 @@ class ObjStyleWidget : public QWidget {
                    ObjStyleWidgetFlags flags = OBJ_STYLE_WIDGET_ALL);
 
   public slots:
-    void setPointSize(float val);
-    void setPointColor(float val[3]);
-    void setPointColor(float r, float g, float b);
-    void setPointColorRed(float val);
-    void setPointColorGreen(float val);
-    void setPointColorBlue(float val);
+    void setPointSize(double val);
+    void setPointColor(double val[3]);
+    void setPointColor(double r, double g, double b);
+    void setPointColorRed(double val);
+    void setPointColorGreen(double val);
+    void setPointColorBlue(double val);
     void setPointOnOff(bool on);
 
-    void setEdgeWidth(float val);
-    void setEdgeColor(float val[3]);
-    void setEdgeColor(float r, float g, float b);
-    void setEdgeColorRed(float val);
-    void setEdgeColorGreen(float val);
-    void setEdgeColorBlue(float val);
+    void setEdgeWidth(double val);
+    void setEdgeColor(double val[3]);
+    void setEdgeColor(double r, double g, double b);
+    void setEdgeColorRed(double val);
+    void setEdgeColorGreen(double val);
+    void setEdgeColorBlue(double val);
     void setEdgeOnOff(bool on);
 
-    void setFaceColor(float val[3]);
-    void setFaceColor(float r, float g, float b);
-    void setFaceColorRed(float val);
-    void setFaceColorGreen(float val);
-    void setFaceColorBlue(float val);
+    void setFaceColor(double val[3]);
+    void setFaceColor(double r, double g, double b);
+    void setFaceColorRed(double val);
+    void setFaceColorGreen(double val);
+    void setFaceColorBlue(double val);
     void setFaceOnOff(bool on);
 
 
   private slots:
-    void _pointSize(float val);
-    void _pointColorRed(float val);
-    void _pointColorBlue(float val);
-    void _pointColorGreen(float val);
-    void _pointColor(float r, float g, float b);
+    void _pointSize(double val);
+    void _pointColorRed(double val);
+    void _pointColorBlue(double val);
+    void _pointColorGreen(double val);
     void _pointOnOff(bool on);
 
-    void _edgeWidth(float val);
-    void _edgeColorRed(float val);
-    void _edgeColorBlue(float val);
-    void _edgeColorGreen(float val);
-    void _edgeColor(float r, float g, float b);
+    void _edgeWidth(double val);
+    void _edgeColorRed(double val);
+    void _edgeColorBlue(double val);
+    void _edgeColorGreen(double val);
     void _edgeOnOff(bool on);
 
-    void _faceColorRed(float val);
-    void _faceColorBlue(float val);
-    void _faceColorGreen(float val);
-    void _faceColor(float r, float g, float b);
+    void _faceColorRed(double val);
+    void _faceColorBlue(double val);
+    void _faceColorGreen(double val);
     void _faceOnOff(bool on);
 
   signals:
-    void pointSize(void *obj, float val);
-    void pointColorRed(void *obj, float val);
-    void pointColorBlue(void *obj, float val);
-    void pointColorGreen(void *obj, float val);
-    void pointColor(void *obj, float r, float g, float b);
+    void pointSize(void *obj, double val);
+    void pointColorRed(void *obj, double val);
+    void pointColorBlue(void *obj, double val);
+    void pointColorGreen(void *obj, double val);
+    void pointColor(void *obj, double r, double g, double b);
     void pointOnOff(void *obj, bool on);
 
-    void edgeWidth(void *obj, float val);
-    void edgeColorRed(void *obj, float val);
-    void edgeColorBlue(void *obj, float val);
-    void edgeColorGreen(void *obj, float val);
-    void edgeColor(void *obj, float r, float g, float b);
+    void edgeWidth(void *obj, double val);
+    void edgeColorRed(void *obj, double val);
+    void edgeColorBlue(void *obj, double val);
+    void edgeColorGreen(void *obj, double val);
+    void edgeColor(void *obj, double r, double g, double b);
     void edgeOnOff(void *obj, bool on);
 
-    void faceColorRed(void *obj, float val);
-    void faceColorBlue(void *obj, float val);
-    void faceColorGreen(void *obj, float val);
-    void faceColor(void *obj, float r, float g, float b);
+    void faceColorRed(void *obj, double val);
+    void faceColorBlue(void *obj, double val);
+    void faceColorGreen(void *obj, double val);
+    void faceColor(void *obj, double r, double g, double b);
     void faceOnOff(void *obj, bool on);
 };
 
