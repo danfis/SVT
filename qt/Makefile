@@ -2,7 +2,7 @@ include ../Makefile.include
 
 CXXFLAGS += $(QT_CXXFLAGS)
 
-TARGETS = obj_widget.o
+TARGETS = obj_widget.o obj_style_widget.o
 OBJS =
 
 all: $(TARGETS)
@@ -16,6 +16,7 @@ libcommon.a: $(OBJS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 obj_widget.cpp: obj_widget.moc
+obj_style_widget.cpp: obj_style_widget.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 
