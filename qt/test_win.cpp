@@ -4,6 +4,7 @@ using namespace std;
 #include "test_win.hpp"
 #include "obj_widget.hpp"
 #include "obj_style_widget.hpp"
+#include "widget_stack.hpp"
 
 #include "test_win.moc"
 
@@ -14,16 +15,17 @@ MainWindow::MainWindow()
     Qt::ObjStyleWidget *objs;
     QWidget *w = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
+    Qt::WidgetStack *stack = new Qt::WidgetStack;
 
     obj = new Qt::ObjWidget(_obj);
-    layout->addWidget(obj);
+    stack->push(obj);
     connect(obj, SIGNAL(onOff(void *, bool)),
             this, SLOT(printBool(void *, bool)));
     connect(obj, SIGNAL(config(void *)),
             this, SLOT(clicked(void *)));
 
     objs = new Qt::ObjStyleWidget(_obj);
-    layout->addWidget(objs);
+    stack->push(objs);
     objs->setPointColor(0.1, 0.1, 0.1);
     connect(objs, SIGNAL(pointOnOff(void *, bool)),
             this, SLOT(printBool(void *, bool)));
@@ -41,11 +43,14 @@ MainWindow::MainWindow()
     obj = new Qt::ObjWidget(_obj,
                     Qt::OBJ_WIDGET_NAME | Qt::OBJ_WIDGET_CONFIG);
     obj->setName("Default style");
-    layout->addWidget(obj);
+    stack->push(obj);
     connect(obj, SIGNAL(onOff(void *, bool)),
             this, SLOT(printBool(void *, bool)));
     connect(obj, SIGNAL(config(void *)),
             this, SLOT(clicked(void *)));
+
+    stack->finish();
+    layout->addWidget(stack);
 
     w->setLayout(layout);
     setCentralWidget(w);

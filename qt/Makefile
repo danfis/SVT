@@ -3,18 +3,17 @@ include ../Makefile.include
 CXXFLAGS += $(QT_CXXFLAGS)
 LDFLAGS += $(QT_LDFLAGS)
 
-TARGETS = test obj_widget.o obj_style_widget.o
-OBJS =
+TARGETS = libqt.a test
+OBJS = obj_widget.o obj_style_widget.o widget_stack.o
 
 all: $(TARGETS)
 
-libcommon.a: $(OBJS)
+libqt.a: $(OBJS)
 	ar cr $@ $^
 	ranlib $@
-	touch ../apps/*.cpp
 
-test: test.o test_win.o obj_widget.o obj_style_widget.o
-	$(CXX) $(CXXFLAGS) -o test $^ $(LDFLAGS)
+test: test.o test_win.o $(OBJS) libqt.a
+	$(CXX) $(CXXFLAGS) -o test test.o test_win.o $(LDFLAGS) -L./ -lqt
 
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
@@ -30,5 +29,6 @@ clean:
 	rm -f *.o
 	rm -f *~
 	rm -f *.moc
+	rm -f *.a
 
 .PHONY: all clean
