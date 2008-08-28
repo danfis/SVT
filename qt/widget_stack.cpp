@@ -4,7 +4,14 @@ namespace Qt {
 
 WidgetStack::WidgetStack()
 {
+    setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    setLineWidth(0);
+    setFrameShape(QFrame::NoFrame);
+    setContentsMargins(0, 0, 0, 0);
+
     _layout = new QVBoxLayout;
+    _layout->setSpacing(10);
+    _layout->setContentsMargins(0, 0, 0, 0);
 }
 
 void WidgetStack::push(QWidget *w)
