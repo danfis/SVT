@@ -20,7 +20,7 @@ class ObjStyleWidget : public QWidget {
 
   private:
     void *_obj;
-    ObjStyleWidgetFlags _flags;
+    int _flags;
 
     QDoubleSpinBox *_points[4]; /* size, r, g, b */
     QPushButton *_points_b;
@@ -40,8 +40,7 @@ class ObjStyleWidget : public QWidget {
     void _setUpConnections();
 
   public:
-    ObjStyleWidget(void *obj,
-                   ObjStyleWidgetFlags flags = OBJ_STYLE_WIDGET_ALL);
+    ObjStyleWidget(void *obj, int flags = OBJ_STYLE_WIDGET_ALL);
 
   public slots:
     void setPointSize(double val);

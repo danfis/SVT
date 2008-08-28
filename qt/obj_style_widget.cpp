@@ -9,7 +9,7 @@
 
 namespace Qt {
 
-ObjStyleWidget::ObjStyleWidget(void *obj, ObjStyleWidgetFlags flags)
+ObjStyleWidget::ObjStyleWidget(void *obj, int flags)
     : _obj(obj), _flags(flags)
 {
     QVBoxLayout *layout = new QVBoxLayout;

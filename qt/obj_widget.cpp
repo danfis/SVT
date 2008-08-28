@@ -5,7 +5,7 @@
 
 namespace Qt {
 
-ObjWidget::ObjWidget(void *obj, ObjWidgetFlags flags)
+ObjWidget::ObjWidget(void *obj, int flags)
     : _obj(obj), _flags(flags), _conf(0), _on_off(0)
 {
     QVBoxLayout *layout = new QVBoxLayout;

@@ -38,6 +38,15 @@ MainWindow::MainWindow()
     connect(objs, SIGNAL(faceColor(void *, double, double, double)),
             this, SLOT(val3(void *, double, double, double)));
 
+    obj = new Qt::ObjWidget(_obj,
+                    Qt::OBJ_WIDGET_NAME | Qt::OBJ_WIDGET_CONFIG);
+    obj->setName("Default style");
+    layout->addWidget(obj);
+    connect(obj, SIGNAL(onOff(void *, bool)),
+            this, SLOT(printBool(void *, bool)));
+    connect(obj, SIGNAL(config(void *)),
+            this, SLOT(clicked(void *)));
+
     w->setLayout(layout);
     setCentralWidget(w);
 }

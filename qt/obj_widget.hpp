@@ -19,7 +19,7 @@ class ObjWidget : public QGroupBox {
 
   private:
     void *_obj;
-    ObjWidgetFlags _flags;
+    int _flags;
     QPushButton *_conf, *_on_off;
     QString name;
 
@@ -31,7 +31,7 @@ class ObjWidget : public QGroupBox {
 
 
   public:
-    ObjWidget(void *obj, ObjWidgetFlags flags = OBJ_WIDGET_ALL);
+    ObjWidget(void *obj, int flags = OBJ_WIDGET_ALL);
 
   public slots:
     void setName(const char *name);
