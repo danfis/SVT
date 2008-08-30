@@ -72,18 +72,18 @@ class ObjStyleWidget : public QWidget {
     void _pointColorRed(double val);
     void _pointColorBlue(double val);
     void _pointColorGreen(double val);
-    void _pointOnOff(bool on);
+    void _pointOnOff(bool off);
 
     void _edgeWidth(double val);
     void _edgeColorRed(double val);
     void _edgeColorBlue(double val);
     void _edgeColorGreen(double val);
-    void _edgeOnOff(bool on);
+    void _edgeOnOff(bool off);
 
     void _faceColorRed(double val);
     void _faceColorBlue(double val);
     void _faceColorGreen(double val);
-    void _faceOnOff(bool on);
+    void _faceOnOff(bool off);
 
   signals:
     void pointSize(void *obj, double val);

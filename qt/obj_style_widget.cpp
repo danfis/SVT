@@ -194,8 +194,8 @@ void ObjStyleWidget::_pointColorGreen(double val)
                       _points[1]->value(),
                       _points[2]->value(),
                       _points[3]->value()); }
-void ObjStyleWidget::_pointOnOff(bool on)
-    { emit pointOnOff(_obj, on); }
+void ObjStyleWidget::_pointOnOff(bool off)
+    { emit pointOnOff(_obj, !off); }
 
 void ObjStyleWidget::_edgeWidth(double val)
     { emit edgeWidth(_obj, val); }
@@ -217,8 +217,8 @@ void ObjStyleWidget::_edgeColorGreen(double val)
                       _edges[1]->value(),
                       _edges[2]->value(),
                       _edges[3]->value()); }
-void ObjStyleWidget::_edgeOnOff(bool on)
-    { emit edgeOnOff(_obj, on); }
+void ObjStyleWidget::_edgeOnOff(bool off)
+    { emit edgeOnOff(_obj, !off); }
 
 void ObjStyleWidget::_faceColorRed(double val)
     { emit faceColorRed(_obj, val);
@@ -238,8 +238,8 @@ void ObjStyleWidget::_faceColorGreen(double val)
                       _faces[0]->value(),
                       _faces[1]->value(),
                       _faces[2]->value()); }
-void ObjStyleWidget::_faceOnOff(bool on)
-    { emit faceOnOff(_obj, on); }
+void ObjStyleWidget::_faceOnOff(bool off)
+    { emit faceOnOff(_obj, !off); }
 
 // PUBLIC SLOTS
 void ObjStyleWidget::setPointSize(double val)
