@@ -18,11 +18,13 @@ MainWindow::MainWindow()
     Qt::WidgetStack *stack = new Qt::WidgetStack;
 
     obj = new Qt::ObjWidget(_obj);
-    stack->push(obj);
     connect(obj, SIGNAL(onOff(void *, bool)),
             this, SLOT(printBool(void *, bool)));
     connect(obj, SIGNAL(config(void *)),
             this, SLOT(clicked(void *)));
+    connect(obj, SIGNAL(config(void *)),
+            this, SLOT(showObjStyleWidget(void *)));
+    addObjWidget(obj);
 
     objs = new Qt::ObjStyleWidget(_obj);
     stack->push(objs);
@@ -43,11 +45,11 @@ MainWindow::MainWindow()
     obj = new Qt::ObjWidget(_obj,
                     Qt::OBJ_WIDGET_NAME | Qt::OBJ_WIDGET_CONFIG);
     obj->setName("Default style");
-    stack->push(obj);
     connect(obj, SIGNAL(onOff(void *, bool)),
             this, SLOT(printBool(void *, bool)));
     connect(obj, SIGNAL(config(void *)),
             this, SLOT(clicked(void *)));
+    addObjWidget(obj);
 
     stack->finish();
     layout->addWidget(stack);
@@ -58,21 +60,50 @@ MainWindow::MainWindow()
 
 void MainWindow::printBool(void *obj, bool v)
 {
-    cout << (long)_obj << ": " << (long)obj << " - " << v << endl;
+    QString msg = QString("%1 : %2 - %3")
+                    .arg((long)_obj)
+                    .arg((long)obj)
+                    .arg(v);
+
+    showMsgInStatusBar(msg);
 }
 
 void MainWindow::clicked(void *obj)
 {
-    cout << (long)_obj << ": " << (long)obj << " clicked" << endl;
+    QString msg = QString("%1 : %2 clicked")
+                    .arg((long)_obj)
+                    .arg((long)obj);
+
+    showMsgInStatusBar(msg);
+}
+
+void MainWindow::showObjStyleWidget(void *o)
+{
+    Qt::ObjStyleWidget *obj = new Qt::ObjStyleWidget(o);
+    obj->setPointSize(2.5);
+    obj->setEdgeOnOff(false);
+
+    Qt::MainWindow::showObjStyleWidget(obj);
 }
 
 void MainWindow::val(void *obj, double val)
 {
-    cout << (long)_obj << ": " << (long)obj << " " << val << endl;
+    QString msg = QString("%1 :%2 %3")
+                    .arg((long)_obj)
+                    .arg((long)obj)
+                    .arg(val);
+
+    showMsgInStatusBar(msg);
 }
 
 void MainWindow::val3(void *obj, double a, double b, double c)
 {
-    cout << (long)_obj << ": " << (long)obj << " " << a << " " << b << " "
-         << c << endl;
+    QString msg = QString("%1 :%2 %3 %4 %5")
+                    .arg((long)_obj)
+                    .arg((long)obj)
+                    .arg(a)
+                    .arg(b)
+                    .arg(c);
+
+    showMsgInStatusBar(msg);
 }

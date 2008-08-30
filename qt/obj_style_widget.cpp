@@ -281,7 +281,7 @@ void ObjStyleWidget::setPointColorBlue(double val)
 void ObjStyleWidget::setPointOnOff(bool on)
 {
     if ((OBJ_STYLE_WIDGET_POINTS & _flags) != 0)
-        _points_b->setChecked(on);
+        _points_b->setChecked(!on);
 }
 
 
@@ -324,7 +324,7 @@ void ObjStyleWidget::setEdgeColorBlue(double val)
 void ObjStyleWidget::setEdgeOnOff(bool on)
 {
     if ((OBJ_STYLE_WIDGET_EDGES & _flags) != 0)
-        _edges_b->setChecked(on);
+        _edges_b->setChecked(!on);
 }
 
 
@@ -362,7 +362,7 @@ void ObjStyleWidget::setFaceColorBlue(double val)
 void ObjStyleWidget::setFaceOnOff(bool on)
 {
     if ((OBJ_STYLE_WIDGET_FACES & _flags) != 0)
-        _faces_b->setChecked(on);
+        _faces_b->setChecked(!on);
 }
 
 
