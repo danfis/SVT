@@ -3,6 +3,8 @@
 
 #include "obj_widget.moc"
 
+namespace SVT {
+
 namespace Qt {
 
 ObjWidget::ObjWidget(void *obj, int flags)
@@ -66,4 +68,6 @@ void ObjWidget::setButtonOnOff(bool on)
 }
 
 
-};
+} /* Qt */
+
+} /* SVT */

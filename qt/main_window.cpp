@@ -3,6 +3,7 @@
 
 #include "main_window.moc"
 
+namespace SVT {
 
 namespace Qt {
 
@@ -11,11 +12,11 @@ MainWindow::MainWindow()
     _obj_widgets = new WidgetStack;
 
     _left_dock = new QDockWidget;
-    _left_dock->setAllowedAreas(Qt::LeftDockWidgetArea);
+    _left_dock->setAllowedAreas(::Qt::LeftDockWidgetArea);
     _left_dock->setFeatures(QDockWidget::DockWidgetFloatable
                             | QDockWidget::DockWidgetMovable);
     _left_dock->setWidget(_obj_widgets);
-    addDockWidget(Qt::LeftDockWidgetArea, _left_dock, Qt::Vertical);
+    addDockWidget(::Qt::LeftDockWidgetArea, _left_dock, ::Qt::Vertical);
 
     _right_dock = 0;
 
@@ -42,17 +43,17 @@ void MainWindow::show()
 void MainWindow::showObjStyleWidget(ObjStyleWidget *w)
 {
     if (_right_dock != 0
-        && dockWidgetArea(_right_dock) != Qt::NoDockWidgetArea){
+        && dockWidgetArea(_right_dock) != ::Qt::NoDockWidgetArea){
         delete _right_dock;
     }
 
     _right_dock = new QDockWidget;
-    _right_dock->setAllowedAreas(Qt::RightDockWidgetArea);
+    _right_dock->setAllowedAreas(::Qt::RightDockWidgetArea);
     _right_dock->setFeatures(QDockWidget::DockWidgetFloatable
                              | QDockWidget::DockWidgetMovable
                              | QDockWidget::DockWidgetClosable);
     _right_dock->setWidget(w);
-    addDockWidget(Qt::RightDockWidgetArea, _right_dock, Qt::Vertical);
+    addDockWidget(::Qt::RightDockWidgetArea, _right_dock, ::Qt::Vertical);
 }
 
 void MainWindow::showMsgInStatusBar(QString &msg)
@@ -60,4 +61,6 @@ void MainWindow::showMsgInStatusBar(QString &msg)
     _status->showMessage(msg);
 }
 
-}
+} /* Qt */
+
+} /* SVT */

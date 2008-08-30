@@ -3,18 +3,18 @@ include ../Makefile.include
 CXXFLAGS += $(QT_CXXFLAGS)
 LDFLAGS += $(QT_LDFLAGS)
 
-TARGETS = libqt.a test
+TARGETS = libsvtqt.a test
 OBJS = obj_widget.o obj_style_widget.o widget_stack.o \
        main_window.o
 
 all: $(TARGETS)
 
-libqt.a: $(OBJS)
+libsvtqt.a: $(OBJS)
 	ar cr $@ $^
 	ranlib $@
 
-test: test.o test_win.o $(OBJS) libqt.a
-	$(CXX) $(CXXFLAGS) -o test test.o test_win.o $(LDFLAGS) -L./ -lqt
+test: test.o test_win.o $(OBJS) libsvtqt.a
+	$(CXX) $(CXXFLAGS) -o test test.o test_win.o $(LDFLAGS) -L./ -lsvtqt
 
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<

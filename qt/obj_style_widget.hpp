@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+namespace SVT {
+
 namespace Qt {
 
 enum ObjStyleWidgetFlags {
@@ -107,5 +109,8 @@ class ObjStyleWidget : public QWidget {
     void faceOnOff(void *obj, bool on);
 };
 
-};
+} /* Qt */
+
+} /* SVT */
+
 #endif

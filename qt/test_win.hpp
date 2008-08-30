@@ -3,7 +3,7 @@
 
 #include "main_window.hpp"
 
-class MainWindow : public Qt::MainWindow {
+class MainWindow : public SVT::Qt::MainWindow {
     Q_OBJECT
 
     void *_obj;

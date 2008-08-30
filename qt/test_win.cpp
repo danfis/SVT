@@ -11,13 +11,13 @@ using namespace std;
 MainWindow::MainWindow()
     : _obj((void *)1000)
 {
-    Qt::ObjWidget *obj;
-    Qt::ObjStyleWidget *objs;
+    SVT::Qt::ObjWidget *obj;
+    SVT::Qt::ObjStyleWidget *objs;
     QWidget *w = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
-    Qt::WidgetStack *stack = new Qt::WidgetStack;
+    SVT::Qt::WidgetStack *stack = new SVT::Qt::WidgetStack;
 
-    obj = new Qt::ObjWidget(_obj);
+    obj = new SVT::Qt::ObjWidget(_obj);
     connect(obj, SIGNAL(onOff(void *, bool)),
             this, SLOT(printBool(void *, bool)));
     connect(obj, SIGNAL(config(void *)),
@@ -26,7 +26,7 @@ MainWindow::MainWindow()
             this, SLOT(showObjStyleWidget(void *)));
     addObjWidget(obj);
 
-    objs = new Qt::ObjStyleWidget(_obj);
+    objs = new SVT::Qt::ObjStyleWidget(_obj);
     stack->push(objs);
     objs->setPointColor(0.1, 0.1, 0.1);
     connect(objs, SIGNAL(pointOnOff(void *, bool)),
@@ -42,8 +42,8 @@ MainWindow::MainWindow()
     connect(objs, SIGNAL(faceColor(void *, double, double, double)),
             this, SLOT(val3(void *, double, double, double)));
 
-    obj = new Qt::ObjWidget(_obj,
-                    Qt::OBJ_WIDGET_NAME | Qt::OBJ_WIDGET_CONFIG);
+    obj = new SVT::Qt::ObjWidget(_obj,
+                    SVT::Qt::OBJ_WIDGET_NAME | SVT::Qt::OBJ_WIDGET_CONFIG);
     obj->setName("Default style");
     connect(obj, SIGNAL(onOff(void *, bool)),
             this, SLOT(printBool(void *, bool)));
@@ -79,11 +79,11 @@ void MainWindow::clicked(void *obj)
 
 void MainWindow::showObjStyleWidget(void *o)
 {
-    Qt::ObjStyleWidget *obj = new Qt::ObjStyleWidget(o);
+    SVT::Qt::ObjStyleWidget *obj = new SVT::Qt::ObjStyleWidget(o);
     obj->setPointSize(2.5);
     obj->setEdgeOnOff(false);
 
-    Qt::MainWindow::showObjStyleWidget(obj);
+    SVT::Qt::MainWindow::showObjStyleWidget(obj);
 }
 
 void MainWindow::val(void *obj, double val)

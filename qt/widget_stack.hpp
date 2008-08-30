@@ -5,6 +5,8 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 
+namespace SVT {
+
 namespace Qt {
 
 class WidgetStack : public QScrollArea {
@@ -16,5 +18,7 @@ class WidgetStack : public QScrollArea {
     void finish();
 };
 
-}
+} /* Qt */
+
+} /* SVT */
 #endif

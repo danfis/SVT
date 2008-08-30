@@ -1,10 +1,12 @@
 #include "widget_stack.hpp"
 
+namespace SVT {
+
 namespace Qt {
 
 WidgetStack::WidgetStack()
 {
-    setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    setAlignment(::Qt::AlignHCenter | ::Qt::AlignTop);
     setLineWidth(0);
     setFrameShape(QFrame::NoFrame);
     setContentsMargins(0, 0, 0, 0);
@@ -26,4 +28,6 @@ void WidgetStack::finish()
     setWidget(main);
 }
 
-}
+} /* Qt */
+
+} /* SVT */

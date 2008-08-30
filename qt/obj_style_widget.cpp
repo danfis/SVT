@@ -7,6 +7,8 @@
 
 #include "obj_style_widget.moc"
 
+namespace SVT {
+
 namespace Qt {
 
 ObjStyleWidget::ObjStyleWidget(void *obj, int flags)
@@ -367,4 +369,6 @@ void ObjStyleWidget::setFaceOnOff(bool on)
 
 
 
-};
+} /* Qt */
+
+} /* SVT */

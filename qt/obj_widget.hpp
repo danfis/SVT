@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QString>
 
+namespace SVT {
+
 namespace Qt {
 
 enum ObjWidgetFlags {
@@ -42,6 +44,8 @@ class ObjWidget : public QGroupBox {
     void onOff(void *obj, bool on);
 };
 
-};
+} /* Qt */
+
+} /* SVT */
 
 #endif

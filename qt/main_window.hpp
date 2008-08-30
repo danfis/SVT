@@ -10,6 +10,8 @@
 #include "obj_style_widget.hpp"
 #include "widget_stack.hpp"
 
+namespace SVT {
+
 namespace Qt {
 
 class MainWindow : public QMainWindow {
@@ -32,6 +34,8 @@ class MainWindow : public QMainWindow {
     void showMsgInStatusBar(QString &msg);
 };
 
-}
+} /* Qt */
+
+} /* SVT */
 
 #endif
