@@ -35,11 +35,11 @@ class ObjWidget : public QGroupBox {
 
   public slots:
     void setName(const char *name);
-    void setButtonOnOff(bool checked);
+    void setButtonOnOff(bool on);
 
   signals:
     void config(void *obj);
-    void onOff(void *obj, bool checked);
+    void onOff(void *obj, bool on);
 };
 
 };

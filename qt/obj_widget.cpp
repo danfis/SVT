@@ -48,7 +48,7 @@ void ObjWidget::_config()
 
 void ObjWidget::_onOff(bool checked)
 {
-    emit onOff(_obj, checked);
+    emit onOff(_obj, !checked);
 }
 
 void ObjWidget::setName(const char *name)
@@ -58,10 +58,10 @@ void ObjWidget::setName(const char *name)
     }
 }
 
-void ObjWidget::setButtonOnOff(bool checked)
+void ObjWidget::setButtonOnOff(bool on)
 {
     if (_on_off != 0){
-        _on_off->setChecked(checked);
+        _on_off->setChecked(!on);
     }
 }
 
