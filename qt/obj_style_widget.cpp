@@ -15,6 +15,7 @@ ObjStyleWidget::ObjStyleWidget(void *obj, int flags)
     : _obj(obj), _flags(flags)
 {
     QVBoxLayout *layout = new QVBoxLayout;
+    layout->setAlignment(::Qt::AlignTop | ::Qt::AlignHCenter);
 
     if ((OBJ_STYLE_WIDGET_POINTS & flags) != 0){
         layout->addWidget(_buildPoints());
@@ -25,6 +26,8 @@ ObjStyleWidget::ObjStyleWidget(void *obj, int flags)
     if ((OBJ_STYLE_WIDGET_FACES & flags) != 0){
         layout->addWidget(_buildFaces());
     }
+
+    layout->addStretch(1);
 
     setLayout(layout);
 
