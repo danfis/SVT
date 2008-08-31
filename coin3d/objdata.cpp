@@ -212,6 +212,114 @@ ObjData::~ObjData()
         sw_faces->unref();
 }
 
+
+void ObjData::setOn(bool on)
+{
+    if (on){
+        sw->whichChild = SO_SWITCH_ALL;
+    }else{
+        sw->whichChild = SO_SWITCH_NONE;
+    }
+}
+
+
+void ObjData::setPointsOn(bool on)
+{
+    if (on){
+        sw_points->whichChild = SO_SWITCH_ALL;
+    }else{
+        sw_points->whichChild = SO_SWITCH_NONE;
+    }
+}
+
+void ObjData::setEdgesOn(bool on)
+{
+    if (on){
+        sw_edges->whichChild = SO_SWITCH_ALL;
+    }else{
+        sw_edges->whichChild = SO_SWITCH_NONE;
+    }
+}
+
+void ObjData::setFacesOn(bool on)
+{
+    if (on){
+        sw_faces->whichChild = SO_SWITCH_ALL;
+    }else{
+        sw_faces->whichChild = SO_SWITCH_NONE;
+    }
+}
+
+
+void ObjData::setPointSize(float size)
+{
+    style_points->pointSize.setValue(size);
+}
+
+void ObjData::setEdgeWidth(float width)
+{
+    style_edges->lineWidth.setValue(width);
+}
+
+
+void ObjData::setPointColor(float r, float g, float b)
+{
+    SbColor c(r, g, b);
+    material_points->diffuseColor.setValue(c);
+}
+
+void ObjData::setEdgeColor(float r, float g, float b)
+{
+    SbColor c(r, g, b);
+    material_edges->diffuseColor.setValue(c);
+}
+
+void ObjData::setFaceColor(float r, float g, float b)
+{
+    SbColor c(r, g, b);
+    material_faces->diffuseColor.setValue(c);
+}
+
+
+Qt::ObjStyleWidget *ObjData::createObjStyleWidget() const
+{
+    Qt::ObjStyleWidget *o;
+    int flags = 0x0;
+    float r, g, b;
+
+    if (numPoints() > 0)
+        flags |= Qt::OBJ_STYLE_WIDGET_POINTS;
+    if (numEdges() > 0)
+        flags |= Qt::OBJ_STYLE_WIDGET_EDGES;
+    if (numFaces() > 0)
+        flags |= Qt::OBJ_STYLE_WIDGET_FACES;
+
+    o = new Qt::ObjStyleWidget((void *)this, flags);
+    o->setPointSize(pointSize());
+    pointColor(&r, &g, &b);
+    o->setPointColor(r, g, b);
+    o->setPointOnOff(pointsOn());
+
+    o->setEdgeWidth(edgeWidth());
+    edgeColor(&r, &g, &b);
+    o->setEdgeColor(r, g, b);
+    o->setEdgeOnOff(edgesOn());
+
+    faceColor(&r, &g, &b);
+    o->setFaceColor(r, g, b);
+    o->setFaceOnOff(facesOn());
+}
+
+Qt::ObjWidget *ObjData::createObjWidget() const
+{
+    Qt::ObjWidget *o = new Qt::ObjWidget((void *)this, Qt::OBJ_WIDGET_ALL);
+
+    if (_name.size() > 0)
+        o->setName(_name.c_str());
+    o->setButtonOnOff(allOn());
+}
+
+
 } /* Coin3d */
 
 } /* SVT */

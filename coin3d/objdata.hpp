@@ -34,6 +34,9 @@
 
 #include "../parser/parser.h"
 
+#include "../qt/obj_widget.hpp"
+#include "../qt/obj_style_widget.hpp"
+
 namespace SVT {
 
 namespace Coin3d {
@@ -70,6 +73,8 @@ class ObjData {
     ObjData(svt_obj_t *obj);
     virtual ~ObjData();
 
+    SoGroup *root() { return sw; }
+
     const std::string &name() const { return _name; }
 
     int numPoints() const { return points->numPoints.getValue(); }
@@ -95,22 +100,81 @@ class ObjData {
 
     void pointColor(float *r, float *g, float *b) const
         { material_points->diffuseColor[0].getValue(*r, *g, *b); }
+    void pointColor(float rgb[3]) const
+        { pointColor(rgb, rgb + 1, rgb + 2); }
     float pointColorRed() const { return material_points->diffuseColor[0][0]; }
     float pointColorGreen() const { return material_points->diffuseColor[0][1]; }
     float pointColorBlue() const { return material_points->diffuseColor[0][2]; }
 
     void edgeColor(float *r, float *g, float *b) const
         { material_edges->diffuseColor[0].getValue(*r, *g, *b); }
+    void edgeColor(float rgb[3]) const
+        { edgeColor(rgb, rgb + 1, rgb + 2); }
     float edgeColorRed() const { return material_edges->diffuseColor[0][0]; }
     float edgeColorGreen() const { return material_edges->diffuseColor[0][1]; }
     float edgeColorBlue() const { return material_edges->diffuseColor[0][2]; }
 
     void faceColor(float *r, float *g, float *b) const
         { material_faces->diffuseColor[0].getValue(*r, *g, *b); }
+    void faceColor(float rgb[3]) const
+        { faceColor(rgb, rgb + 1, rgb + 2); }
     float faceColorRed() const { return material_faces->diffuseColor[0][0]; }
     float faceColorGreen() const { return material_faces->diffuseColor[0][1]; }
     float faceColorBlue() const { return material_faces->diffuseColor[0][2]; }
 
+    void setOn(bool on = true);
+
+    void setPointsOn(bool on = true);
+    void setEdgesOn(bool on = true);
+    void setFacesOn(bool on = true);
+
+    void setPointSize(float size);
+    void setEdgeWidth(float width);
+
+    void setPointColor(float r, float g, float b);
+    void setPointColor(float rgb[3])
+        { setPointColor(rgb[0], rgb[1], rgb[2]); }
+    void setPointColorRed(float v)
+        { setPointColor(v,
+                material_points->diffuseColor[0][1],
+                material_points->diffuseColor[0][2]); }
+    void setPointColorGreen(float v)
+        { setPointColor(material_points->diffuseColor[0][0],
+                v, material_points->diffuseColor[0][2]); }
+    void setPointColorBlue(float v)
+        { setPointColor(material_points->diffuseColor[0][0],
+                material_points->diffuseColor[0][1], v); }
+
+    void setEdgeColor(float r, float g, float b);
+    void setEdgeColor(float rgb[3])
+        { setEdgeColor(rgb[0], rgb[1], rgb[2]); }
+    void setEdgeColorRed(float v)
+        { setEdgeColor(v,
+                material_edges->diffuseColor[0][1],
+                material_edges->diffuseColor[0][2]); }
+    void setEdgeColorGreen(float v)
+        { setEdgeColor(material_edges->diffuseColor[0][0],
+                v, material_edges->diffuseColor[0][2]); }
+    void setEdgeColorBlue(float v)
+        { setEdgeColor(material_edges->diffuseColor[0][0],
+                material_edges->diffuseColor[0][1], v); }
+
+    void setFaceColor(float r, float g, float b);
+    void setFaceColor(float rgb[3])
+        { setFaceColor(rgb[0], rgb[1], rgb[2]); }
+    void setFaceColorRed(float v)
+        { setFaceColor(v,
+                material_faces->diffuseColor[0][1],
+                material_faces->diffuseColor[0][2]); }
+    void setFaceColorGreen(float v)
+        { setFaceColor(material_faces->diffuseColor[0][0],
+                v, material_faces->diffuseColor[0][2]); }
+    void setFaceColorBlue(float v)
+        { setFaceColor(material_faces->diffuseColor[0][0],
+                material_faces->diffuseColor[0][1], v); }
+
+    Qt::ObjStyleWidget *createObjStyleWidget() const;
+    Qt::ObjWidget *createObjWidget() const;
 };
 
 } /* Coin3d */
