@@ -194,6 +194,11 @@ static void svtParserParseObj(svt_parser_t *parser)
 
     while (parser->cur_tok != 0 && !end){
         switch (parser->cur_tok){
+            case T_FLT_NUM:
+                // if first token is float number it's assumed that
+                // this section is points2d
+                svtParserParsePoints2d(parser);
+                break;
             case T_POINTS:
                 svtParserParsePoints(parser);
                 break;
@@ -266,7 +271,10 @@ static void svtParserParsePoints2d(svt_parser_t *parser)
     float coords[2];
     int i = 0;
 
-    NEXT;
+    if (parser->cur_tok == T_POINTS2D){
+        NEXT;
+    }
+
     while (parser->cur_tok == T_FLT_NUM){
         coords[i] = parser->yylval.flt_num;
         i = (i + 1) % 2;
