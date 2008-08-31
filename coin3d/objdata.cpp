@@ -21,7 +21,10 @@
  */
 
 #include "objdata.hpp"
-#include "msg.hpp"
+
+namespace SVT {
+
+namespace Coin3d {
 
 ObjData::ObjData(svt_obj_t *obj)
     : num_coords(0), num_points(0), num_edges(0), num_faces(0)
@@ -171,7 +174,7 @@ ObjData::ObjData(svt_obj_t *obj)
 
     oname = svtObjName(obj);
     if (oname != NULL)
-        name = oname;
+        _name = oname;
 }
 
 ObjData::~ObjData()
@@ -209,3 +212,6 @@ ObjData::~ObjData()
         sw_faces->unref();
 }
 
+} /* Coin3d */
+
+} /* SVT */

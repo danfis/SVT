@@ -20,8 +20,8 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _OBJDATA_HPP_
-#define _OBJDATA_HPP_
+#ifndef COIN3D_OBJDATA_HPP_
+#define COIN3D_OBJDATA_HPP_
 
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoSwitch.h>
@@ -34,13 +34,15 @@
 
 #include "../parser/parser.h"
 
+namespace SVT {
+
+namespace Coin3d {
+
 /**
  * Class which describes visualisable object by Coin3d library.
- * All attributes are public, becuase this should be only object which
- * holds data and do with them not much things.
  */
-struct ObjData {
-    std::string name; /*! name of object */
+class ObjData {
+    std::string _name; /*! name of object */
 
     SoCoordinate3 *coords; /*! coordinates */
     SoPointSet *points; /*! points (holds number of points formed by
@@ -61,14 +63,57 @@ struct ObjData {
     /*! Materials of each part of object */
     SoMaterial *material_points, *material_edges, *material_faces;
 
+  public:
     /**
      * Constructor which only inicialize empty attrinutes
      */
     ObjData(svt_obj_t *obj);
     virtual ~ObjData();
 
+    const std::string &name() const { return _name; }
+
     int numPoints() const { return points->numPoints.getValue(); }
     int numEdges() const { return edges->coordIndex.getNum() / 3; }
     int numFaces() const { return faces->coordIndex.getNum() / 4; }
+
+    bool pointsOn() const
+        { return sw_points->whichChild.getValue() == SO_SWITCH_ALL; }
+    bool edgesOn() const
+        { return sw_edges->whichChild.getValue() == SO_SWITCH_ALL; }
+    bool facesOn() const
+        { return sw_faces->whichChild.getValue() == SO_SWITCH_ALL; }
+    bool allOn() const
+        { return sw->whichChild.getValue() == SO_SWITCH_ALL; }
+
+    bool pointsOff() const { return !pointsOn(); }
+    bool edgesOff() const { return !edgesOn(); }
+    bool facesOff() const { return !facesOn(); }
+    bool allOff() const { return !allOn(); }
+
+    float pointSize() const { return style_points->pointSize.getValue(); }
+    float edgeWidth() const { return style_edges->lineWidth.getValue(); } 
+
+    void pointColor(float *r, float *g, float *b) const
+        { material_points->diffuseColor[0].getValue(*r, *g, *b); }
+    float pointColorRed() const { return material_points->diffuseColor[0][0]; }
+    float pointColorGreen() const { return material_points->diffuseColor[0][1]; }
+    float pointColorBlue() const { return material_points->diffuseColor[0][2]; }
+
+    void edgeColor(float *r, float *g, float *b) const
+        { material_edges->diffuseColor[0].getValue(*r, *g, *b); }
+    float edgeColorRed() const { return material_edges->diffuseColor[0][0]; }
+    float edgeColorGreen() const { return material_edges->diffuseColor[0][1]; }
+    float edgeColorBlue() const { return material_edges->diffuseColor[0][2]; }
+
+    void faceColor(float *r, float *g, float *b) const
+        { material_faces->diffuseColor[0].getValue(*r, *g, *b); }
+    float faceColorRed() const { return material_faces->diffuseColor[0][0]; }
+    float faceColorGreen() const { return material_faces->diffuseColor[0][1]; }
+    float faceColorBlue() const { return material_faces->diffuseColor[0][2]; }
+
 };
+
+} /* Coin3d */
+
+} /* SVT */
 #endif
