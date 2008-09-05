@@ -20,13 +20,13 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "objdata.hpp"
+#include "obj.hpp"
 
 namespace SVT {
 
 namespace Coin3d {
 
-ObjData::ObjData(svt_obj_t *obj)
+Obj::Obj(svt_obj_t *obj)
     : num_coords(0), num_points(0), num_edges(0), num_faces(0)
 {
     coords = new SoCoordinate3;
@@ -177,7 +177,7 @@ ObjData::ObjData(svt_obj_t *obj)
         _name = oname;
 }
 
-ObjData::~ObjData()
+Obj::~Obj()
 {
     if (coords != 0)
         coords->unref();
@@ -213,7 +213,7 @@ ObjData::~ObjData()
 }
 
 
-void ObjData::setOn(bool on)
+void Obj::setOn(bool on)
 {
     if (on){
         sw->whichChild = SO_SWITCH_ALL;
@@ -223,7 +223,7 @@ void ObjData::setOn(bool on)
 }
 
 
-void ObjData::setPointsOn(bool on)
+void Obj::setPointsOn(bool on)
 {
     if (on){
         sw_points->whichChild = SO_SWITCH_ALL;
@@ -232,7 +232,7 @@ void ObjData::setPointsOn(bool on)
     }
 }
 
-void ObjData::setEdgesOn(bool on)
+void Obj::setEdgesOn(bool on)
 {
     if (on){
         sw_edges->whichChild = SO_SWITCH_ALL;
@@ -241,7 +241,7 @@ void ObjData::setEdgesOn(bool on)
     }
 }
 
-void ObjData::setFacesOn(bool on)
+void Obj::setFacesOn(bool on)
 {
     if (on){
         sw_faces->whichChild = SO_SWITCH_ALL;
@@ -251,74 +251,34 @@ void ObjData::setFacesOn(bool on)
 }
 
 
-void ObjData::setPointSize(float size)
+void Obj::setPointSize(float size)
 {
     style_points->pointSize.setValue(size);
 }
 
-void ObjData::setEdgeWidth(float width)
+void Obj::setEdgeWidth(float width)
 {
     style_edges->lineWidth.setValue(width);
 }
 
 
-void ObjData::setPointColor(float r, float g, float b)
+void Obj::setPointColor(float r, float g, float b)
 {
     SbColor c(r, g, b);
     material_points->diffuseColor.setValue(c);
 }
 
-void ObjData::setEdgeColor(float r, float g, float b)
+void Obj::setEdgeColor(float r, float g, float b)
 {
     SbColor c(r, g, b);
     material_edges->diffuseColor.setValue(c);
 }
 
-void ObjData::setFaceColor(float r, float g, float b)
+void Obj::setFaceColor(float r, float g, float b)
 {
     SbColor c(r, g, b);
     material_faces->diffuseColor.setValue(c);
 }
-
-
-Qt::ObjStyleWidget *ObjData::createObjStyleWidget() const
-{
-    Qt::ObjStyleWidget *o;
-    int flags = 0x0;
-    float r, g, b;
-
-    if (numPoints() > 0)
-        flags |= Qt::OBJ_STYLE_WIDGET_POINTS;
-    if (numEdges() > 0)
-        flags |= Qt::OBJ_STYLE_WIDGET_EDGES;
-    if (numFaces() > 0)
-        flags |= Qt::OBJ_STYLE_WIDGET_FACES;
-
-    o = new Qt::ObjStyleWidget((void *)this, flags);
-    o->setPointSize(pointSize());
-    pointColor(&r, &g, &b);
-    o->setPointColor(r, g, b);
-    o->setPointOnOff(pointsOn());
-
-    o->setEdgeWidth(edgeWidth());
-    edgeColor(&r, &g, &b);
-    o->setEdgeColor(r, g, b);
-    o->setEdgeOnOff(edgesOn());
-
-    faceColor(&r, &g, &b);
-    o->setFaceColor(r, g, b);
-    o->setFaceOnOff(facesOn());
-}
-
-Qt::ObjWidget *ObjData::createObjWidget() const
-{
-    Qt::ObjWidget *o = new Qt::ObjWidget((void *)this, Qt::OBJ_WIDGET_ALL);
-
-    if (_name.size() > 0)
-        o->setName(_name.c_str());
-    o->setButtonOnOff(allOn());
-}
-
 
 } /* Coin3d */
 

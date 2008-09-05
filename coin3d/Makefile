@@ -3,7 +3,7 @@ include ../Makefile.include
 CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
 
 TARGETS = libsvtcoin3d.a
-OBJS = objdata.o objdata_manager.o
+OBJS = obj.o obj_manager.o
 
 all: $(TARGETS)
 

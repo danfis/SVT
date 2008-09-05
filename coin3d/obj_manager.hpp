@@ -20,32 +20,32 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COIN3D_OBJDATA_MANAGER_HPP
-#define COIN3D_OBJDATA_MANAGER_HPP
+#ifndef COIN3D_OBJ_MANAGER_HPP
+#define COIN3D_OBJ_MANAGER_HPP
 
 #include <Inventor/nodes/SoSwitch.h>
 #include <list>
 
-#include "objdata.hpp"
+#include "obj.hpp"
 
 namespace SVT {
 
 namespace Coin3d {
 
-class ObjDataManager {
-    std::list<ObjData *> _objs;
+class ObjManager {
+    std::list<Obj *> _objs;
 
     SoSwitch *_root;
 
   public:
-    ObjDataManager();
-    ~ObjDataManager();
+    ObjManager();
+    ~ObjManager();
 
     SoGroup *root() { return _root; }
 
-    void add(ObjData *obj)
+    void add(Obj *obj)
         { _objs.push_back(obj); _root->addChild(obj->root()); }
-    void remove(ObjData *obj)
+    void remove(Obj *obj)
         { _objs.remove(obj); _root->removeChild(obj->root()); }
     void clear();
 

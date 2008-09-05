@@ -20,10 +20,10 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "objdata_manager.hpp"
+#include "obj_manager.hpp"
 
 #define forAll \
-    std::list<ObjData *>::iterator it, it_end; \
+    std::list<Obj *>::iterator it, it_end; \
 \
     it = _objs.begin(); \
     it_end = _objs.end(); \
@@ -33,20 +33,20 @@ namespace SVT {
 
 namespace Coin3d {
 
-ObjDataManager::ObjDataManager()
+ObjManager::ObjManager()
 {
     _root = new SoSwitch;
     _root->ref();
     _root->whichChild = SO_SWITCH_ALL;
 }
 
-ObjDataManager::~ObjDataManager()
+ObjManager::~ObjManager()
 {
     clear();
     _root->unref();
 }
 
-void ObjDataManager::clear()
+void ObjManager::clear()
 {
     forAll{
         delete *it;
@@ -55,7 +55,7 @@ void ObjDataManager::clear()
     _root->removeAllChildren();
 }
 
-void ObjDataManager::setOn(bool on)
+void ObjManager::setOn(bool on)
 {
     if (on){
         _root->whichChild = SO_SWITCH_ALL;
@@ -64,119 +64,119 @@ void ObjDataManager::setOn(bool on)
     }
 }
 
-void ObjDataManager::setPointsOn(bool on)
+void ObjManager::setPointsOn(bool on)
 {
     forAll{
         (*it)->setPointsOn(on);
     }
 }
 
-void ObjDataManager::setEdgesOn(bool on)
+void ObjManager::setEdgesOn(bool on)
 {
     forAll{
         (*it)->setEdgesOn(on);
     }
 }
 
-void ObjDataManager::setFacesOn(bool on)
+void ObjManager::setFacesOn(bool on)
 {
     forAll{
         (*it)->setFacesOn(on);
     }
 }
 
-void ObjDataManager::setPointSize(float size)
+void ObjManager::setPointSize(float size)
 {
     forAll{
         (*it)->setPointSize(size);
     }
 }
 
-void ObjDataManager::setEdgeWidth(float width)
+void ObjManager::setEdgeWidth(float width)
 {
     forAll{
         (*it)->setEdgeWidth(width);
     }
 }
 
-void ObjDataManager::setPointColor(float r, float g, float b)
+void ObjManager::setPointColor(float r, float g, float b)
 {
     forAll{
         (*it)->setPointColor(r, g, b);
     }
 }
 
-void ObjDataManager::setPointColorRed(float v)
+void ObjManager::setPointColorRed(float v)
 {
     forAll{
         (*it)->setPointColorRed(v);
     }
 }
 
-void ObjDataManager::setPointColorGreen(float v)
+void ObjManager::setPointColorGreen(float v)
 {
     forAll{
         (*it)->setPointColorGreen(v);
     }
 }
 
-void ObjDataManager::setPointColorBlue(float v)
+void ObjManager::setPointColorBlue(float v)
 {
     forAll{
         (*it)->setPointColorBlue(v);
     }
 }
 
-void ObjDataManager::setEdgeColor(float r, float g, float b)
+void ObjManager::setEdgeColor(float r, float g, float b)
 {
     forAll{
         (*it)->setEdgeColor(r, g, b);
     }
 }
 
-void ObjDataManager::setEdgeColorRed(float v)
+void ObjManager::setEdgeColorRed(float v)
 {
     forAll{
         (*it)->setEdgeColorRed(v);
     }
 }
 
-void ObjDataManager::setEdgeColorGreen(float v)
+void ObjManager::setEdgeColorGreen(float v)
 {
     forAll{
         (*it)->setEdgeColorGreen(v);
     }
 }
 
-void ObjDataManager::setEdgeColorBlue(float v)
+void ObjManager::setEdgeColorBlue(float v)
 {
     forAll{
         (*it)->setEdgeColorBlue(v);
     }
 }
 
-void ObjDataManager::setFaceColor(float r, float g, float b)
+void ObjManager::setFaceColor(float r, float g, float b)
 {
     forAll{
         (*it)->setFaceColor(r, g, b);
     }
 }
 
-void ObjDataManager::setFaceColorRed(float v)
+void ObjManager::setFaceColorRed(float v)
 {
     forAll{
         (*it)->setFaceColorRed(v);
     }
 }
 
-void ObjDataManager::setFaceColorGreen(float v)
+void ObjManager::setFaceColorGreen(float v)
 {
     forAll{
         (*it)->setFaceColorGreen(v);
     }
 }
 
-void ObjDataManager::setFaceColorBlue(float v)
+void ObjManager::setFaceColorBlue(float v)
 {
     forAll{
         (*it)->setFaceColorBlue(v);

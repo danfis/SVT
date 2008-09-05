@@ -20,8 +20,8 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COIN3D_OBJDATA_HPP_
-#define COIN3D_OBJDATA_HPP_
+#ifndef COIN3D_OBJ_HPP_
+#define COIN3D_OBJ_HPP_
 
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoSwitch.h>
@@ -46,7 +46,7 @@ namespace Coin3d {
 /**
  * Class which describes visualisable object by Coin3d library.
  */
-class ObjData : public Common::Obj {
+class Obj : public Common::Obj {
     std::string _name; /*! name of object */
 
     SoCoordinate3 *coords; /*! coordinates */
@@ -72,8 +72,8 @@ class ObjData : public Common::Obj {
     /**
      * Constructor which only inicialize empty attrinutes
      */
-    ObjData(svt_obj_t *obj);
-    virtual ~ObjData();
+    Obj(svt_obj_t *obj);
+    virtual ~Obj();
 
     SoGroup *root() { return sw; }
 
@@ -157,9 +157,6 @@ class ObjData : public Common::Obj {
     void setFaceColorBlue(float v)
         { setFaceColor(material_faces->diffuseColor[0][0],
                 material_faces->diffuseColor[0][1], v); }
-
-    Qt::ObjStyleWidget *createObjStyleWidget() const;
-    Qt::ObjWidget *createObjWidget() const;
 };
 
 } /* Coin3d */
