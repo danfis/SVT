@@ -32,6 +32,8 @@
 #include <Inventor/nodes/SoMaterial.h>
 #include <string>
 
+#include "../common/obj.hpp"
+
 #include "../parser/parser.h"
 
 #include "../qt/obj_widget.hpp"
@@ -44,7 +46,7 @@ namespace Coin3d {
 /**
  * Class which describes visualisable object by Coin3d library.
  */
-class ObjData {
+class ObjData : public Common::Obj {
     std::string _name; /*! name of object */
 
     SoCoordinate3 *coords; /*! coordinates */
@@ -90,34 +92,23 @@ class ObjData {
     bool allOn() const
         { return sw->whichChild.getValue() == SO_SWITCH_ALL; }
 
-    bool pointsOff() const { return !pointsOn(); }
-    bool edgesOff() const { return !edgesOn(); }
-    bool facesOff() const { return !facesOn(); }
-    bool allOff() const { return !allOn(); }
-
     float pointSize() const { return style_points->pointSize.getValue(); }
     float edgeWidth() const { return style_edges->lineWidth.getValue(); } 
 
     void pointColor(float *r, float *g, float *b) const
         { material_points->diffuseColor[0].getValue(*r, *g, *b); }
-    void pointColor(float rgb[3]) const
-        { pointColor(rgb, rgb + 1, rgb + 2); }
     float pointColorRed() const { return material_points->diffuseColor[0][0]; }
     float pointColorGreen() const { return material_points->diffuseColor[0][1]; }
     float pointColorBlue() const { return material_points->diffuseColor[0][2]; }
 
     void edgeColor(float *r, float *g, float *b) const
         { material_edges->diffuseColor[0].getValue(*r, *g, *b); }
-    void edgeColor(float rgb[3]) const
-        { edgeColor(rgb, rgb + 1, rgb + 2); }
     float edgeColorRed() const { return material_edges->diffuseColor[0][0]; }
     float edgeColorGreen() const { return material_edges->diffuseColor[0][1]; }
     float edgeColorBlue() const { return material_edges->diffuseColor[0][2]; }
 
     void faceColor(float *r, float *g, float *b) const
         { material_faces->diffuseColor[0].getValue(*r, *g, *b); }
-    void faceColor(float rgb[3]) const
-        { faceColor(rgb, rgb + 1, rgb + 2); }
     float faceColorRed() const { return material_faces->diffuseColor[0][0]; }
     float faceColorGreen() const { return material_faces->diffuseColor[0][1]; }
     float faceColorBlue() const { return material_faces->diffuseColor[0][2]; }
@@ -132,8 +123,6 @@ class ObjData {
     void setEdgeWidth(float width);
 
     void setPointColor(float r, float g, float b);
-    void setPointColor(float rgb[3])
-        { setPointColor(rgb[0], rgb[1], rgb[2]); }
     void setPointColorRed(float v)
         { setPointColor(v,
                 material_points->diffuseColor[0][1],
@@ -146,8 +135,6 @@ class ObjData {
                 material_points->diffuseColor[0][1], v); }
 
     void setEdgeColor(float r, float g, float b);
-    void setEdgeColor(float rgb[3])
-        { setEdgeColor(rgb[0], rgb[1], rgb[2]); }
     void setEdgeColorRed(float v)
         { setEdgeColor(v,
                 material_edges->diffuseColor[0][1],
@@ -160,8 +147,6 @@ class ObjData {
                 material_edges->diffuseColor[0][1], v); }
 
     void setFaceColor(float r, float g, float b);
-    void setFaceColor(float rgb[3])
-        { setFaceColor(rgb[0], rgb[1], rgb[2]); }
     void setFaceColorRed(float v)
         { setFaceColor(v,
                 material_faces->diffuseColor[0][1],
