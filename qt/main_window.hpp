@@ -6,6 +6,8 @@
 #include <QStatusBar>
 #include <QString>
 
+#include "../common/obj.hpp"
+
 #include "obj_widget.hpp"
 #include "obj_style_widget.hpp"
 #include "widget_stack.hpp"
@@ -25,12 +27,12 @@ class MainWindow : public QMainWindow {
     MainWindow();
     virtual ~MainWindow();
 
-    void addObjWidget(ObjWidget *);
+    void addObjWidget(Common::Obj *, int flags = OBJ_WIDGET_ALL);
 
     void show();
 
   public slots:
-    void showObjStyleWidget(ObjStyleWidget *);
+    void showObjStyleWidget(Common::Obj *);
     void showMsgInStatusBar(QString &msg);
 };
 

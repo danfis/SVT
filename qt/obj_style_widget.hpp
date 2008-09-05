@@ -6,23 +6,17 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include "../common/obj.hpp"
+
 namespace SVT {
 
 namespace Qt {
-
-enum ObjStyleWidgetFlags {
-    OBJ_STYLE_WIDGET_POINTS = 0x1,
-    OBJ_STYLE_WIDGET_EDGES = 0x2,
-    OBJ_STYLE_WIDGET_FACES = 0x4,
-    OBJ_STYLE_WIDGET_ALL = 0x7
-};
 
 class ObjStyleWidget : public QWidget {
     Q_OBJECT
 
   private:
-    void *_obj;
-    int _flags;
+    Common::Obj *_obj;
 
     QDoubleSpinBox *_points[4]; /* size, r, g, b */
     QPushButton *_points_b;
@@ -40,9 +34,10 @@ class ObjStyleWidget : public QWidget {
     void _buildOnOff(QVBoxLayout *layout, QPushButton **refs);
 
     void _setUpConnections();
+    void _setUpDefaultValues();
 
   public:
-    ObjStyleWidget(void *obj, int flags = OBJ_STYLE_WIDGET_ALL);
+    ObjStyleWidget(Common::Obj *obj);
 
   public slots:
     void setPointSize(double val);
@@ -88,25 +83,25 @@ class ObjStyleWidget : public QWidget {
     void _faceOnOff(bool off);
 
   signals:
-    void pointSize(void *obj, double val);
-    void pointColorRed(void *obj, double val);
-    void pointColorBlue(void *obj, double val);
-    void pointColorGreen(void *obj, double val);
-    void pointColor(void *obj, double r, double g, double b);
-    void pointOnOff(void *obj, bool on);
+    void pointSize(Common::Obj *obj, double val);
+    void pointColorRed(Common::Obj *obj, double val);
+    void pointColorBlue(Common::Obj *obj, double val);
+    void pointColorGreen(Common::Obj *obj, double val);
+    void pointColor(Common::Obj *obj, double r, double g, double b);
+    void pointOnOff(Common::Obj *obj, bool on);
 
-    void edgeWidth(void *obj, double val);
-    void edgeColorRed(void *obj, double val);
-    void edgeColorBlue(void *obj, double val);
-    void edgeColorGreen(void *obj, double val);
-    void edgeColor(void *obj, double r, double g, double b);
-    void edgeOnOff(void *obj, bool on);
+    void edgeWidth(Common::Obj *obj, double val);
+    void edgeColorRed(Common::Obj *obj, double val);
+    void edgeColorBlue(Common::Obj *obj, double val);
+    void edgeColorGreen(Common::Obj *obj, double val);
+    void edgeColor(Common::Obj *obj, double r, double g, double b);
+    void edgeOnOff(Common::Obj *obj, bool on);
 
-    void faceColorRed(void *obj, double val);
-    void faceColorBlue(void *obj, double val);
-    void faceColorGreen(void *obj, double val);
-    void faceColor(void *obj, double r, double g, double b);
-    void faceOnOff(void *obj, bool on);
+    void faceColorRed(Common::Obj *obj, double val);
+    void faceColorBlue(Common::Obj *obj, double val);
+    void faceColorGreen(Common::Obj *obj, double val);
+    void faceColor(Common::Obj *obj, double r, double g, double b);
+    void faceOnOff(Common::Obj *obj, bool on);
 };
 
 } /* Qt */

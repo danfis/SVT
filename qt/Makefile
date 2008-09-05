@@ -13,15 +13,14 @@ libsvtqt.a: $(OBJS)
 	ar cr $@ $^
 	ranlib $@
 
-test: test.o test_win.o $(OBJS) libsvtqt.a
-	$(CXX) $(CXXFLAGS) -o test test.o test_win.o $(LDFLAGS) -L./ -lsvtqt
+test: test.o libsvtqt.a
+	$(CXX) $(CXXFLAGS) -o test test.o $(LDFLAGS) -L./ -lsvtqt
 
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 obj_widget.cpp: obj_widget.moc
 obj_style_widget.cpp: obj_style_widget.moc
-test_win.cpp: test_win.moc
 main_window.cpp: main_window.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@

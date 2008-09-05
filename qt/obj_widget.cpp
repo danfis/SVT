@@ -7,7 +7,7 @@ namespace SVT {
 
 namespace Qt {
 
-ObjWidget::ObjWidget(void *obj, int flags)
+ObjWidget::ObjWidget(Common::Obj *obj, int flags)
     : _obj(obj), _flags(flags), _conf(0), _on_off(0)
 {
     QVBoxLayout *layout = new QVBoxLayout;
@@ -28,6 +28,8 @@ ObjWidget::ObjWidget(void *obj, int flags)
     setLayout(layout);
 
     _setUpConnections();
+    _setUpDefaultValues();
+
 }
 
 void ObjWidget::_setUpConnections()
@@ -43,6 +45,19 @@ void ObjWidget::_setUpConnections()
     }
 }
 
+void ObjWidget::_setUpDefaultValues()
+{
+    if (_obj->name().size() > 0){
+        setName(_obj->name().c_str());
+    }else{
+        /* TODO */
+    }
+
+    if (_on_off != 0){
+        setButtonOnOff(_obj->allOn());
+    }
+}
+
 void ObjWidget::_config()
 {
     emit config(_obj);
@@ -50,6 +65,8 @@ void ObjWidget::_config()
 
 void ObjWidget::_onOff(bool checked)
 {
+    _obj->setAllOn(!checked);
+
     emit onOff(_obj, !checked);
 }
 

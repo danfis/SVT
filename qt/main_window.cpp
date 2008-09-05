@@ -29,9 +29,13 @@ MainWindow::~MainWindow()
     delete _obj_widgets;
 }
 
-void MainWindow::addObjWidget(ObjWidget *w)
+void MainWindow::addObjWidget(Common::Obj *obj, int flags)
 {
-    _obj_widgets->push(w);
+    ObjWidget *o = new ObjWidget(obj, flags);
+    _obj_widgets->push(o);
+
+    connect(o, SIGNAL(config(Common::Obj *)),
+            this, SLOT(showObjStyleWidget(Common::Obj *)));
 }
 
 void MainWindow::show()
@@ -40,7 +44,7 @@ void MainWindow::show()
     QMainWindow::show();
 }
 
-void MainWindow::showObjStyleWidget(ObjStyleWidget *w)
+void MainWindow::showObjStyleWidget(Common::Obj *obj)
 {
     if (_right_dock != 0
         && dockWidgetArea(_right_dock) != ::Qt::NoDockWidgetArea){
@@ -52,7 +56,7 @@ void MainWindow::showObjStyleWidget(ObjStyleWidget *w)
     _right_dock->setFeatures(QDockWidget::DockWidgetFloatable
                              | QDockWidget::DockWidgetMovable
                              | QDockWidget::DockWidgetClosable);
-    _right_dock->setWidget(w);
+    _right_dock->setWidget(new ObjStyleWidget(obj));
     addDockWidget(::Qt::RightDockWidgetArea, _right_dock, ::Qt::Vertical);
 }
 

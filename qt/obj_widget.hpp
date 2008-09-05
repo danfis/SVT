@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QString>
 
+#include "../common/obj.hpp"
+
 namespace SVT {
 
 namespace Qt {
@@ -20,12 +22,13 @@ class ObjWidget : public QGroupBox {
     Q_OBJECT
 
   private:
-    void *_obj;
+    Common::Obj *_obj;
     int _flags;
     QPushButton *_conf, *_on_off;
     QString name;
 
     void _setUpConnections();
+    void _setUpDefaultValues();
 
   private slots:
     void _config();
@@ -33,15 +36,15 @@ class ObjWidget : public QGroupBox {
 
 
   public:
-    ObjWidget(void *obj, int flags = OBJ_WIDGET_ALL);
+    ObjWidget(Common::Obj *obj, int flags = OBJ_WIDGET_ALL);
 
   public slots:
     void setName(const char *name);
     void setButtonOnOff(bool on);
 
   signals:
-    void config(void *obj);
-    void onOff(void *obj, bool on);
+    void config(Common::Obj *obj);
+    void onOff(Common::Obj *obj, bool on);
 };
 
 } /* Qt */
