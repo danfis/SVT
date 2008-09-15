@@ -153,7 +153,7 @@ Obj::Obj(svt_obj_t *obj)
         edges->coordIndex.setValues(0, len * 3, ilist);
         num_edges = len;
 
-        delete ilist;
+        delete [] ilist;
     }
 
     ofaces = svtObjFaces(obj, &len);
@@ -169,7 +169,7 @@ Obj::Obj(svt_obj_t *obj)
         faces->coordIndex.setValues(0, len * 4, ilist);
         num_faces = len;
 
-        delete ilist;
+        delete [] ilist;
     }
 
     oname = svtObjName(obj);
