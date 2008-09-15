@@ -31,12 +31,9 @@ using namespace std;
 
 #include "common.hpp"
 #include "common_coin.hpp"
-
-#include "common/objdata.hpp"
-#include "common/viewer.hpp"
-#include "common/msg.hpp"
-#include "common/coin3dtools.hpp"
+#include "coin3d/coin3d.hpp"
 #include "parser/parser.h"
+#include "common/msg.hpp"
 
 #define READER_HUNKS 5
 
@@ -44,7 +41,6 @@ static void *thViewer(void *arg);
 static void *thReader(void *arg);
 
 svt_parser_t *parser;
-Viewer *viewer;
 
 useconds_t sleep_time = 50000;
 
@@ -65,10 +61,7 @@ int main(int argc, char *argv[])
 
     args = processOptions(argc, argv, &num_args);
 
-    Coin3dTools::init("viewer");
-    viewer = Coin3dTools::viewer();
-
-    applySettings(viewer);
+    SVT::Coin3d::Coin3d::init("Viewer-Live");
 
     parser = svtParserNew();
 
@@ -95,9 +88,9 @@ int main(int argc, char *argv[])
 
     // start reading thread
     pthread_create(th + 0, 0, thReader, NULL);
-    pthread_create(th + 1, 0, thViewer, (void *)viewer);
+    pthread_create(th + 1, 0, thViewer, NULL);
 
-    Coin3dTools::mainLoop();
+    SVT::Coin3d::Coin3d::mainLoop();
 
     pthread_mutex_lock(&lock_end);
     end = 1;
@@ -110,6 +103,8 @@ int main(int argc, char *argv[])
     cout << endl;
 
     svtParserDelete(parser);
+
+    SVT::Coin3d::Coin3d::free();
 
     return 0;
 }
@@ -150,13 +145,13 @@ void *thViewer(void *arg)
                     .arg(svtObjNumPoints(objs), 8)
                     .arg(svtObjNumEdges(objs), 8)
                     .arg(svtObjNumFaces(objs), 8);
-            Coin3dTools::showMessageInStatusBar(msg);
+            SVT::Coin3d::Coin3d::showMessageInStatusBar(msg);
             frame++;
 
             // set up object
-            viewer->clear();
-            viewer->addDynObjData(new ObjData(objs));
-            viewer->rebuildSceneGraph();
+            SVT::Coin3d::Obj *obj = new SVT::Coin3d::Obj(objs);
+            applyDefaultSettings(obj);
+            SVT::Coin3d::Coin3d::addDynObj(obj);
 
             // shift list of objects
             objs = svtObjDelete(objs);

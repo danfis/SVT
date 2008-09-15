@@ -39,8 +39,10 @@ void ViewerCameraChangedCallback(void *data, SoSensor *);
 class Viewer : public QWidget, public SoQtExaminerViewer {
     Q_OBJECT
 
-  private:
+  protected:
     SoSwitch *_root; /*! root of scene graph */
+
+  private:
     SoPointLight *_light; /*! main light source */
     SbVec3f _light_transform; /*! vector which holds data used for relative
                                   transformation of _light from camera

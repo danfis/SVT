@@ -7,7 +7,7 @@ TEST_LDFLAGS = -L./ -lsvtcoin3d -L../qt -lsvtqt \
 
 
 TARGETS = libsvtcoin3d.a
-OBJS = obj.o obj_manager.o coin3d.o viewer.o
+OBJS = obj.o obj_manager.o coin3d.o viewer.o viewer_live.o
 
 all: $(TARGETS)
 
@@ -19,6 +19,7 @@ libsvtcoin3d.a: $(OBJS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 viewer.cpp: viewer.moc
+viewer_live.cpp: viewer_live.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 

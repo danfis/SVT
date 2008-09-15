@@ -6,8 +6,8 @@ LDFLAGS_COIN = -L../parser -lsvtparser -L../coin3d -lsvtcoin3d \
                $(COIN_LDFLAGS) $(SOQT_LDFLAGS) $(QT_LDFLAGS)
 LDFLAGS_TO_SVG = -L../parser -lsvtparser -lfl
 
-#TARGETS = svt-viewer svt-iv-viewer svt-viewer-live svt-to-svg
-TARGETS = svt-viewer svt-iv-viewer svt-to-svg
+TARGETS = svt-viewer svt-iv-viewer svt-viewer-live svt-to-svg
+#TARGETS = svt-viewer svt-iv-viewer svt-to-svg
 VIEWER_OBJS = viewer.o viewer-common.o common_coin.o settings.o
 IV_VIEWER_OBJS = iv-viewer.o
 VIEWER_LIVE_OBJS = viewer-live.o viewer-live-common.o common_coin.o settings.o

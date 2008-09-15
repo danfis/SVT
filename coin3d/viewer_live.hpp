@@ -20,53 +20,41 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COIN3D_COIN3D_HPP
-#define COIN3D_COIN3D_HPP
+#ifndef COIN3D_VIEWER_LIVE_HPP
+#define COIN3D_VIEWER_LIVE_HPP
 
-#include <Inventor/Qt/SoQt.h>
-#include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
-#include <QWidget>
-#include <list>
-#include "../qt/main_window.hpp"
-#include "obj_manager.hpp"
-#include "viewer_live.hpp"
+#include "viewer.hpp"
 
 namespace SVT {
 
 namespace Coin3d {
 
-class Coin3d {
+
+class ViewerLive : public Viewer {
+    Q_OBJECT
+
   private:
-    static Qt::MainWindow *_mainwin;
-    static QWidget *_win;
-    static ViewerLive *_viewer;
-    static ObjManager _obj_manager;
+    SoSwitch *_dyn;
+
+  private slots:
+    void _setDynSceneGraph(SoNode *);
+    void _clearDynSceneGraph();
+
+  signals:
+    void _setDynSceneGraphSignal(SoNode *);
+    void _clearDynSceneGraphSignal();
 
   public:
-    static void init(const char *win_title = "");
-    static void mainLoop();
-    static void free();
+    ViewerLive(QWidget *win);
+    ~ViewerLive();
 
-    static void showMessageInStatusBar(QString &str);
-
-    /**
-     * Add object to Viewer.
-     */
-    static void addObj(Obj *obj);
-
-
-    /**
-     * Add dynamic object to ViewerLive
-     */
-    static void addDynObj(Obj *obj);
-
-    /**
-     * Remove all dynamic objects from viewer
-     */
-    static void clearDynObjs();
+    void setDynSceneGraph(SoNode *);
+    void clearDynSceneGraph();
 };
 
 } /* namespace Coin3d */
+
 } /* namespace SVT */
+
 #endif
 

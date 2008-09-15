@@ -28,14 +28,14 @@ namespace Coin3d {
 
 Qt::MainWindow *Coin3d::_mainwin = 0;
 QWidget *Coin3d::_win = 0;
-Viewer *Coin3d::_viewer = 0;
+ViewerLive *Coin3d::_viewer = 0;
 ObjManager Coin3d::_obj_manager;
 
 void Coin3d::init(const char *win_title)
 {
     _win = SoQt::init(win_title);
     _mainwin = new Qt::MainWindow();
-    _viewer = new Viewer(_win);
+    _viewer = new ViewerLive(_win);
     _mainwin->setCentralWidget(_win);
 }
 
@@ -57,12 +57,26 @@ void Coin3d::free()
     delete _mainwin;
 }
 
+void Coin3d::showMessageInStatusBar(QString &str)
+{
+    //_mainwin->showMsgInStatusBar(str);
+}
+
 void Coin3d::addObj(Obj *obj)
 {
     _obj_manager.add(obj);
     _mainwin->addObjWidget(obj);
 }
 
+void Coin3d::addDynObj(Obj *obj)
+{
+    _viewer->setDynSceneGraph(obj->root());
+}
+
+void Coin3d::clearDynObjs()
+{
+    _viewer->clearDynSceneGraph();
+}
 
 } /* namespace Coin3d */
 } /* namespace SVT */
