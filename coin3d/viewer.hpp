@@ -34,20 +34,28 @@ namespace Coin3d {
 
 void ViewerCameraChangedCallback(void *data, SoSensor *);
 
+
+
 class Viewer : public QWidget, public SoQtExaminerViewer {
     Q_OBJECT
 
   private:
-    SoSwitch *_root;
+    SoSwitch *_root; /*! root of scene graph */
     SoPointLight *_light; /*! main light source */
     SbVec3f _light_transform; /*! vector which holds data used for relative
                                   transformation of _light from camera
                                   position */
 
     
+    /**
+     * Overloaded functions for changing behaviour of left and right wheels
+     */
     void leftWheelMotion(float val);
     void bottomWheelMotion(float val);
 
+    /**
+     * Callback which is called when camera position is changed
+     */
     friend void ViewerCameraChangedCallback(void *data, SoSensor *);
 
   private slots:
@@ -61,6 +69,7 @@ class Viewer : public QWidget, public SoQtExaminerViewer {
     ~Viewer();
 
     void setSceneGraph(SoNode *node);
+
     void show();
 };
 

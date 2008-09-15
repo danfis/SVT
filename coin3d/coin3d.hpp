@@ -46,6 +46,10 @@ class Coin3d {
     static void init(const char *win_title = "");
     static void mainLoop();
     static void free();
+
+    /**
+     * Add object to Viewer.
+     */
     static void addObj(Obj *obj);
 };
 

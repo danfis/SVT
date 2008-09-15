@@ -47,8 +47,6 @@ int main(int argc, char *argv[])
 
     SVT::Coin3d::Coin3d::init("viewer");
 
-    //applySettings(viewer);
-
     parser = svtParserNew();
 
     if (args != 0){
