@@ -79,9 +79,9 @@ class Obj : public Common::Obj {
 
     const std::string &name() const { return _name; }
 
-    int numPoints() const { return points->numPoints.getValue(); }
-    int numEdges() const { return edges->coordIndex.getNum() / 3; }
-    int numFaces() const { return faces->coordIndex.getNum() / 4; }
+    int numPoints() const { return num_points; }
+    int numEdges() const { return num_edges; }
+    int numFaces() const { return num_faces; }
 
     bool pointsOn() const
         { return sw_points->whichChild.getValue() == SO_SWITCH_ALL; }

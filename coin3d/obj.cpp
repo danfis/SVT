@@ -167,7 +167,7 @@ Obj::Obj(svt_obj_t *obj)
         }
 
         faces->coordIndex.setValues(0, len * 4, ilist);
-        num_edges = len;
+        num_faces = len;
 
         delete ilist;
     }
