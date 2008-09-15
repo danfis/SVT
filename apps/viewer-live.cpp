@@ -90,6 +90,8 @@ int main(int argc, char *argv[])
     pthread_create(th + 0, 0, thReader, NULL);
     pthread_create(th + 1, 0, thViewer, NULL);
 
+    QString str("Ahoj");
+    SVT::Coin3d::Coin3d::showMessageInStatusBar(str);
     SVT::Coin3d::Coin3d::mainLoop();
 
     pthread_mutex_lock(&lock_end);

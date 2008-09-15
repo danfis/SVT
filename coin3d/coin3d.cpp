@@ -59,7 +59,7 @@ void Coin3d::free()
 
 void Coin3d::showMessageInStatusBar(QString &str)
 {
-    //_mainwin->showMsgInStatusBar(str);
+    _mainwin->showMsgInStatusBarSignal(str);
 }
 
 void Coin3d::addObj(Obj *obj)

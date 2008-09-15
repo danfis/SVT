@@ -22,6 +22,9 @@ MainWindow::MainWindow()
 
     _status = new QStatusBar;
     setStatusBar(_status);
+
+    connect(this, SIGNAL(_showMsgInStatusBarSignal(const QString &)),
+            _status, SLOT(showMessage(const QString &)));
 }
 
 MainWindow::~MainWindow()
@@ -44,6 +47,11 @@ void MainWindow::show()
     QMainWindow::show();
 }
 
+void MainWindow::showMsgInStatusBarSignal(const QString &msg)
+{
+    emit _showMsgInStatusBarSignal(msg);
+}
+
 void MainWindow::showObjStyleWidget(Common::Obj *obj)
 {
     if (_right_dock != 0
@@ -60,7 +68,7 @@ void MainWindow::showObjStyleWidget(Common::Obj *obj)
     addDockWidget(::Qt::RightDockWidgetArea, _right_dock, ::Qt::Vertical);
 }
 
-void MainWindow::showMsgInStatusBar(QString &msg)
+void MainWindow::showMsgInStatusBar(const QString &msg)
 {
     _status->showMessage(msg);
 }

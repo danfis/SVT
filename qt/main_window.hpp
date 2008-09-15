@@ -31,9 +31,13 @@ class MainWindow : public QMainWindow {
 
     void show();
 
+    void showMsgInStatusBarSignal(const QString &msg);
+
+  signals:
+    void _showMsgInStatusBarSignal(const QString &msg);
   public slots:
     void showObjStyleWidget(Common::Obj *);
-    void showMsgInStatusBar(QString &msg);
+    void showMsgInStatusBar(const QString &msg);
 };
 
 } /* Qt */
