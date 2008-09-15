@@ -25,21 +25,43 @@
 
 #include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
 #include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/nodes/SoPointLight.h>
+#include <QWidget>
 
 namespace SVT {
 
 namespace Coin3d {
 
-class Viewer : public SoQtExaminerViewer {
+void ViewerCameraChangedCallback(void *data, SoSensor *);
+
+class Viewer : public QWidget, public SoQtExaminerViewer {
+    Q_OBJECT
+
   private:
     SoSwitch *_root;
-    SoSwitch *_dyn;
+    SoPointLight *_light; /*! main light source */
+    SbVec3f _light_transform; /*! vector which holds data used for relative
+                                  transformation of _light from camera
+                                  position */
+
+    
+    void leftWheelMotion(float val);
+    void bottomWheelMotion(float val);
+
+    friend void ViewerCameraChangedCallback(void *data, SoSensor *);
+
+  private slots:
+    void _setUpLightPosition();
+
+  signals:
+    void setUpLightPosition();
 
   public:
     Viewer(QWidget *win);
     ~Viewer();
 
     void setSceneGraph(SoNode *node);
+    void show();
 };
 
 } /* namespace Coin3d */

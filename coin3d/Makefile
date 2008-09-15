@@ -18,6 +18,7 @@ libsvtcoin3d.a: $(OBJS)
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+viewer.cpp: viewer.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 
