@@ -28,25 +28,24 @@ namespace Coin3d {
 
 Qt::MainWindow *Coin3d::_mainwin = 0;
 QWidget *Coin3d::_win = 0;
-SoQtExaminerViewer *Coin3d::_viewer = 0;
+Viewer *Coin3d::_viewer = 0;
 ObjManager Coin3d::_obj_manager;
 
 void Coin3d::init(const char *win_title)
 {
     _win = SoQt::init(win_title);
     _mainwin = new Qt::MainWindow();
-    _viewer = new SoQtExaminerViewer(_win);
-    _viewer->setSceneGraph(_obj_manager.root());
-
+    _viewer = new Viewer(_win);
     _mainwin->setCentralWidget(_win);
 }
 
 void Coin3d::mainLoop()
 {
-    if (_viewer != 0){
-        _viewer->show();
-    }
+    _viewer->setSceneGraph(_obj_manager.root());
+    _viewer->show();
+
     _mainwin->show();
+
     SoQt::show(_mainwin);
     SoQt::mainLoop();
 }

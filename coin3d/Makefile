@@ -7,7 +7,7 @@ TEST_LDFLAGS = -L./ -lsvtcoin3d -L../qt -lsvtqt \
 
 
 TARGETS = libsvtcoin3d.a
-OBJS = obj.o obj_manager.o coin3d.o
+OBJS = obj.o obj_manager.o coin3d.o viewer.o
 
 all: $(TARGETS)
 

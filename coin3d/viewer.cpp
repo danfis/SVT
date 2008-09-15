@@ -20,36 +20,38 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COIN3D_COIN3D_HPP
-#define COIN3D_COIN3D_HPP
-
-#include <Inventor/Qt/SoQt.h>
-#include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
-#include <QWidget>
-#include <list>
-#include "../qt/main_window.hpp"
-#include "obj_manager.hpp"
 #include "viewer.hpp"
 
 namespace SVT {
 
 namespace Coin3d {
 
-class Coin3d {
-  private:
-    static Qt::MainWindow *_mainwin;
-    static QWidget *_win;
-    static Viewer *_viewer;
-    static ObjManager _obj_manager;
+Viewer::Viewer(QWidget *win)
+    : SoQtExaminerViewer(win)
+{
+    _root = new SoSwitch;
+    _root->ref();
+    _root->whichChild = SO_SWITCH_ALL;
 
-  public:
-    static void init(const char *win_title = "");
-    static void mainLoop();
-    static void free();
-    static void addObj(Obj *obj);
-};
+    _dyn = new SoSwitch;
+    _dyn->ref();
+    _dyn->whichChild = SO_SWITCH_ALL;
+
+    _root->addChild(_dyn);
+}
+
+Viewer::~Viewer()
+{
+    _root->unref();
+    _dyn->unref();
+}
+
+void Viewer::setSceneGraph(SoNode *node)
+{
+    _root->addChild(node);
+    SoQtExaminerViewer::setSceneGraph(node);
+}
 
 } /* namespace Coin3d */
-} /* namespace SVT */
-#endif
 
+} /* namespace SVT */
