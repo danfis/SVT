@@ -24,13 +24,13 @@
 #define COMMON_COIN_HPP
 
 #include "parser/parser.h"
-#include "common/viewer.hpp"
+#include "coin3d/obj.hpp"
 
 extern svt_parser_t *parser;
 
 void parseObjData();
 
-void applySettings(Viewer *viewer);
+void applyDefaultSettings(SVT::Coin3d::Obj *);
 
 #endif
 

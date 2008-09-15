@@ -32,30 +32,22 @@ using namespace std;
 
 #include "common.hpp"
 #include "common_coin.hpp"
-
-#include "common/objdata.hpp"
-#include "common/viewer.hpp"
 #include "common/msg.hpp"
-#include "common/coin3dtools.hpp"
+#include "coin3d/coin3d.hpp"
 #include "parser/parser.h"
-
-void chooseRandomColor(float *r, float *g, float *b);
-void parseObjData();
 
 svt_parser_t *parser;
 
 int main(int argc, char *argv[])
 {
-    Viewer *viewer;
     char **args;
     int num_args;
 
     args = processOptions(argc, argv, &num_args);
 
-    Coin3dTools::init("viewer");
-    viewer = Coin3dTools::viewer();
+    SVT::Coin3d::Coin3d::init("viewer");
 
-    applySettings(viewer);
+    //applySettings(viewer);
 
     parser = svtParserNew();
 
@@ -81,7 +73,9 @@ int main(int argc, char *argv[])
 
     svtParserDelete(parser);
 
-    Coin3dTools::mainLoop();
+    SVT::Coin3d::Coin3d::mainLoop();
+
+    SVT::Coin3d::Coin3d::free();
 
     return 0;
 }

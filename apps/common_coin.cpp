@@ -23,18 +23,14 @@
 #include "common_coin.hpp"
 #include "common.hpp"
 #include "settings.hpp"
-#include "common/objdata.hpp"
-#include "common/viewer.hpp"
-#include "common/coin3dtools.hpp"
+#include "coin3d/coin3d.hpp"
+#include "common/msg.hpp"
 
 void parseObjData()
 {
     svt_obj_t *objs;
-    ObjData *data;
-    Viewer *viewer;
+    SVT::Coin3d::Obj *data;
     float r, g, b;
-
-    viewer = Coin3dTools::viewer();
 
     if (svtParserParse(parser) != 0){
         ERR("Can't parse input");
@@ -43,45 +39,48 @@ void parseObjData()
 
     objs = svtParserObjsSteal(parser, NULL);
     while (objs != NULL){
-        data = new ObjData(objs);
-        viewer->addObjData(data);
+        data = new SVT::Coin3d::Obj(objs);
+
+        applyDefaultSettings(data);
 
         // colour elemets if requested
         if (Settings::colour_points){
             chooseRandomColor(&r, &g, &b);
-            data->material_points->diffuseColor.setValue(r, g, b);
+            data->setPointColor(r, g, b);
         }
         if (Settings::colour_edges){
             chooseRandomColor(&r, &g, &b);
-            data->material_edges->diffuseColor.setValue(r, g, b);
+            data->setEdgeColor(r, g, b);
         }
         if (Settings::colour_faces){
             chooseRandomColor(&r, &g, &b);
-            data->material_faces->diffuseColor.setValue(r, g, b);
+            data->setFaceColor(r, g, b);
         }
+
+        SVT::Coin3d::Coin3d::addObj(data);
 
         objs = svtObjDelete(objs);
     }
 }
 
 
-void applySettings(Viewer *viewer)
+void applyDefaultSettings(SVT::Coin3d::Obj *obj)
 {
-    viewer->setDefaultSwitch(!Settings::all_off);
-    viewer->setDefaultPointsSwitch(!Settings::points_off);
-    viewer->setDefaultEdgesSwitch(!Settings::edges_off);
-    viewer->setDefaultFacesSwitch(!Settings::faces_off);
+    obj->setAllOn(!Settings::all_off);
+    obj->setPointsOn(!Settings::points_off);
+    obj->setEdgesOn(!Settings::edges_off);
+    obj->setFacesOn(!Settings::faces_off);
 
-    viewer->setDefaultPointSize(Settings::point_size);
-    viewer->setDefaultLineWidth(Settings::edge_width);
+    obj->setPointSize(Settings::point_size);
+    obj->setEdgeWidth(Settings::edge_width);
 
-    viewer->setDefaultPointsDiffuseColorRed(Settings::point_color[0]);
-    viewer->setDefaultPointsDiffuseColorGreen(Settings::point_color[1]);
-    viewer->setDefaultPointsDiffuseColorBlue(Settings::point_color[2]);
-    viewer->setDefaultEdgesDiffuseColorRed(Settings::edge_color[0]);
-    viewer->setDefaultEdgesDiffuseColorGreen(Settings::edge_color[1]);
-    viewer->setDefaultEdgesDiffuseColorBlue(Settings::edge_color[2]);
-    viewer->setDefaultFacesDiffuseColorRed(Settings::face_color[0]);
-    viewer->setDefaultFacesDiffuseColorGreen(Settings::face_color[1]);
-    viewer->setDefaultFacesDiffuseColorBlue(Settings::face_color[2]);
+    obj->setPointColorRed(Settings::point_color[0]);
+    obj->setPointColorGreen(Settings::point_color[1]);
+    obj->setPointColorBlue(Settings::point_color[2]);
+    obj->setEdgeColorRed(Settings::edge_color[0]);
+    obj->setEdgeColorGreen(Settings::edge_color[1]);
+    obj->setEdgeColorBlue(Settings::edge_color[2]);
+    obj->setFaceColorRed(Settings::face_color[0]);
+    obj->setFaceColorGreen(Settings::face_color[1]);
+    obj->setFaceColorBlue(Settings::face_color[2]);
 }
