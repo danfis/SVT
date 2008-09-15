@@ -35,6 +35,7 @@ namespace Coin3d {
 
 ObjManager::ObjManager()
 {
+    SoDB::init();
     _root = new SoSwitch;
     _root->ref();
     _root->whichChild = SO_SWITCH_ALL;

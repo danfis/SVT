@@ -213,7 +213,7 @@ Obj::~Obj()
 }
 
 
-void Obj::setOn(bool on)
+void Obj::setAllOn(bool on)
 {
     if (on){
         sw->whichChild = SO_SWITCH_ALL;

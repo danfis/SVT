@@ -113,7 +113,7 @@ class Obj : public Common::Obj {
     float faceColorGreen() const { return material_faces->diffuseColor[0][1]; }
     float faceColorBlue() const { return material_faces->diffuseColor[0][2]; }
 
-    void setOn(bool on = true);
+    void setAllOn(bool on = true);
 
     void setPointsOn(bool on = true);
     void setEdgesOn(bool on = true);
