@@ -68,6 +68,9 @@ class Obj : public Common::Obj {
     /*! Materials of each part of object */
     SoMaterial *material_points, *material_edges, *material_faces;
 
+    /*! Indicates, if colors weren't already set up. */
+    bool point_color_set, edge_color_set, face_color_set;
+
   public:
     /**
      * Constructor which only inicialize empty attrinutes
@@ -100,18 +103,21 @@ class Obj : public Common::Obj {
     float pointColorRed() const { return material_points->diffuseColor[0][0]; }
     float pointColorGreen() const { return material_points->diffuseColor[0][1]; }
     float pointColorBlue() const { return material_points->diffuseColor[0][2]; }
+    bool pointColorAlreadySet() { return this->point_color_set; }
 
     void edgeColor(float *r, float *g, float *b) const
         { material_edges->diffuseColor[0].getValue(*r, *g, *b); }
     float edgeColorRed() const { return material_edges->diffuseColor[0][0]; }
     float edgeColorGreen() const { return material_edges->diffuseColor[0][1]; }
     float edgeColorBlue() const { return material_edges->diffuseColor[0][2]; }
+    bool edgeColorAlreadySet() { return this->edge_color_set; }
 
     void faceColor(float *r, float *g, float *b) const
         { material_faces->diffuseColor[0].getValue(*r, *g, *b); }
     float faceColorRed() const { return material_faces->diffuseColor[0][0]; }
     float faceColorGreen() const { return material_faces->diffuseColor[0][1]; }
     float faceColorBlue() const { return material_faces->diffuseColor[0][2]; }
+    bool faceColorAlreadySet() { return this->face_color_set; }
 
     void setAllOn(bool on = true);
 

@@ -34,16 +34,16 @@ using namespace std;
 
 static void toSvg(svt_obj_t *objs);
 static void printPoint(const svt_point_t point,
-                       float colorf[3],
+                       const float colorf[3],
                        ostream &);
 static void printEdge(const svt_point_t from,
                       const svt_point_t to,
-                      float colorf[3],
+                      const float colorf[3],
                       ostream &);
 static void printFace(const svt_point_t p1,
                       const svt_point_t p2,
                       const svt_point_t p3,
-                      float colorf[3],
+                      const float colorf[3],
                       ostream &);
 
 static void size(svt_obj_t *objs,
@@ -101,7 +101,7 @@ void toSvg(svt_obj_t *objs)
     const svt_face_t *faces;
     int points_len, edges_len, faces_len;
     float colorf[3];
-    float *col;
+    const float *col;
     char color[7];
     int width, height;
     float view_box[4];
@@ -161,6 +161,8 @@ void toSvg(svt_obj_t *objs)
             if (Settings::colour_faces){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
                 col = colorf;
+            }else if (svtObjFaceColor(objs) != NULL){
+                col = svtObjFaceColor(objs);
             }
 
             for (int i=0; i < faces_len; i++){
@@ -182,6 +184,8 @@ void toSvg(svt_obj_t *objs)
             if (Settings::colour_edges){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
                 col = colorf;
+            }else if (svtObjEdgeColor(objs) != NULL){
+                col = svtObjEdgeColor(objs);
             }
 
             for (int i=0; i < edges_len; i++){
@@ -200,6 +204,8 @@ void toSvg(svt_obj_t *objs)
             if (Settings::colour_points){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
                 col = colorf;
+            }else if (svtObjPointColor(objs) != NULL){
+                col = svtObjPointColor(objs);
             }
 
             for (int i=0; i < points_len; i++){
@@ -216,7 +222,7 @@ void toSvg(svt_obj_t *objs)
 }
 
 void printPoint(const svt_point_t point,
-                float colorf[3],
+                const float colorf[3],
                 ostream &out)
 {
     float x, y, move;
@@ -241,7 +247,7 @@ void printPoint(const svt_point_t point,
 
 void printEdge(const svt_point_t from,
                const svt_point_t to,
-               float colorf[3],
+               const float colorf[3],
                ostream &out)
 {
     float x1, y1, x2, y2;
@@ -265,7 +271,7 @@ void printEdge(const svt_point_t from,
 void printFace(const svt_point_t p1,
                const svt_point_t p2,
                const svt_point_t p3,
-               float colorf[3],
+               const float colorf[3],
                ostream &out)
 {
     float x1, y1, x2, y2, x3, y3;

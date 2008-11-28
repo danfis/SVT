@@ -31,7 +31,7 @@ void usage(int argc, char *argv[], const char *optstr = 0);
 
 char **processOptions(int argc, char *argv[], int *len);
 
-void colorToHex(char str[7], float color[3]);
+void colorToHex(char str[7], const float color[3]);
 
 bool parseFloat(const char *str, float *f);
 bool parseInt(const char *str, int *i);

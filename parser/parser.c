@@ -100,6 +100,9 @@ static void svtParserParseFaces(svt_parser_t *parser);
 static void svtParserParseName(svt_parser_t *parser);
 static void svtParserParsePoly(svt_parser_t *parser);
 static void svtParserParsePolyline(svt_parser_t *parser);
+static void svtParserParsePointColor(svt_parser_t *parser);
+static void svtParserParseEdgetColor(svt_parser_t *parser);
+static void svtParserParseFaceColor(svt_parser_t *parser);
 static void svtParserParseError(svt_parser_t *parser);
 
 int svtParserParse(svt_parser_t *parser)
@@ -219,6 +222,15 @@ static void svtParserParseObj(svt_parser_t *parser)
                 break;
             case T_POLYLINE:
                 svtParserParsePolyline(parser);
+                break;
+            case T_POINT_COLOR:
+                svtParserParsePointColor(parser);
+                break;
+            case T_EDGE_COLOR:
+                svtParserParseEdgetColor(parser);
+                break;
+            case T_FACE_COLOR:
+                svtParserParseFaceColor(parser);
                 break;
             case T_ERROR:
                 svtParserParseError(parser);
@@ -448,6 +460,80 @@ static void svtParserParsePolyline(svt_parser_t *parser)
         if (i == 1)
             fprintf(stderr, "%f", coords[0]);
         fprintf(stderr, "\n");
+    }
+}
+
+static int svtParserParseColor(svt_parser_t *parser, float *nums)
+{
+    int i = 0;
+    float trash;
+
+    NEXT;
+    while (parser->cur_tok == T_FLT_NUM && i < 3){
+        nums[i] = parser->yylval.flt_num;
+        i++;
+
+        if (i == 0){
+            if (parser->cur_obj == NULL)
+                parser->cur_obj = svtObjNew();
+
+            svtObjAddFace(parser->cur_obj, nums[0], nums[1], nums[2]);
+        }
+
+        NEXT;
+    }
+    
+    while (parser->cur_tok == T_FLT_NUM){
+        trash = parser->yylval.flt_num;
+        fprintf(stderr, "In color section unparsed number %f on line %d\n",
+                trash, parser->yylval.lineno);
+        NEXT;
+    }
+
+    return i;
+}
+static void svtParserParsePointColor(svt_parser_t *parser)
+{
+    float nums[3];
+    int num;
+
+    num = svtParserParseColor(parser, nums);
+
+    if (num == 3){
+        if (parser->cur_obj == NULL)
+            parser->cur_obj = svtObjNew();
+
+        svtObjSetPointColor(parser->cur_obj, nums[0], nums[1], nums[2]);
+    }
+}
+
+static void svtParserParseEdgetColor(svt_parser_t *parser)
+{
+    float nums[3];
+    int num;
+
+    num = svtParserParseColor(parser, nums);
+
+    if (num == 3){
+        if (parser->cur_obj == NULL)
+            parser->cur_obj = svtObjNew();
+
+        svtObjSetEdgeColor(parser->cur_obj, nums[0], nums[1], nums[2]);
+    }
+}
+
+static void svtParserParseFaceColor(svt_parser_t *parser)
+{
+    float nums[3];
+    int num;
+
+    num = svtParserParseColor(parser, nums);
+
+    if (num == 3){
+        if (parser->cur_obj == NULL)
+            parser->cur_obj = svtObjNew();
+
+        svtObjSetFaceColor(parser->cur_obj, nums[0], nums[1], nums[2]);
     }
 }
 

@@ -55,13 +55,13 @@ COMMENT "#"
 DELIM [-=+]
 EXP [eE]
 
-%s points points2d edges faces name poly polyline
+%s points points2d edges faces name poly polyline color
 %%
-<INITIAL,points,points2d,poly,polyline>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
+<INITIAL,points,points2d,poly,polyline,color>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
     PARSE_FLOAT(T_FLT_NUM);
 }
 
-<INITIAL,points,points2d,poly,polyline>{SIGN}?{NONZERO}{DIGIT}*({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -1043.1234e-23 */
+<INITIAL,points,points2d,poly,polyline,color>{SIGN}?{NONZERO}{DIGIT}*({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -1043.1234e-23 */
     PARSE_FLOAT(T_FLT_NUM);
 }
 
@@ -108,6 +108,22 @@ EXP [eE]
     BEGIN(polyline);
     yyextra->lineno = yylineno;
     return T_POLYLINE;
+}
+
+[Pp][Oo][Ii][Nn][Tt][ ][Cc][Oo][Ll][Oo][Rr]: {
+    BEGIN(color);
+    yyextra->lineno = yylineno;
+    return T_POINT_COLOR;
+}
+[Ee][Dd][Gg][Ee][ ][Cc][Oo][Ll][Oo][Rr]: {
+    BEGIN(color);
+    yyextra->lineno = yylineno;
+    return T_EDGE_COLOR;
+}
+[Ff][Aa][Cc][Ee][ ][Cc][Oo][Ll][Oo][Rr]: {
+    BEGIN(color);
+    yyextra->lineno = yylineno;
+    return T_FACE_COLOR;
 }
 
 [Nn][Aa][Mm][Ee]:[ \t]* {

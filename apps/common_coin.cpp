@@ -64,28 +64,31 @@ void applyDefaultSettings(SVT::Coin3d::Obj *obj)
     // colour elemets if requested
     if (Settings::colour_points){
         chooseRandomColor(&r, &g, &b);
-    }else{
+        obj->setPointColor(r, g, b);
+    }else if (!obj->pointColorAlreadySet()){
         r = Settings::point_color[0];
         g = Settings::point_color[1];
         b = Settings::point_color[2];
+        obj->setPointColor(r, g, b);
     }
-    obj->setPointColor(r, g, b);
 
     if (Settings::colour_edges){
         chooseRandomColor(&r, &g, &b);
-    }else{
+        obj->setEdgeColor(r, g, b);
+    }else if (!obj->edgeColorAlreadySet()){
         r = Settings::edge_color[0];
         g = Settings::edge_color[1];
         b = Settings::edge_color[2];
+        obj->setEdgeColor(r, g, b);
     }
-    obj->setEdgeColor(r, g, b);
 
     if (Settings::colour_faces){
         chooseRandomColor(&r, &g, &b);
-    }else{
+        obj->setFaceColor(r, g, b);
+    }else if (obj->faceColorAlreadySet()){
         r = Settings::face_color[0];
         g = Settings::face_color[1];
         b = Settings::face_color[2];
+        obj->setFaceColor(r, g, b);
     }
-    obj->setFaceColor(r, g, b);
 }

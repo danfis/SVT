@@ -27,7 +27,8 @@ namespace SVT {
 namespace Coin3d {
 
 Obj::Obj(svt_obj_t *obj)
-    : num_coords(0), num_points(0), num_edges(0), num_faces(0)
+    : num_coords(0), num_points(0), num_edges(0), num_faces(0),
+      point_color_set(false), edge_color_set(false), face_color_set(false)
 {
     coords = new SoCoordinate3;
     coords->ref();
@@ -133,6 +134,7 @@ Obj::Obj(svt_obj_t *obj)
     const char *oname;
     int *ilist;
     int len;
+    const float *color;
 
     opoints = svtObjPoints(obj, &len);
     if (len > 0){
@@ -175,6 +177,27 @@ Obj::Obj(svt_obj_t *obj)
     oname = svtObjName(obj);
     if (oname != NULL)
         _name = oname;
+
+    color = svtObjPointColor(obj);
+    if (color != NULL){
+        point_color_set = true;
+        SbColor c(color[0], color[1], color[2]);
+        material_points->diffuseColor.setValue(c);
+    }
+
+    color = svtObjEdgeColor(obj);
+    if (color != NULL){
+        edge_color_set = true;
+        SbColor c(color[0], color[1], color[2]);
+        material_edges->diffuseColor.setValue(c);
+    }
+
+    color = svtObjFaceColor(obj);
+    if (color != NULL){
+        face_color_set = true;
+        SbColor c(color[0], color[1], color[2]);
+        material_faces->diffuseColor.setValue(c);
+    }
 }
 
 Obj::~Obj()
@@ -264,18 +287,21 @@ void Obj::setEdgeWidth(float width)
 
 void Obj::setPointColor(float r, float g, float b)
 {
+    point_color_set = true;
     SbColor c(r, g, b);
     material_points->diffuseColor.setValue(c);
 }
 
 void Obj::setEdgeColor(float r, float g, float b)
 {
+    edge_color_set = true;
     SbColor c(r, g, b);
     material_edges->diffuseColor.setValue(c);
 }
 
 void Obj::setFaceColor(float r, float g, float b)
 {
+    face_color_set = true;
     SbColor c(r, g, b);
     material_faces->diffuseColor.setValue(c);
 }

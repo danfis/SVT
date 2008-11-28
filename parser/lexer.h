@@ -39,6 +39,9 @@ extern "C" {
 #define T_NAME 267
 #define T_POLY 268
 #define T_POLYLINE 269
+#define T_POINT_COLOR 270
+#define T_EDGE_COLOR 271
+#define T_FACE_COLOR 272
 
 #define YY_BUFSIZE 1000
 

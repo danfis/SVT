@@ -274,7 +274,7 @@ char **processOptions(int argc, char *argv[], int *len)
 }
 
 
-void colorToHex(char str[7], float colorf[3])
+void colorToHex(char str[7], const float colorf[3])
 {
     int color[3];
     int n, pos;

@@ -56,6 +56,8 @@ struct _svt_obj_t {
     char *name;
     int name_alloc;
 
+    float *point_color, *edge_color, *face_color;
+
     struct _svt_obj_t *next;
 };
 typedef struct _svt_obj_t svt_obj_t;
@@ -96,6 +98,9 @@ int svtObjAddPoint(svt_obj_t *, float x, float y, float z);
 void svtObjAddEdge(svt_obj_t *, int a, int b);
 void svtObjAddFace(svt_obj_t *, int a, int b, int c);
 void svtObjSetName(svt_obj_t *, const char *name);
+void svtObjSetPointColor(svt_obj_t *, float r, float g, float b);
+void svtObjSetEdgeColor(svt_obj_t *, float r, float g, float b);
+void svtObjSetFaceColor(svt_obj_t *, float r, float g, float b);
 
 /**
  * Truncate all internaly managed lists to occupy only necessary amount of
@@ -107,6 +112,10 @@ const svt_point_t *svtObjPoints(svt_obj_t *, int *len);
 const svt_edge_t *svtObjEdges(svt_obj_t *, int *len);
 const svt_face_t *svtObjFaces(svt_obj_t *, int *len);
 const char *svtObjName(svt_obj_t *obj);
+
+#define svtObjPointColor(o) ((const float *)(o)->point_color)
+#define svtObjEdgeColor(o) ((const float *)(o)->edge_color)
+#define svtObjFaceColor(o) ((const float *)(o)->face_color)
 
 /**
  * Transform all points from obj using given transform matrix.

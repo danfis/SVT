@@ -43,6 +43,8 @@ svt_obj_t *svtObjNew()
 
     obj->name = NULL;
 
+    obj->point_color = obj->edge_color = obj->face_color = NULL;
+
     obj->next = NULL;
 
     return obj;
@@ -62,6 +64,12 @@ svt_obj_t *svtObjDelete(svt_obj_t *obj)
         free(obj->faces);
     if (obj->name != NULL)
         free(obj->name);
+    if (obj->point_color != NULL)
+        free(obj->point_color);
+    if (obj->edge_color != NULL)
+        free(obj->edge_color);
+    if (obj->face_color != NULL)
+        free(obj->face_color);
     free(obj);
 
     return next;
@@ -190,4 +198,34 @@ void svtObjTransformPoints(svt_obj_t *obj, float m[9])
         obj->points[i][0] = v[0];
         obj->points[i][1] = v[1];
     }
+}
+
+void svtObjSetPointColor(svt_obj_t *o, float r, float g, float b)
+{
+    if (o->point_color == NULL)
+        o->point_color = ALLOC_ARR(float, 3);
+
+    o->point_color[0] = r;
+    o->point_color[1] = g;
+    o->point_color[2] = b;
+}
+
+void svtObjSetEdgeColor(svt_obj_t *o, float r, float g, float b)
+{
+    if (o->edge_color == NULL)
+        o->edge_color = ALLOC_ARR(float, 3);
+
+    o->edge_color[0] = r;
+    o->edge_color[1] = g;
+    o->edge_color[2] = b;
+}
+
+void svtObjSetFaceColor(svt_obj_t *o, float r, float g, float b)
+{
+    if (o->face_color == NULL)
+        o->face_color = ALLOC_ARR(float, 3);
+
+    o->face_color[0] = r;
+    o->face_color[1] = g;
+    o->face_color[2] = b;
 }
