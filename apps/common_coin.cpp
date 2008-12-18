@@ -85,7 +85,7 @@ void applyDefaultSettings(SVT::Coin3d::Obj *obj)
     if (Settings::colour_faces){
         chooseRandomColor(&r, &g, &b);
         obj->setFaceColor(r, g, b);
-    }else if (obj->faceColorAlreadySet()){
+    }else if (!obj->faceColorAlreadySet()){
         r = Settings::face_color[0];
         g = Settings::face_color[1];
         b = Settings::face_color[2];
