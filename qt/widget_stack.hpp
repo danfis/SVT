@@ -11,6 +11,7 @@ namespace Qt {
 
 class WidgetStack : public QScrollArea {
     QVBoxLayout *_layout;
+    int _max_width;
 
   public:
     WidgetStack();

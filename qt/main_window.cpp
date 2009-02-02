@@ -25,6 +25,8 @@ MainWindow::MainWindow()
 
     connect(this, SIGNAL(_showMsgInStatusBarSignal(const QString &)),
             _status, SLOT(showMessage(const QString &)));
+
+    resize(800, 600);
 }
 
 MainWindow::~MainWindow()
