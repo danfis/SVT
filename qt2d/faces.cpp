@@ -39,6 +39,9 @@ SVT::Qt2D::Faces::~Faces()
 
 void SVT::Qt2D::Faces::paint(QPainter &painter)
 {
+    if (!on())
+        return;
+
     painter.setPen(pen());
     painter.drawPath(_path);
 }

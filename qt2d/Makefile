@@ -7,7 +7,7 @@ TEST_LDFLAGS = -L./ -L../qt -lsvtqt -lsvtqt2d \
 
 
 TARGETS = libsvtqt2d.a test
-OBJS = painter.o points.o edges.o faces.o
+OBJS = painter.o points.o edges.o faces.o obj.o
 
 all: $(TARGETS)
 

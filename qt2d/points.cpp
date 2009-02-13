@@ -34,6 +34,9 @@ SVT::Qt2D::Points::~Points()
 
 void SVT::Qt2D::Points::paint(QPainter &painter)
 {
+    if (!on())
+        return;
+
     painter.setPen(pen());
 
     for (int i=0; i < _points_len; i++){

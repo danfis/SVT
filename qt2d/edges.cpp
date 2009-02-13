@@ -36,6 +36,9 @@ SVT::Qt2D::Edges::~Edges()
 
 void SVT::Qt2D::Edges::paint(QPainter &painter)
 {
+    if (!on())
+        return;
+
     painter.setPen(pen());
     painter.drawPath(_path);
 }
