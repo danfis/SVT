@@ -3,6 +3,7 @@
 
 
 SVT::Qt2D::Edges::Edges(svt_obj_t *obj)
+    : _num_edges(0)
 {
     const svt_edge_t *edges;
     int edges_len;
@@ -20,6 +21,7 @@ SVT::Qt2D::Edges::Edges(svt_obj_t *obj)
         _path.moveTo(points[id1][0], points[id1][1]);
         _path.lineTo(points[id2][0], points[id2][1]);
     }
+    _num_edges = edges_len;
 
     // get color
     color = svtObjEdgeColor(obj);

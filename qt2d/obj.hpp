@@ -51,10 +51,9 @@ class Obj : public Common::Obj {
 
     const std::string &name() const { return _name; }
 
-    // TODO
-    int numPoints() const { return 0; }
-    int numEdges() const { return 0; }
-    int numFaces() const { return 0; }
+    int numPoints() const { return (_points ? _points->numPoints() : 0); }
+    int numEdges() const { return (_edges ? _edges->numEdges() : 0); }
+    int numFaces() const { return (_faces ? _faces->numFaces() : 0); }
 
     bool pointsOn() const { return (_points ? _points->on() : false); }
     bool edgesOn() const { return (_edges ? _edges->on() : false); }

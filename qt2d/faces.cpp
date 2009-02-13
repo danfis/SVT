@@ -3,6 +3,7 @@
 
 
 SVT::Qt2D::Faces::Faces(svt_obj_t *obj)
+    : _num_faces(0)
 {
     const svt_face_t *faces;
     int faces_len;
@@ -23,6 +24,7 @@ SVT::Qt2D::Faces::Faces(svt_obj_t *obj)
         _path.lineTo(points[id3][0], points[id3][1]);
         _path.lineTo(points[id1][0], points[id1][1]);
     }
+    _num_faces = faces_len;
 
     // get color
     color = svtObjEdgeColor(obj);

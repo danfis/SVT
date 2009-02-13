@@ -11,10 +11,13 @@ namespace Qt2D {
 class Faces : public Elements {
   private:
     QPainterPath _path;
+    int _num_faces;
 
   public:
     Faces(svt_obj_t *obj);
     ~Faces();
+
+    int numFaces() const { return _num_faces; }
 
     void paint(QPainter &painter);
 };

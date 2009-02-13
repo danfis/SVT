@@ -11,10 +11,13 @@ namespace Qt2D {
 class Edges : public Elements {
   private:
     QPainterPath _path;
+    int _num_edges;
 
   public:
     Edges(svt_obj_t *obj);
     ~Edges();
+
+    int numEdges() const { return _num_edges; }
 
     void paint(QPainter &painter);
 };

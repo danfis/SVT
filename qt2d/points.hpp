@@ -20,6 +20,8 @@ class Points : public Elements{
     Points(svt_obj_t *obj);
     ~Points();
 
+    int numPoints() const { return _points_len; }
+
     void paint(QPainter &painter);
 };
 

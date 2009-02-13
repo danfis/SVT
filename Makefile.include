@@ -11,6 +11,9 @@ else
   CFLAGS = -g
 endif
 
+CXXFLAGS += -Wall -pedantic
+CFLAGS += -Wall -pedantic
+
 QT_CXXFLAGS = $(shell pkg-config QtGui QtCore --cflags)
 QT_LDFLAGS = $(shell pkg-config QtGui QtCore --libs)
 COIN_CXXFLAGS = $(shell coin-config --cppflags)

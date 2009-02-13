@@ -3,6 +3,7 @@ include ../Makefile.include
 CXXFLAGS += $(QT_CXXFLAGS)
 
 TEST_LDFLAGS = -L./ -L../qt -lsvtqt -lsvtqt2d \
+			   -L../parser -lsvtparser \
                $(QT_LDFLAGS)
 
 
