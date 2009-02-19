@@ -9,19 +9,22 @@ svt_obj_t *svtobj2();
 
 int main(int argc, char *argv[])
 {
-    svt_obj_t *obj;
+    svt_obj_t *o;
+    SVT::Qt2D::Obj *obj;
 
     QApplication app(argc, argv);
 
     SVT::Qt2D::MainWindow mw;
 
-    obj = svtobj();
+    o = svtobj();
+    obj = new SVT::Qt2D::Obj(o);
     mw.addObj(obj);
-    svtObjDelete(obj);
+    svtObjDelete(o);
 
-    obj = svtobj2();
+    o = svtobj2();
+    obj = new SVT::Qt2D::Obj(o);
     mw.addObj(obj);
-    svtObjDelete(obj);
+    svtObjDelete(o);
 
     mw.show();
 

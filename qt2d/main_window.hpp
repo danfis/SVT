@@ -28,7 +28,6 @@
 #include "../qt/main_window.hpp"
 #include "../qt/obj_style_widget.hpp"
 #include "../qt/obj_widget.hpp"
-#include "../parser/obj.h"
 #include "painter.hpp"
 
 namespace SVT {
@@ -44,9 +43,10 @@ class MainWindow : public Qt::MainWindow{
     MainWindow();
     ~MainWindow();
 
-    void addObj(svt_obj_t *obj);
+    void addObj(Obj *obj);
     Qt::ObjStyleWidget *showObjStyleWidget(Common::Obj *);
     Qt::ObjWidget *addObjWidget(Common::Obj *, int flags = Qt::OBJ_WIDGET_ALL);
+    void scaleToWindow() { _painter->scaleToWindow(); }
 };
 
 } /* Qt2D */

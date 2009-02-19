@@ -21,20 +21,16 @@
  */
 
 #include <iostream>
-#include <cstdlib>
-#include <getopt.h>
-#include <Inventor/Qt/SoQt.h>
-#include <Inventor/nodes/SoGroup.h>
 #include <QApplication>
 #include <QStatusBar>
 #include <QMainWindow>
 using namespace std;
 
 #include "common.hpp"
-#include "common_coin.hpp"
 #include "common/msg.hpp"
-#include "coin3d/coin3d.hpp"
 #include "parser/parser.h"
+#include "parser/obj.h"
+#include "qt2d/main_window.hpp"
 
 svt_parser_t *parser;
 
@@ -42,10 +38,14 @@ int main(int argc, char *argv[])
 {
     char **args;
     int num_args;
+    svt_parser_t *parser;
+    svt_obj_t *o;
+    SVT::Qt2D::Obj *obj;
 
     args = processOptions(argc, argv, &num_args);
 
-    SVT::Coin3d::Coin3d::init("viewer");
+    QApplication app(argc, argv);
+    SVT::Qt2D::MainWindow mw;
 
     parser = svtParserNew();
 
@@ -59,21 +59,37 @@ int main(int argc, char *argv[])
                 ERR("Can't read file " << args[i]);
                 continue;
             }
+
             svtParserSetInput(parser, fin);
 
-            parseObjData();
+            if (svtParserParse(parser) != 0){
+                ERR("Can't parse file " << args[i]);
+            }
 
             fclose(fin);
         }
     }else{
-        parseObjData();
+        if (svtParserParse(parser) != 0){
+            ERR("Can't parse input");
+        }
+    }
+
+    o = svtParserObjs(parser, 0);
+    while (o != 0){
+        obj = new SVT::Qt2D::Obj(o);
+        applyDefaultSettings(obj);
+        mw.addObj(obj);
+
+        o = svtObjNext(o);
     }
 
     svtParserDelete(parser);
 
-    SVT::Coin3d::Coin3d::mainLoop();
 
-    SVT::Coin3d::Coin3d::free();
+    mw.show();
+    mw.scaleToWindow();
+
+    app.exec();
 
     return 0;
 }

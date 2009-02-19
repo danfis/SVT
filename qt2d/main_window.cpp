@@ -29,14 +29,12 @@ MainWindow::~MainWindow()
     
 }
 
-void MainWindow::addObj(svt_obj_t *o)
+void MainWindow::addObj(Obj *o)
 {
-    Obj *obj = new Obj(o);
+    addObjWidget(o);
+    _painter->addObj(o);
 
-    addObjWidget(obj);
-    _painter->addObj(obj);
-
-    _objs.push_back(obj);
+    _objs.push_back(o);
 }
 
 Qt::ObjStyleWidget *MainWindow::showObjStyleWidget(Common::Obj *o)
