@@ -6,6 +6,7 @@
 #include <QLinkedList>
 #include <QRectF>
 #include <QMatrix>
+#include <QWheelEvent>
 #include <list>
 
 #include "obj.hpp"
@@ -19,9 +20,12 @@ class Painter : public QWidget {
 
   private:
     std::list<Obj *> _objs;
-    QMatrix _tr; /*! transformation */
+    qreal _scale, _dx, _dy; /*! world transfomataions */
     QRectF _brect;
     bool _brect_init;
+    bool _mouse_pressed; /*! indicates if mouse's left button is pressed */
+    QPoint _mouse_pos; /*! last position of mouse */
+
 
   protected:
     void paintEvent(QPaintEvent *e);
@@ -33,6 +37,10 @@ class Painter : public QWidget {
     void addObj(Obj *o);
     void scaleToWindow();
 
+    void wheelEvent(QWheelEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
   public slots:
     void repaint(Common::Obj *o = 0);
 };

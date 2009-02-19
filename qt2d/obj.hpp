@@ -65,7 +65,7 @@ class Obj : public Common::Obj {
     bool pointsOff() const { return !pointsOn(); }
     bool edgesOff() const { return !edgesOn(); }
     bool facesOff() const { return !facesOn(); }
-    bool allOff() const { return !allOn(); }
+    bool allOff() const { return pointsOff() && edgesOff() && facesOff(); }
 
     float pointSize() const { return (_points ? _points->size() : -1.); }
     float edgeWidth() const { return (_edges ? _edges->size() : -1.); }
