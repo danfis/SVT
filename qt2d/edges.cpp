@@ -18,8 +18,11 @@ SVT::Qt2D::Edges::Edges(svt_obj_t *obj)
     for (int i=0; i < edges_len; i++){
         id1 = edges[i][0];
         id2 = edges[i][1];
-        _path.moveTo(points[id1][0], points[id1][1]);
-        _path.lineTo(points[id2][0], points[id2][1]);
+        _path.moveTo(points[id1][0], -1. * points[id1][1]);
+        _path.lineTo(points[id2][0], -1. * points[id2][1]);
+
+        _setPointInBoundingRect(points[id1]);
+        _setPointInBoundingRect(points[id2]);
     }
     _num_edges = edges_len;
 

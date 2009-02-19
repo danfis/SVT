@@ -6,6 +6,8 @@
 #include <QPainter>
 #include <QRectF>
 
+#include "../parser/obj.h"
+
 namespace SVT {
 
 namespace Qt2D {
@@ -20,9 +22,12 @@ class Elements {
     qreal _size;
     bool _on;
     QRectF _brect; /*! bounding rectangle */
+    bool _brect_init;
+
+    void _setPointInBoundingRect(const svt_point_t point);
 
   public:
-    Elements() : _on(true) {}
+    Elements() : _on(true), _brect_init(false) {}
 
     void setColor(float r, float g, float b)
         { _color.setRgbF(r, g, b); _pen.setColor(_color);}

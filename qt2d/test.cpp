@@ -28,9 +28,9 @@ svt_obj_t *svtobj()
 {
     svt_obj_t *obj = svtObjNew();
 
+    svtObjAddPoint(obj, 0., -100., 0.);
+    svtObjAddPoint(obj, 100., 0., 0.);
     svtObjAddPoint(obj, 0., 0., 0.);
-    svtObjAddPoint(obj, 100., 100., 0.);
-    svtObjAddPoint(obj, 0., 100., 0.);
 
     svtObjAddEdge(obj, 0, 1);
     svtObjAddEdge(obj, 1, 2);

@@ -23,6 +23,7 @@
 #ifndef QT2D_OBJ_HPP_
 #define QT2D_OBJ_HPP_
 
+#include <QRectF>
 #include <string>
 
 #include "../common/obj.hpp"
@@ -44,6 +45,7 @@ class Obj : public Common::Obj {
     Edges *_edges;
     Faces *_faces;
     std::string _name;
+    QRectF _brect; /*! boudning rectangle */
 
   public:
     Obj(svt_obj_t *obj);
@@ -136,6 +138,8 @@ class Obj : public Common::Obj {
         { if (_points) _points->paint(painter);
           if (_edges) _edges->paint(painter);
           if (_faces) _faces->paint(painter); }
+
+    const QRectF &boundingRect() const { return _brect; }
 };
 
 } /* Common */

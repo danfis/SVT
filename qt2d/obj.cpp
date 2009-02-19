@@ -17,6 +17,41 @@ SVT::Qt2D::Obj::Obj(svt_obj_t *obj)
 
     if (svtObjNumFaces(obj) > 0)
         _faces = new Faces(obj);
+
+
+    // set up bounding rectangle
+    if (_points != 0)
+        _brect = _points->boundingRect();
+    else if (_edges != 0)
+        _brect = _edges->boundingRect();
+    else if (_faces != 0)
+        _brect = _faces->boundingRect();
+
+    if (_points != 0 && _edges != 0){
+        const QRectF &br = _edges->boundingRect();
+
+        if (br.left() < _brect.left())
+            _brect.setLeft(br.left());
+        if (br.right() > _brect.right())
+            _brect.setRight(br.right());
+        if (br.top() < _brect.top())
+            _brect.setTop(br.top());
+        if (br.bottom() > _brect.bottom())
+            _brect.setBottom(br.bottom());
+    }
+
+    if ((_points != 0 || _edges != 0) && _faces != 0){
+        const QRectF &br = _faces->boundingRect();
+
+        if (br.left() < _brect.left())
+            _brect.setLeft(br.left());
+        if (br.right() > _brect.right())
+            _brect.setRight(br.right());
+        if (br.top() < _brect.top())
+            _brect.setTop(br.top());
+        if (br.bottom() > _brect.bottom())
+            _brect.setBottom(br.bottom());
+    }
 }
 
 SVT::Qt2D::Obj::~Obj()

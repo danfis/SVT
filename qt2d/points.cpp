@@ -12,9 +12,9 @@ SVT::Qt2D::Points::Points(svt_obj_t *obj)
 
     for (int i=0; i < _points_len; i++){
         // ignore third coordinate
-        _points[i] = new QPointF(points[i][0], points[i][1]);
+        _points[i] = new QPointF(points[i][0], -1. * points[i][1]);
 
-        // set up parametters for bouding rect
+        _setPointInBoundingRect(points[i]);
     }
 
     // get color

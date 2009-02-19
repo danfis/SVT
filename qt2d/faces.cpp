@@ -19,10 +19,14 @@ SVT::Qt2D::Faces::Faces(svt_obj_t *obj)
         id1 = faces[i][0];
         id2 = faces[i][1];
         id3 = faces[i][2];
-        _path.moveTo(points[id1][0], points[id1][1]);
-        _path.lineTo(points[id2][0], points[id2][1]);
-        _path.lineTo(points[id3][0], points[id3][1]);
-        _path.lineTo(points[id1][0], points[id1][1]);
+        _path.moveTo(points[id1][0], -1. * points[id1][1]);
+        _path.lineTo(points[id2][0], -1. * points[id2][1]);
+        _path.lineTo(points[id3][0], -1. * points[id3][1]);
+        _path.lineTo(points[id1][0], -1. * points[id1][1]);
+
+        _setPointInBoundingRect(points[id1]);
+        _setPointInBoundingRect(points[id2]);
+        _setPointInBoundingRect(points[id3]);
     }
     _num_faces = faces_len;
 
