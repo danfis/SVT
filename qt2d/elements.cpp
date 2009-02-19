@@ -16,7 +16,7 @@ void SVT::Qt2D::Elements::_setPointInBoundingRect(const svt_point_t point)
     if (point[0] > _brect.right())
         _brect.setRight(point[0]);
     if ((-1. * point[1]) < _brect.top())
-        _brect.setTop(point[1]);
+        _brect.setTop(-1. * point[1]);
     if ((-1. * point[1]) > _brect.bottom())
-        _brect.setBottom(point[1]);
+        _brect.setBottom(-1. * point[1]);
 }
