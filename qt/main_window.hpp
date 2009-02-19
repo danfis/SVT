@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow {
     MainWindow();
     virtual ~MainWindow();
 
-    void addObjWidget(Common::Obj *, int flags = OBJ_WIDGET_ALL);
+    virtual ObjWidget *addObjWidget(Common::Obj *, int flags = OBJ_WIDGET_ALL);
 
     void show();
 

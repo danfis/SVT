@@ -97,26 +97,33 @@ void Painter::wheelEvent(QWheelEvent *event)
 
 void Painter::mousePressEvent(QMouseEvent *event)
 {
-    _mouse_pressed = true;
-    _mouse_pos = event->globalPos();
+    if (event->button() == Qt::LeftButton){
+        _mouse_pressed = true;
+        _mouse_pos = event->globalPos();
+    }
 }
 
 void Painter::mouseReleaseEvent(QMouseEvent *event)
 {
-    _mouse_pressed = false;
-    _mouse_pos = event->globalPos();
+    if (event->button() == Qt::LeftButton && _mouse_pressed){
+        _mouse_pressed = false;
+        _mouse_pos = event->globalPos();
+    }
 }
 
 void Painter::mouseMoveEvent(QMouseEvent *event)
 {
-    QPoint pos = event->globalPos();
 
-    _dx += pos.x() - _mouse_pos.x();
-    _dy += pos.y() - _mouse_pos.y();
+    if (_mouse_pressed){
+        QPoint pos = event->globalPos();
 
-    _mouse_pos = pos;
+        _dx += pos.x() - _mouse_pos.x();
+        _dy += pos.y() - _mouse_pos.y();
 
-    update();
+        _mouse_pos = pos;
+
+        update();
+    }
 }
 
 

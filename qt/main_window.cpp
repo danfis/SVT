@@ -34,13 +34,15 @@ MainWindow::~MainWindow()
     delete _obj_widgets;
 }
 
-void MainWindow::addObjWidget(Common::Obj *obj, int flags)
+ObjWidget *MainWindow::addObjWidget(Common::Obj *obj, int flags)
 {
     ObjWidget *o = new ObjWidget(obj, flags);
     _obj_widgets->push(o);
 
     connect(o, SIGNAL(config(Common::Obj *)),
             this, SLOT(showObjStyleWidget(Common::Obj *)));
+
+    return o;
 }
 
 void MainWindow::show()

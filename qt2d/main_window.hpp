@@ -27,6 +27,7 @@
 
 #include "../qt/main_window.hpp"
 #include "../qt/obj_style_widget.hpp"
+#include "../qt/obj_widget.hpp"
 #include "../parser/obj.h"
 #include "painter.hpp"
 
@@ -45,6 +46,7 @@ class MainWindow : public Qt::MainWindow{
 
     void addObj(svt_obj_t *obj);
     Qt::ObjStyleWidget *showObjStyleWidget(Common::Obj *);
+    Qt::ObjWidget *addObjWidget(Common::Obj *, int flags = Qt::OBJ_WIDGET_ALL);
 };
 
 } /* Qt2D */

@@ -67,6 +67,16 @@ Qt::ObjStyleWidget *MainWindow::showObjStyleWidget(Common::Obj *o)
 }
 
 
+Qt::ObjWidget *MainWindow::addObjWidget(Common::Obj *o, int flags)
+{
+    Qt::ObjWidget *ow = Qt::MainWindow::addObjWidget(o, flags);
+
+    connect(ow, SIGNAL(onOff(Common::Obj *, bool)),
+            _painter, SLOT(repaint(Common::Obj *)));
+
+    return ow;
+}
+
 }
 
 }
