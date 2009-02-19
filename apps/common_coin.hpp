@@ -30,7 +30,5 @@ extern svt_parser_t *parser;
 
 void parseObjData();
 
-void applyDefaultSettings(SVT::Coin3d::Obj *);
-
 #endif
 

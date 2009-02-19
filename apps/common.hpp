@@ -24,6 +24,7 @@
 #define COMMON_HPP
 
 #include "parser/parse_func.h"
+#include "common/obj.hpp"
 
 void chooseRandomColor(float *r, float *g, float *b);
 
@@ -36,4 +37,6 @@ void colorToHex(char str[7], const float color[3]);
 bool parseFloat(const char *str, float *f);
 bool parseInt(const char *str, int *i);
 bool parseFloatList(const char *str, int len, float *nums);
+
+void applyDefaultSettings(SVT::Common::Obj *);
 #endif

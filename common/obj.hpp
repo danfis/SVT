@@ -31,8 +31,13 @@ namespace Common {
  * Class which describes visualisable object by Coin3d library.
  */
 class Obj {
+  protected:
+    /*! Indicates, if colors weren't already set up. */
+    bool _point_color_set, _edge_color_set, _face_color_set;
+
   public:
-    //Obj(svt_obj_t *obj);
+    Obj() : _point_color_set(false), _edge_color_set(false),
+            _face_color_set(false){}
     //~Obj()
 
     virtual const std::string &name() const = 0;
@@ -60,6 +65,7 @@ class Obj {
     virtual float pointColorRed() const = 0;
     virtual float pointColorGreen() const = 0;
     virtual float pointColorBlue() const = 0;
+    bool pointColorAlreadySet() { return _point_color_set; }
 
     virtual void edgeColor(float *r, float *g, float *b) const = 0;
     virtual void edgeColor(float rgb[3]) const
@@ -67,6 +73,7 @@ class Obj {
     virtual float edgeColorRed() const = 0;
     virtual float edgeColorGreen() const = 0;
     virtual float edgeColorBlue() const = 0;
+    bool edgeColorAlreadySet() { return _edge_color_set; }
 
     virtual void faceColor(float *r, float *g, float *b) const = 0;
     virtual void faceColor(float rgb[3]) const
@@ -74,6 +81,7 @@ class Obj {
     virtual float faceColorRed() const = 0;
     virtual float faceColorGreen() const = 0;
     virtual float faceColorBlue() const = 0;
+    bool faceColorAlreadySet() { return _face_color_set; }
 
     virtual void setAllOn(bool on = true) = 0;
 
