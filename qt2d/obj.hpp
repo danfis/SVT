@@ -131,6 +131,11 @@ class Obj : public Common::Obj {
     void setFaceColorRed(float v) { if (_faces) _faces->setColorRed(v); }
     void setFaceColorGreen(float v) { if (_faces) _faces->setColorGreen(v); }
     void setFaceColorBlue(float v) { if (_faces) _faces->setColorBlue(v); }
+
+    void paint(QPainter &painter)
+        { if (_points) _points->paint(painter);
+          if (_edges) _edges->paint(painter);
+          if (_faces) _faces->paint(painter); }
 };
 
 } /* Common */

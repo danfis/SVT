@@ -54,8 +54,10 @@ void MainWindow::showMsgInStatusBarSignal(const QString &msg)
     emit _showMsgInStatusBarSignal(msg);
 }
 
-void MainWindow::showObjStyleWidget(Common::Obj *obj)
+ObjStyleWidget *MainWindow::showObjStyleWidget(Common::Obj *obj)
 {
+    ObjStyleWidget *osw = new ObjStyleWidget(obj);
+
     if (_right_dock != 0
         && dockWidgetArea(_right_dock) != ::Qt::NoDockWidgetArea){
         delete _right_dock;
@@ -66,8 +68,10 @@ void MainWindow::showObjStyleWidget(Common::Obj *obj)
     _right_dock->setFeatures(QDockWidget::DockWidgetFloatable
                              | QDockWidget::DockWidgetMovable
                              | QDockWidget::DockWidgetClosable);
-    _right_dock->setWidget(new ObjStyleWidget(obj));
+    _right_dock->setWidget(osw);
     addDockWidget(::Qt::RightDockWidgetArea, _right_dock, ::Qt::Vertical);
+
+    return osw;
 }
 
 void MainWindow::showMsgInStatusBar(const QString &msg)

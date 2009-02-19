@@ -36,7 +36,7 @@ class MainWindow : public QMainWindow {
   signals:
     void _showMsgInStatusBarSignal(const QString &msg);
   public slots:
-    void showObjStyleWidget(Common::Obj *);
+    virtual ObjStyleWidget *showObjStyleWidget(Common::Obj *);
     void showMsgInStatusBar(const QString &msg);
 };
 
