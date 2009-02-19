@@ -45,5 +45,5 @@ void SVT::Qt2D::Faces::paint(QPainter &painter)
         return;
 
     painter.setPen(pen());
-    painter.drawPath(_path);
+    painter.fillPath(_path, pen().brush());
 }

@@ -13,6 +13,8 @@ SVT::Qt2D::Points::Points(svt_obj_t *obj)
     for (int i=0; i < _points_len; i++){
         // ignore third coordinate
         _points[i] = new QPointF(points[i][0], points[i][1]);
+
+        // set up parametters for bouding rect
     }
 
     // get color
@@ -34,13 +36,16 @@ SVT::Qt2D::Points::~Points()
 
 void SVT::Qt2D::Points::paint(QPainter &painter)
 {
+    QRectF p(0., 0., _size, _size);
+
     if (!on())
         return;
 
     painter.setPen(pen());
 
     for (int i=0; i < _points_len; i++){
-        painter.drawPoint(*_points[i]);
+        p.moveCenter(*_points[i]);
+        painter.fillRect(p, pen().brush());
     }
 }
 

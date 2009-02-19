@@ -4,6 +4,7 @@
 #include <QColor>
 #include <QPen>
 #include <QPainter>
+#include <QRectF>
 
 namespace SVT {
 
@@ -18,9 +19,10 @@ class Elements {
     QColor _color;
     qreal _size;
     bool _on;
+    QRectF _brect; /*! bounding rectangle */
 
   public:
-    Elements() : _on(true){}
+    Elements() : _on(true) {}
 
     void setColor(float r, float g, float b)
         { _color.setRgbF(r, g, b); _pen.setColor(_color);}
@@ -43,6 +45,8 @@ class Elements {
     bool on() const { return _on; }
 
     void paint(QPainter &painter){};
+
+    const QRectF &boundingRect() const { return _brect; }
 };
 
 } /* Qt2D */
