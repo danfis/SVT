@@ -19,7 +19,7 @@ class Edges : public Elements {
 
     int numEdges() const { return _num_edges; }
 
-    void paint(QPainter &painter);
+    void paint(QPainter &painter, const QRectF &rect);
 };
 
 } /* Qt2D */

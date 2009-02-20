@@ -43,7 +43,7 @@ SVT::Qt2D::Faces::~Faces()
 {
 }
 
-void SVT::Qt2D::Faces::paint(QPainter &painter)
+void SVT::Qt2D::Faces::paint(QPainter &painter, const QRectF &rect)
 {
     if (!on())
         return;

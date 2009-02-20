@@ -89,23 +89,41 @@ void Painter::fitToWin()
 }
 
 
-void Painter::paintEvent(QPaintEvent *e)
+void Painter::paintEvent(QPaintEvent *event)
 {
-    QMatrix tr;
+    const QRect &rect_update_i = event->rect();
+    QRectF rect_update;
+    QMatrix tr, tr_rev;
     QPainter painter(this);
     list<Obj *>::iterator it, it_end;
 
+    // set up transformations
     tr.translate(_dx, _dy);
     tr.scale(_scale, _scale);
+    tr_rev.scale(1. / _scale, 1. / _scale);
+    tr_rev.translate(-_dx, -_dy);
+
+    // set up world matrix
     painter.setWorldMatrix(tr);
 
+    // turn on antialiasing
     painter.setRenderHint(QPainter::Antialiasing);
+
+    // set up update rectangle
+    rect_update.setTop(rect_update_i.top());
+    rect_update.setBottom(rect_update_i.bottom());
+    rect_update.setLeft(rect_update_i.left());
+    rect_update.setRight(rect_update_i.right());
+    rect_update = tr_rev.mapRect(rect_update);
 
     it = _objs.begin();
     it_end = _objs.end();
     for (; it != it_end; ++it){
-        if (!(*it)->allOff())
-            (*it)->paint(painter);
+        // paint object only if is enabled and if object falls into
+        // rectangle which should be updated
+        if ((*it)->allOn() && (*it)->boundingRect().intersects(rect_update)){
+            (*it)->paint(painter, rect_update);
+        }
     }
 
     painter.end();

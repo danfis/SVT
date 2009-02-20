@@ -35,7 +35,7 @@ SVT::Qt2D::Points::~Points()
 }
 
 
-void SVT::Qt2D::Points::paint(QPainter &painter)
+void SVT::Qt2D::Points::paint(QPainter &painter, const QRectF &rect)
 {
     QRectF p; // rectangle which will be drawed as point
     qreal fx, tx, omit; // for recomputing size of points using world transf.
@@ -51,11 +51,15 @@ void SVT::Qt2D::Points::paint(QPainter &painter)
     p.setHeight(size);
     p.setWidth(size);
 
+
     painter.setPen(pen());
 
     for (int i=0; i < _points_len; i++){
         p.moveCenter(*_points[i]);
-        painter.fillRect(p, pen().brush());
+
+        if (rect.intersects(p)){
+            painter.fillRect(p, pen().brush());
+        }
     }
 }
 

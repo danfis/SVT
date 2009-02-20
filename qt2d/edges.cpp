@@ -39,7 +39,7 @@ SVT::Qt2D::Edges::~Edges()
 {
 }
 
-void SVT::Qt2D::Edges::paint(QPainter &painter)
+void SVT::Qt2D::Edges::paint(QPainter &painter, const QRectF &rect)
 {
     QPen cpen = pen(); // current pen
     qreal fx, tx, omit; // for recomputing of width

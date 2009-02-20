@@ -19,7 +19,7 @@ class Faces : public Elements {
 
     int numFaces() const { return _num_faces; }
 
-    void paint(QPainter &painter);
+    void paint(QPainter &painter, const QRectF &rect);
 };
 
 } /* Qt2D */

@@ -2,7 +2,6 @@
 #define SVT_QT2D_POINTS_HPP
 
 #include <QPointF>
-#include <QPainter>
 
 #include "../parser/obj.h"
 #include "elements.hpp"
@@ -22,7 +21,7 @@ class Points : public Elements{
 
     int numPoints() const { return _points_len; }
 
-    void paint(QPainter &painter);
+    void paint(QPainter &painter, const QRectF &rect);
 };
 
 } /* Qt2D */

@@ -46,6 +46,7 @@ class Obj : public Common::Obj {
     Faces *_faces;
     std::string _name;
     QRectF _brect; /*! boudning rectangle */
+    QRect _brecti; /*! bounding rectangle in ints */
     bool _all_on;
 
   public:
@@ -135,10 +136,10 @@ class Obj : public Common::Obj {
     void setFaceColorGreen(float v) { if (_faces) _faces->setColorGreen(v); }
     void setFaceColorBlue(float v) { if (_faces) _faces->setColorBlue(v); }
 
-    void paint(QPainter &painter)
-        { if (_faces) _faces->paint(painter);
-          if (_edges) _edges->paint(painter);
-          if (_points) _points->paint(painter); }
+    void paint(QPainter &painter, const QRectF &rect)
+        { if (_faces) _faces->paint(painter, rect);
+          if (_edges) _edges->paint(painter, rect);
+          if (_points) _points->paint(painter, rect); }
 
     const QRectF &boundingRect() const { return _brect; }
 };

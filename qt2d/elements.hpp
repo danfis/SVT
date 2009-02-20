@@ -49,7 +49,7 @@ class Elements {
     const QPen &pen() const { return _pen; }
     bool on() const { return _on; }
 
-    void paint(QPainter &painter){};
+    void paint(QPainter &painter, const QRectF &rect){};
 
     const QRectF &boundingRect() const { return _brect; }
 };
