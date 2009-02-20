@@ -1,7 +1,7 @@
 #include "obj.hpp"
 
 SVT::Qt2D::Obj::Obj(svt_obj_t *obj)
-    : _points(0), _edges(0), _faces(0)
+    : _points(0), _edges(0), _faces(0), _all_on(true)
 {
     const char *name;
 

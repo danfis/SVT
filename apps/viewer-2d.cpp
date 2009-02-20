@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -26,6 +26,7 @@
 #include <QMainWindow>
 using namespace std;
 
+#include "settings.hpp"
 #include "common.hpp"
 #include "common/msg.hpp"
 #include "parser/parser.h"
@@ -34,6 +35,8 @@ using namespace std;
 
 svt_parser_t *parser;
 
+static void changeDefaultSettings();
+
 int main(int argc, char *argv[])
 {
     char **args;
@@ -41,6 +44,8 @@ int main(int argc, char *argv[])
     svt_parser_t *parser;
     svt_obj_t *o;
     SVT::Qt2D::Obj *obj;
+
+    changeDefaultSettings();
 
     args = processOptions(argc, argv, &num_args);
 
@@ -92,4 +97,11 @@ int main(int argc, char *argv[])
     app.exec();
 
     return 0;
+}
+
+static void changeDefaultSettings()
+{
+    Settings::point_color[0] = 0.;
+    Settings::point_color[1] = 0.;
+    Settings::point_color[2] = 0.;
 }

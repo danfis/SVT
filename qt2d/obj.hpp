@@ -46,6 +46,7 @@ class Obj : public Common::Obj {
     Faces *_faces;
     std::string _name;
     QRectF _brect; /*! boudning rectangle */
+    bool _all_on;
 
   public:
     Obj(svt_obj_t *obj);
@@ -60,12 +61,12 @@ class Obj : public Common::Obj {
     bool pointsOn() const { return (_points ? _points->on() : false); }
     bool edgesOn() const { return (_edges ? _edges->on() : false); }
     bool facesOn() const { return (_faces ? _faces->on() : false); }
-    bool allOn() const { return pointsOn() && edgesOn() && facesOn(); }
+    bool allOn() const { return _all_on; }
 
     bool pointsOff() const { return !pointsOn(); }
     bool edgesOff() const { return !edgesOn(); }
     bool facesOff() const { return !facesOn(); }
-    bool allOff() const { return pointsOff() && edgesOff() && facesOff(); }
+    bool allOff() const { return !_all_on; }
 
     float pointSize() const { return (_points ? _points->size() : -1.); }
     float edgeWidth() const { return (_edges ? _edges->size() : -1.); }
@@ -101,7 +102,7 @@ class Obj : public Common::Obj {
         { return (_faces ? _faces->color().blueF() : -1.); }
 
     void setAllOn(bool on = true)
-        { setPointsOn(on); setEdgesOn(on); setFacesOn(on); }
+        { _all_on = on; }
 
     void setPointsOn(bool on = true) { if (_points) _points->setOn(on); }
     void setEdgesOn(bool on = true) { if (_edges) _edges->setOn(on); }
