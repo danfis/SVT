@@ -5,6 +5,7 @@ using namespace std;
 
 #include "painter.moc"
 
+#define MIN_SCALE 0.05
 
 namespace SVT {
 
@@ -91,6 +92,9 @@ void Painter::paintEvent(QPaintEvent *e)
 void Painter::wheelEvent(QWheelEvent *event)
 {
     _scale += event->delta() * 1.E-3;
+    if (_scale < 0.){
+        _scale = MIN_SCALE;
+    }
 
     update();
 }

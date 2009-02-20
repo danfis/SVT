@@ -1,3 +1,4 @@
+#include <iostream>
 #include "points.hpp"
 
 
@@ -36,10 +37,19 @@ SVT::Qt2D::Points::~Points()
 
 void SVT::Qt2D::Points::paint(QPainter &painter)
 {
-    QRectF p(0., 0., _size, _size);
+    QRectF p; // rectangle which will be drawed as point
+    qreal fx, tx, omit; // for recomputing size of points using world transf.
+    qreal size;
 
     if (!on())
         return;
+
+    // first compute dimensions of rectangle
+    painter.worldMatrix().map(0., 0., &fx, &omit);
+    painter.worldMatrix().map(1, 0., &tx, &omit);
+    size = _size * (1 / (tx - fx));
+    p.setHeight(size);
+    p.setWidth(size);
 
     painter.setPen(pen());
 

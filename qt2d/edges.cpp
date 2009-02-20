@@ -41,9 +41,19 @@ SVT::Qt2D::Edges::~Edges()
 
 void SVT::Qt2D::Edges::paint(QPainter &painter)
 {
+    QPen cpen = pen(); // current pen
+    qreal fx, tx, omit; // for recomputing of width
+    qreal size;
+
     if (!on())
         return;
 
-    painter.setPen(pen());
+    // compute correct line width
+    painter.worldMatrix().map(0., 0., &fx, &omit);
+    painter.worldMatrix().map(1, 0., &tx, &omit);
+    size = _size * (1 / (tx - fx));
+    cpen.setWidthF(size);
+
+    painter.setPen(cpen);
     painter.drawPath(_path);
 }
