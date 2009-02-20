@@ -19,6 +19,7 @@ namespace Qt {
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
+  protected:
     WidgetStack *_obj_widgets;
     QDockWidget *_left_dock, *_right_dock;
     QStatusBar *_status;

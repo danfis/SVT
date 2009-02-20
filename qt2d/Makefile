@@ -8,7 +8,8 @@ TEST_LDFLAGS = -L./ -L../qt -lsvtqt -lsvtqt2d \
 
 
 TARGETS = libsvtqt2d.a test
-OBJS = painter.o elements.o points.o edges.o faces.o obj.o main_window.o
+OBJS = painter.o elements.o points.o edges.o faces.o obj.o main_window.o \
+       config.o
 
 all: $(TARGETS)
 
@@ -22,6 +23,7 @@ libsvtqt2d.a: $(OBJS)
 viewer.cpp: viewer.moc
 viewer_live.cpp: viewer_live.moc
 painter.cpp: painter.moc
+config.cpp: config.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 

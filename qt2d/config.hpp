@@ -20,38 +20,39 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef QT2D_MAIN_WINDOW_HPP_
-#define QT2D_MAIN_WINDOW_HPP_
+#ifndef QT2D_CONFIG_HPP_
+#define QT2D_CONFIG_HPP_
 
-#include <list>
-
-#include "../qt/main_window.hpp"
-#include "../qt/obj_style_widget.hpp"
-#include "../qt/obj_widget.hpp"
-#include "painter.hpp"
-#include "config.hpp"
+#include <QGroupBox>
+#include <QDoubleSpinBox>
 
 namespace SVT {
 
 namespace Qt2D {
 
-class MainWindow : public Qt::MainWindow{
-  private:
-    std::list<Obj *> _objs;
-    Painter *_painter;
-    ConfigWidget *_config;
+
+class ConfigWidget : public QGroupBox {
+    Q_OBJECT
+
+    QDoubleSpinBox *_scale;
 
   public:
-    MainWindow();
-    ~MainWindow();
+    ConfigWidget(QWidget *parent = 0);
 
-    void addObj(Obj *obj);
-    Qt::ObjStyleWidget *showObjStyleWidget(Common::Obj *);
-    Qt::ObjWidget *addObjWidget(Common::Obj *, int flags = Qt::OBJ_WIDGET_ALL);
+  public slots:
+    void setScale(double val) { _scale->setValue(val); }
+
+  private slots:
+    void _scaleSlot(double val);
+    void _fitToWinSlot(bool ch);
+
+  signals:
+    void scaleChanged(double val);
+    void fitToWin();
 };
 
-} /* Qt2D */
+}
 
-} /* SVT */
+}
 
 #endif

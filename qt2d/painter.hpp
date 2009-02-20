@@ -21,8 +21,6 @@ class Painter : public QWidget {
   private:
     std::list<Obj *> _objs;
     qreal _scale, _dx, _dy; /*! world transfomataions */
-    QRectF _brect;
-    bool _brect_init;
     bool _mouse_pressed; /*! indicates if mouse's left button is pressed */
     QPoint _mouse_pos; /*! last position of mouse */
 
@@ -35,14 +33,20 @@ class Painter : public QWidget {
     ~Painter();
 
     void addObj(Obj *o);
-    void scaleToWindow();
 
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+
   public slots:
     void repaint(Common::Obj *o = 0);
+    void setScale(double val);
+    void setTranslation(double dx, double dy);
+    void fitToWin();
+
+  signals:
+    void scaleChanged(double val);
 };
 
 } /* Qt2D */

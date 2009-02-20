@@ -15,7 +15,7 @@ namespace Qt2D {
 Painter::Painter(QWidget *parent)
     : QWidget(parent),
       _scale(1.), _dx(0.), _dy(0.),
-      _brect_init(false), _mouse_pressed(false)
+      _mouse_pressed(false)
 {
 }
 
@@ -26,43 +26,66 @@ Painter::~Painter()
 void Painter::addObj(Obj *o)
 {
     _objs.push_back(o);
-
-    if (!_brect_init){
-        const QRectF &br = o->boundingRect();
-
-        _brect = br;
-        _brect_init = true;
-    }else{
-        const QRectF &br = o->boundingRect();
-
-        if (br.left() < _brect.left())
-            _brect.setLeft(br.left());
-        if (br.right() > _brect.right())
-            _brect.setRight(br.right());
-        if (br.top() < _brect.top())
-            _brect.setTop(br.top());
-        if (br.bottom() > _brect.bottom())
-            _brect.setBottom(br.bottom());
-    }
 }
 
-void Painter::scaleToWindow()
+void Painter::fitToWin()
 {
+    std::list<Obj *>::iterator it, it_end;
+    QRectF brect; // boundig rectangle
+    int objs_on;
     QSize wsize = size();
-    qreal tmp;
-    QPointF center = _brect.center();
+    qreal tmp, scale, dx, dy;
+    QPointF center;
     QPointF wcenter(wsize.width() / 2., wsize.height() / 2.);
 
+    if (_objs.size() <= 0)
+        return;
+
+    // compute bounding rectangle
+    it = _objs.begin();
+    it_end = _objs.end();
+    objs_on = 0;
+    for (; it != it_end; ++it){
+        if ((*it)->allOn()){
+            if (objs_on == 0){
+                brect = (*it)->boundingRect();
+            }else{
+                const QRectF &br = (*it)->boundingRect();
+
+                if (br.left() < brect.left())
+                    brect.setLeft(br.left());
+                if (br.right() > brect.right())
+                    brect.setRight(br.right());
+                if (br.top() < brect.top())
+                    brect.setTop(br.top());
+                if (br.bottom() > brect.bottom())
+                    brect.setBottom(br.bottom());
+            }
+
+            objs_on++;
+        }
+    }
+
+    if (objs_on <= 0)
+        return;
+
+    // copy center of bounding rect
+    center = brect.center();
+
     // scale:
-    tmp = (qreal)wsize.width() / _brect.width();
-    _scale = (qreal)wsize.height() / _brect.height();
-    if (tmp < _scale)
-        _scale = tmp;
+    tmp = (qreal)wsize.width() / brect.width();
+    scale = (qreal)wsize.height() / brect.height();
+    if (tmp < scale)
+        scale = tmp;
 
     // dx, dy
-    center *= _scale;
-    _dx = wcenter.x() - center.x();
-    _dy = wcenter.y() - center.y();
+    center *= scale;
+    dx = wcenter.x() - center.x();
+    dy = wcenter.y() - center.y();
+
+    setTranslation(dx, dy);
+    setScale(scale);
+    update();
 }
 
 
@@ -91,12 +114,7 @@ void Painter::paintEvent(QPaintEvent *e)
 
 void Painter::wheelEvent(QWheelEvent *event)
 {
-    _scale += event->delta() * 1.E-3;
-    if (_scale < 0.){
-        _scale = MIN_SCALE;
-    }
-
-    update();
+    setScale(_scale + event->delta() * 1.E-3);
 }
 
 void Painter::mousePressEvent(QMouseEvent *event)
@@ -121,12 +139,10 @@ void Painter::mouseMoveEvent(QMouseEvent *event)
     if (_mouse_pressed){
         QPoint pos = event->globalPos();
 
-        _dx += pos.x() - _mouse_pos.x();
-        _dy += pos.y() - _mouse_pos.y();
+        setTranslation(_dx + pos.x() - _mouse_pos.x(),
+                       _dy + pos.y() - _mouse_pos.y());
 
         _mouse_pos = pos;
-
-        update();
     }
 }
 
@@ -138,6 +154,25 @@ void Painter::repaint(Common::Obj *_o)
     update();
 }
 
+void Painter::setScale(double val)
+{
+    _scale = val;
+    if (_scale < 0.){
+        _scale = MIN_SCALE;
+    }
+
+    emit scaleChanged(val);
+
+    update();
+}
+
+void Painter::setTranslation(double dx, double dy)
+{
+    _dx = dx;
+    _dy = dy;
+
+    update();
+}
 
 } /* Qt2D */
 
