@@ -92,8 +92,6 @@ int main(int argc, char *argv[])
 
 
     mw.show();
-    mw.scaleToWindow();
-
     app.exec();
 
     return 0;
