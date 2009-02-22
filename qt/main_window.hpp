@@ -28,17 +28,17 @@ class MainWindow : public QMainWindow {
     MainWindow();
     virtual ~MainWindow();
 
-    virtual ObjWidget *addObjWidget(Common::Obj *, int flags = OBJ_WIDGET_ALL);
+    virtual void addObjWidget(Common::Obj *, int flags = OBJ_WIDGET_ALL);
 
-    void show();
+    virtual void show();
 
-    void showMsgInStatusBarSignal(const QString &msg);
+    virtual void showMsgInStatusBarSignal(const QString &msg);
 
   signals:
-    void _showMsgInStatusBarSignal(const QString &msg);
+    virtual void _showMsgInStatusBarSignal(const QString &msg);
   public slots:
-    virtual ObjStyleWidget *showObjStyleWidget(Common::Obj *);
-    void showMsgInStatusBar(const QString &msg);
+    virtual void showObjStyleWidget(Common::Obj *);
+    virtual void showMsgInStatusBar(const QString &msg);
 };
 
 } /* Qt */

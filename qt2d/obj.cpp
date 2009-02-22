@@ -1,7 +1,8 @@
 #include "obj.hpp"
+#include "painter.hpp"
 
 SVT::Qt2D::Obj::Obj(svt_obj_t *obj)
-    : _points(0), _edges(0), _faces(0), _all_on(true)
+    : _points(0), _edges(0), _faces(0), _all_on(true), _painter(0)
 {
     const char *name;
 
@@ -98,4 +99,10 @@ void SVT::Qt2D::Obj::faceColor(float *r, float *g, float *b) const
         *g = rg;
         *b = rb;
     }
+}
+
+void SVT::Qt2D::Obj::update()
+{
+    if (_painter != 0)
+        _painter->update(this);
 }

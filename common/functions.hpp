@@ -20,36 +20,34 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef QT2D_MAIN_WINDOW_HPP_
-#define QT2D_MAIN_WINDOW_HPP_
+#ifndef COMMON_FUNCTIONS_HPP_
+#define COMMON_FUNCTIONS_HPP_
 
-#include <list>
-
-#include "../qt/main_window.hpp"
-#include "../qt/obj_style_widget.hpp"
-#include "../qt/obj_widget.hpp"
-#include "painter.hpp"
-#include "config.hpp"
+#include <QRect>
+#include <QRectF>
 
 namespace SVT {
 
-namespace Qt2D {
+namespace Common {
 
-class MainWindow : public Qt::MainWindow{
-  private:
-    std::list<Obj *> _objs;
-    Painter *_painter;
-    ConfigWidget *_config;
+inline void rectFToRect(const QRectF &rf, QRect &r)
+{
+    r.setTop((int)rf.top());
+    r.setBottom((int)rf.bottom() + 1);
+    r.setLeft((int)rf.left());
+    r.setRight((int)rf.right() + 1);
+}
 
-  public:
-    MainWindow();
-    ~MainWindow();
+inline void rectToRectF(const QRect &r, QRectF &rf)
+{
+    rf.setTop(r.top());
+    rf.setBottom(r.bottom());
+    rf.setLeft(r.left());
+    rf.setRight(r.right());
+}
 
-    void addObj(Obj *obj);
-};
+}
 
-} /* Qt2D */
-
-} /* SVT */
-
+}
 #endif
+

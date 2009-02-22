@@ -34,15 +34,13 @@ MainWindow::~MainWindow()
     delete _obj_widgets;
 }
 
-ObjWidget *MainWindow::addObjWidget(Common::Obj *obj, int flags)
+void MainWindow::addObjWidget(Common::Obj *obj, int flags)
 {
     ObjWidget *o = new ObjWidget(obj, flags);
     _obj_widgets->push(o);
 
     connect(o, SIGNAL(config(Common::Obj *)),
             this, SLOT(showObjStyleWidget(Common::Obj *)));
-
-    return o;
 }
 
 void MainWindow::show()
@@ -56,7 +54,7 @@ void MainWindow::showMsgInStatusBarSignal(const QString &msg)
     emit _showMsgInStatusBarSignal(msg);
 }
 
-ObjStyleWidget *MainWindow::showObjStyleWidget(Common::Obj *obj)
+void MainWindow::showObjStyleWidget(Common::Obj *obj)
 {
     ObjStyleWidget *osw = new ObjStyleWidget(obj);
 
@@ -72,8 +70,6 @@ ObjStyleWidget *MainWindow::showObjStyleWidget(Common::Obj *obj)
                              | QDockWidget::DockWidgetClosable);
     _right_dock->setWidget(osw);
     addDockWidget(::Qt::RightDockWidgetArea, _right_dock, ::Qt::Vertical);
-
-    return osw;
 }
 
 void MainWindow::showMsgInStatusBar(const QString &msg)

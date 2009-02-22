@@ -36,6 +36,8 @@ namespace SVT {
 
 namespace Qt2D {
 
+class Painter;
+
 /**
  * Class which describes visualisable object by Coin3d library.
  */
@@ -48,6 +50,7 @@ class Obj : public Common::Obj {
     QRectF _brect; /*! boudning rectangle */
     QRect _brecti; /*! bounding rectangle in ints */
     bool _all_on;
+    Painter *_painter;
 
   public:
     Obj(svt_obj_t *obj);
@@ -103,38 +106,57 @@ class Obj : public Common::Obj {
         { return (_faces ? _faces->color().blueF() : -1.); }
 
     void setAllOn(bool on = true)
-        { _all_on = on; }
+        { _all_on = on; update(); }
 
-    void setPointsOn(bool on = true) { if (_points) _points->setOn(on); }
-    void setEdgesOn(bool on = true) { if (_edges) _edges->setOn(on); }
-    void setFacesOn(bool on = true) { if (_faces) _faces->setOn(on); }
+    void setPointsOn(bool on = true)
+        { if (_points){ _points->setOn(on); update(); } }
+    void setEdgesOn(bool on = true)
+        { if (_edges){ _edges->setOn(on); update(); } }
+    void setFacesOn(bool on = true)
+        { if (_faces){ _faces->setOn(on); update(); } }
 
-    void setPointSize(float size) { if (_points) _points->setSize(size); }
-    void setEdgeWidth(float width) { if (_edges) _edges->setSize(width); }
+    void setPointSize(float size)
+        { if (_points){ _points->setSize(size); update(); } }
+    void setEdgeWidth(float width)
+        { if (_edges){ _edges->setSize(width); update(); } }
 
     void setPointColor(float r, float g, float b)
-        { if (_points) _points->setColor(r, g, b); }
+        { if (_points){ _points->setColor(r, g, b); update(); } }
     void setPointColor(float rgb[3])
         { setPointColor(rgb[0], rgb[1], rgb[2]); }
-    void setPointColorRed(float v) { if (_points) _points->setColorRed(v); }
-    void setPointColorGreen(float v) { if (_points) _points->setColorGreen(v); }
-    void setPointColorBlue(float v) { if (_points) _points->setColorBlue(v); }
+    void setPointColorRed(float v)
+        { if (_points){ _points->setColorRed(v); update(); } }
+    void setPointColorGreen(float v)
+        { if (_points){ _points->setColorGreen(v); update(); } }
+    void setPointColorBlue(float v)
+        { if (_points){ _points->setColorBlue(v); update(); } }
 
     void setEdgeColor(float r, float g, float b)
-        { if (_edges) _edges->setColor(r, g, b); }
+        { if (_edges){ _edges->setColor(r, g, b); update(); } }
     void setEdgeColor(float rgb[3])
         { setEdgeColor(rgb[0], rgb[1], rgb[2]); }
-    void setEdgeColorRed(float v) { if (_edges) _edges->setColorRed(v); }
-    void setEdgeColorGreen(float v) { if (_edges) _edges->setColorGreen(v); }
-    void setEdgeColorBlue(float v) { if (_edges) _edges->setColorBlue(v); }
+    void setEdgeColorRed(float v)
+        { if (_edges){ _edges->setColorRed(v); update(); } }
+    void setEdgeColorGreen(float v)
+        { if (_edges){ _edges->setColorGreen(v); update(); } }
+    void setEdgeColorBlue(float v)
+        { if (_edges){ _edges->setColorBlue(v); update(); } }
 
     void setFaceColor(float r, float g, float b)
-        { if (_faces) _faces->setColor(r, g, b); }
+        { if (_faces){ _faces->setColor(r, g, b); update(); } }
     void setFaceColor(float rgb[3])
         { setFaceColor(rgb[0], rgb[1], rgb[2]); }
-    void setFaceColorRed(float v) { if (_faces) _faces->setColorRed(v); }
-    void setFaceColorGreen(float v) { if (_faces) _faces->setColorGreen(v); }
-    void setFaceColorBlue(float v) { if (_faces) _faces->setColorBlue(v); }
+    void setFaceColorRed(float v)
+        { if (_faces){ _faces->setColorRed(v); update(); } }
+    void setFaceColorGreen(float v)
+        { if (_faces){ _faces->setColorGreen(v); update(); } }
+    void setFaceColorBlue(float v)
+        { if (_faces){ _faces->setColorBlue(v); update(); } }
+
+
+    void update();
+
+    void setPainter(Painter *p) { _painter = p; }
 
     void paint(QPainter &painter, const QRectF &rect)
         { if (_faces) _faces->paint(painter, rect);

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "painter.hpp"
+#include "../common/functions.hpp"
 using namespace std;
 
 
@@ -23,9 +24,24 @@ Painter::~Painter()
 {
 }
 
+void Painter::_setUpTransf(QMatrix &m) const
+{
+    m.reset();
+    m.translate(_dx, _dy);
+    m.scale(_scale, _scale);
+}
+
+void Painter::_setUpReverseTransf(QMatrix &m) const
+{
+    m.reset();
+    m.scale(1. / _scale, 1. / _scale);
+    m.translate(-_dx, -_dy);
+}
+
 void Painter::addObj(Obj *o)
 {
     _objs.push_back(o);
+    o->setPainter(this);
 }
 
 void Painter::fitToWin()
@@ -98,10 +114,8 @@ void Painter::paintEvent(QPaintEvent *event)
     list<Obj *>::iterator it, it_end;
 
     // set up transformations
-    tr.translate(_dx, _dy);
-    tr.scale(_scale, _scale);
-    tr_rev.scale(1. / _scale, 1. / _scale);
-    tr_rev.translate(-_dx, -_dy);
+    _setUpTransf(tr);
+    _setUpReverseTransf(tr_rev);
 
     // set up world matrix
     painter.setWorldMatrix(tr);
@@ -110,10 +124,7 @@ void Painter::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
 
     // set up update rectangle
-    rect_update.setTop(rect_update_i.top());
-    rect_update.setBottom(rect_update_i.bottom());
-    rect_update.setLeft(rect_update_i.left());
-    rect_update.setRight(rect_update_i.right());
+    Common::rectToRectF(rect_update_i, rect_update);
     rect_update = tr_rev.mapRect(rect_update);
 
     it = _objs.begin();
@@ -165,11 +176,24 @@ void Painter::mouseMoveEvent(QMouseEvent *event)
 }
 
 
-void Painter::repaint(Common::Obj *_o)
+void Painter::update(Common::Obj *o)
 {
-    //Obj *o = (Obj *)_o;
+    if (o != 0){
+        /*
+        Obj *obj = (Obj *)o;
+        QRect r;
+        QMatrix tr;
 
-    update();
+        _setUpTransf(tr);
+
+        Common::rectFToRect(tr.mapRect(obj->boundingRect()), r);
+
+        QWidget::update(r);
+        */
+        QWidget::update();
+    }else{
+        QWidget::update();
+    }
 }
 
 void Painter::setScale(double val)

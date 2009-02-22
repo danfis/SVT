@@ -25,6 +25,16 @@ class Painter : public QWidget {
     QPoint _mouse_pos; /*! last position of mouse */
 
 
+    /**
+     * Sets up transformation matrix (scale and translation)
+     */
+    void _setUpTransf(QMatrix &m) const;
+
+    /**
+     * Same as _setUpTransf() but reverse transformation is used.
+     */
+    void _setUpReverseTransf(QMatrix &m) const;
+
   protected:
     void paintEvent(QPaintEvent *e);
 
@@ -40,7 +50,7 @@ class Painter : public QWidget {
     void mouseMoveEvent(QMouseEvent *event);
 
   public slots:
-    void repaint(Common::Obj *o = 0);
+    void update(Common::Obj *o = 0);
     void setScale(double val);
     void setTranslation(double dx, double dy);
     void fitToWin();
