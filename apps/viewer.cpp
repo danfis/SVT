@@ -30,43 +30,36 @@
 #include <QMainWindow>
 using namespace std;
 
-#include "common.hpp"
-#include "common_coin.hpp"
+#include "common/settings.hpp"
+#include "common/functions.hpp"
 #include "common/msg.hpp"
 #include "coin3d/coin3d.hpp"
 #include "parser/parser.h"
-
-svt_parser_t *parser;
+#include "parser/obj.h"
 
 int main(int argc, char *argv[])
 {
     char **args;
     int num_args;
+    svt_parser_t *parser;
+    svt_obj_t *o;
+    SVT::Coin3d::Obj *obj;
 
-    args = processOptions(argc, argv, &num_args);
+    args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
 
     SVT::Coin3d::Coin3d::init("viewer");
 
     parser = svtParserNew();
 
-    if (args != 0){
-        FILE *fin;
+    SVT::Common::parseAll(num_args, args, parser);
 
-        for (int i=0; i < num_args; i++){
-            cerr << "Parsing file " << args[i] << " ..." << endl;
-            fin = fopen(args[i], "r");
-            if (fin == NULL){
-                ERR("Can't read file " << args[i]);
-                continue;
-            }
-            svtParserSetInput(parser, fin);
+    o = svtParserObjs(parser, 0);
+    while (o != 0){
+        obj = new SVT::Coin3d::Obj(o);
+        SVT::Common::settings.apply(obj);
+        SVT::Coin3d::Coin3d::addObj(obj);
 
-            parseObjData();
-
-            fclose(fin);
-        }
-    }else{
-        parseObjData();
+        o = svtObjNext(o);
     }
 
     svtParserDelete(parser);

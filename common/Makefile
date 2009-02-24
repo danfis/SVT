@@ -2,12 +2,18 @@ include ../Makefile.include
 
 CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
 
-TARGETS =
-OBJS =
+TARGETS = libsvtcommon.a
+OBJS = settings.o functions.o
 
 all: $(TARGETS)
 
+libsvtcommon.a: $(OBJS)
+	ar cr $@ $^
+	ranlib $@
+
 %.o: %.cpp %.hpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 %.moc: %.hpp

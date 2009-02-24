@@ -23,6 +23,8 @@
 #ifndef COMMON_OBJ_HPP_
 #define COMMON_OBJ_HPP_
 
+#include <string>
+
 namespace SVT {
 
 namespace Common {

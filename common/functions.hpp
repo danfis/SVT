@@ -26,9 +26,22 @@
 #include <QRect>
 #include <QRectF>
 
+#include "../common/obj.hpp"
+#include "../parser/parser.h"
+#include "../parser/obj.h"
+
 namespace SVT {
 
 namespace Common {
+
+
+bool parseFloat(const char *str, float *f);
+bool parseInt(const char *str, int *i);
+bool parseFloatList(const char *str, int len, float *nums);
+
+void chooseRandomColor(float *r, float *g, float *b);
+
+void colorToHex(char str[7], const float color[3]);
 
 inline void rectFToRect(const QRectF &rf, QRect &r)
 {
@@ -45,6 +58,10 @@ inline void rectToRectF(const QRect &r, QRectF &rf)
     rf.setLeft(r.left());
     rf.setRight(r.right());
 }
+
+
+
+void parseAll(int argc, char *argv[], svt_parser_t *parser);
 
 }
 

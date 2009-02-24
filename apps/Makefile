@@ -2,17 +2,17 @@ include ../Makefile.include
 
 CXXFLAGS += -I../ $(COIN_CXXFLAGS) $(SOQT_CXXFLAGS) $(QT_CXXFLAGS)
 LDFLAGS_COIN = -L../parser -lsvtparser -L../coin3d -lsvtcoin3d \
-               -L../qt -lsvtqt -lfl \
+               -L../qt -lsvtqt -lfl -L../common -lsvtcommon\
                $(COIN_LDFLAGS) $(SOQT_LDFLAGS) $(QT_LDFLAGS)
 LDFLAGS_QT = -L../parser -lsvtparser -L../qt2d -lsvtqt2d \
-             -L../qt -lsvtqt -lfl \
+             -L../qt -lsvtqt -lfl -L../common -lsvtcommon \
              $(QT_LDFLAGS)
 LDFLAGS_TO_SVG = -L../parser -lsvtparser -lfl
 
 TARGETS = svt-viewer svt-iv-viewer svt-viewer-live svt-to-svg svt-viewer-2d
 #TARGETS = svt-viewer svt-iv-viewer svt-to-svg
-VIEWER_OBJS = viewer.o viewer-common.o common_coin.o settings.o
-VIEWER2D_OBJS = viewer-2d.o settings.o common.o
+VIEWER_OBJS = viewer.o
+VIEWER2D_OBJS = viewer-2d.o
 IV_VIEWER_OBJS = iv-viewer.o
 VIEWER_LIVE_OBJS = viewer-live.o viewer-live-common.o common_coin.o settings.o
 TO_SVG_OBJS = to-svg.o to-svg-common.o to-svg-settings.o
