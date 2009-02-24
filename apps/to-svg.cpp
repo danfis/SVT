@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -20,17 +20,20 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define TO_SVG
-
 #include <iostream>
 #include <cstdlib>
 #include <float.h>
 using namespace std;
 
-#include "common.hpp"
-#include "settings.hpp"
-#include "parser/parser.h"
 #include "common/msg.hpp"
+#include "common/settings.hpp"
+#include "common/functions.hpp"
+#include "parser/parser.h"
+#include "parser/obj.h"
+
+using SVT::Common::settings;
+using SVT::Common::colorToHex;
+using SVT::Common::chooseRandomColor;
 
 static void toSvg(svt_obj_t *objs);
 static void printPoint(const svt_point_t point,
@@ -50,45 +53,25 @@ static void size(svt_obj_t *objs,
                  int *width, int *height, float view_box[4]);
 
 
-svt_parser_t *parser;
-
 int main(int argc, char *argv[])
 {
     char **args;
     int num_args;
     int len;
-    svt_obj_t *objs;
+    svt_parser_t *parser;
+    svt_obj_t *o;
 
-    args = processOptions(argc, argv, &num_args);
+    args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
 
     parser = svtParserNew();
+    SVT::Common::parseAll(num_args, args, parser);
 
-    if (args != 0){
-        FILE *fin;
-
-        for (int i=0; i < num_args; i++){
-            cerr << "Parsing file " << args[i] << " ..." << endl;
-            fin = fopen(args[i], "r");
-            if (fin == NULL){
-                ERR("Can't read file " << args[i]);
-                continue;
-            }
-
-            svtParserSetInput(parser, fin);
-            svtParserParse(parser);
-
-            fclose(fin);
-        }
-    }else{
-        svtParserParse(parser);
-    }
-
-    objs = svtParserObjs(parser, &len);
+    o = svtParserObjs(parser, &len);
     if (len > 0)
-        toSvg(objs);
-
+        toSvg(o);
 
     svtParserDelete(parser);
+
     return 0;
 }
 
@@ -119,7 +102,7 @@ void toSvg(svt_obj_t *objs)
 
     size(objs, &width, &height, view_box);
 
-    out.precision(Settings::svg_precision);
+    out.precision(settings.svg_precision);
     out.setf(ios::fixed);
 
     // header:
@@ -137,7 +120,7 @@ void toSvg(svt_obj_t *objs)
         << "       xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
 
     // background:
-    colorToHex(color, Settings::svg_bg_color);
+    colorToHex(color, settings.svg_bg_color);
     out << "<rect"
         << " x=\"" << view_box[0] << "\""
         << " y=\"" << view_box[1] << "\""
@@ -156,9 +139,9 @@ void toSvg(svt_obj_t *objs)
         out << "<g id=\"" << i << "\">" << endl;
 
         // FACES:
-        if (!Settings::faces_off){
-            col = Settings::face_color;
-            if (Settings::colour_faces){
+        if (!settings.faces_off){
+            col = settings.face_color;
+            if (settings.colour_faces){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
                 col = colorf;
             }else if (svtObjFaceColor(objs) != NULL){
@@ -179,9 +162,9 @@ void toSvg(svt_obj_t *objs)
         }
 
         // EDGES:
-        if (!Settings::edges_off){
-            col = Settings::edge_color;
-            if (Settings::colour_edges){
+        if (!settings.edges_off){
+            col = settings.edge_color;
+            if (settings.colour_edges){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
                 col = colorf;
             }else if (svtObjEdgeColor(objs) != NULL){
@@ -199,9 +182,9 @@ void toSvg(svt_obj_t *objs)
         }
 
         // POINTS:
-        if (!Settings::points_off){
-            col = Settings::point_color;
-            if (Settings::colour_points){
+        if (!settings.points_off){
+            col = settings.point_color;
+            if (settings.colour_points){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
                 col = colorf;
             }else if (svtObjPointColor(objs) != NULL){
@@ -231,15 +214,15 @@ void printPoint(const svt_point_t point,
     x = point[0];
     y = point[1];
 
-    move = Settings::point_size / 2;
+    move = settings.point_size / 2;
     x -= move;
     y -= move;
 
     colorToHex(color, colorf);
 
     out << "\t<rect x=\"" << x << "\" y=\"" << y << "\""
-        << " width=\"" << Settings::point_size << "\""
-        << " height=\"" << Settings::point_size << "\""
+        << " width=\"" << settings.point_size << "\""
+        << " height=\"" << settings.point_size << "\""
         << " fill=\"#" << color << "\""
         << " stroke=\"none\" />" << endl;
 
@@ -263,7 +246,7 @@ void printEdge(const svt_point_t from,
     out << "\t<line x1=\"" << x1 << "\" y1=\"" << y1 << "\""
         << " x2=\"" << x2 << "\" y2=\"" << y2 << "\""
         << " stroke=\"#" << color << "\""
-        << " stroke-width=\"" << Settings::edge_width << "\" />"
+        << " stroke-width=\"" << settings.edge_width << "\" />"
         << endl;
 }
 
@@ -300,11 +283,11 @@ void printFace(const svt_point_t p1,
 void size(svt_obj_t *objs,
           int *width, int *height, float view_box[4])
 {
-    if (Settings::svg_view_box_enabled){
-        view_box[0] = Settings::svg_view_box[0];
-        view_box[1] = -1.f * Settings::svg_view_box[1];
-        view_box[2] = Settings::svg_view_box[2];
-        view_box[3] = Settings::svg_view_box[3];
+    if (settings.svg_view_box_enabled){
+        view_box[0] = settings.svg_view_box[0];
+        view_box[1] = -1.f * settings.svg_view_box[1];
+        view_box[2] = settings.svg_view_box[2];
+        view_box[3] = settings.svg_view_box[3];
     }else{
         // compute viewbox from points:
         const svt_point_t *points;
@@ -336,6 +319,6 @@ void size(svt_obj_t *objs,
         view_box[3] = topright[1] - bottomleft[1];
     }
 
-    *width = Settings::svg_width;
+    *width = settings.svg_width;
     *height = (int)(((float)*width / view_box[2]) * view_box[3]);
 }
