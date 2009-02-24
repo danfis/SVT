@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -32,12 +32,10 @@
 #include <Inventor/nodes/SoMaterial.h>
 #include <string>
 
-#include "../common/obj.hpp"
-
-#include "../parser/parser.h"
-
-#include "../qt/obj_widget.hpp"
-#include "../qt/obj_style_widget.hpp"
+#include "common/obj.hpp"
+#include "parser/parser.h"
+#include "qt/obj_widget.hpp"
+#include "qt/obj_style_widget.hpp"
 
 namespace SVT {
 

@@ -25,9 +25,9 @@
 
 #include <list>
 
-#include "../qt/main_window.hpp"
-#include "../qt/obj_style_widget.hpp"
-#include "../qt/obj_widget.hpp"
+#include "qt/main_window.hpp"
+#include "qt/obj_style_widget.hpp"
+#include "qt/obj_widget.hpp"
 #include "painter.hpp"
 #include "config.hpp"
 

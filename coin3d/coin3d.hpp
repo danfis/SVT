@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -27,7 +27,7 @@
 #include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
 #include <QWidget>
 #include <list>
-#include "../qt/main_window.hpp"
+#include "qt/main_window.hpp"
 #include "obj_manager.hpp"
 #include "viewer_live.hpp"
 

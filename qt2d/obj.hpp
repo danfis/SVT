@@ -26,8 +26,8 @@
 #include <QRectF>
 #include <string>
 
-#include "../common/obj.hpp"
-#include "../parser/obj.h"
+#include "common/obj.hpp"
+#include "parser/obj.h"
 #include "points.hpp"
 #include "edges.hpp"
 #include "faces.hpp"

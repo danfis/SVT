@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -20,8 +20,8 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MSG_HPP_
-#define _MSG_HPP_
+#ifndef COMMON_MSG_HPP_
+#define COMMON_MSG_HPP_
 
 #include <iostream>
 
