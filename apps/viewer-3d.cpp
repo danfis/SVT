@@ -37,7 +37,7 @@ using namespace std;
 #include "parser/parser.h"
 #include "parser/obj.h"
 
-int main(int argc, char *argv[])
+int main3d(int argc, char *argv[])
 {
     char **args;
     int num_args;

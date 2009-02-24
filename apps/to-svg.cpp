@@ -53,7 +53,7 @@ static void size(svt_obj_t *objs,
                  int *width, int *height, float view_box[4]);
 
 
-int main(int argc, char *argv[])
+int mainToSVG(int argc, char *argv[])
 {
     char **args;
     int num_args;

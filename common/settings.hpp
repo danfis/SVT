@@ -32,6 +32,14 @@ namespace SVT {
 namespace Common {
 
 struct Settings {
+    enum Type {
+        TYPE_VIEWER2D,
+        TYPE_VIEWER3D,
+        TYPE_TO_SVG
+    };
+
+    Type type;
+
     bool all_off;
     bool points_off;
     bool edges_off;
@@ -47,6 +55,8 @@ struct Settings {
     bool colour_points;
     bool colour_edges;
     bool colour_faces;
+
+    bool point_color_changed;
 
     int svg_width;
     bool svg_view_box_enabled;

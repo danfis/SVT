@@ -1,36 +1,27 @@
 include ../Makefile.include
 
-LDFLAGS_ALL = -lfl \
-              -L../parser -lsvtparser \
-              -L../common -lsvtcommon
+CXXFLAGS += $(QT_CXXFLAGS) $(COIN_CXXFLAGS) $(SOQT_CXXFLAGS)
+LDFLAGS = -L../parser -lsvtparser \
+          -L../common -lsvtcommon \
+          -L../coin3d -lsvtcoin3d \
+          -L../qt2d -lsvtqt2d \
+          -L../qt -lsvtqt \
+          -lfl \
+          $(QT_LDFLAGS) $(COIN_LDFLAGS) $(SOQT_LDFLAGS)
 
-CXXFLAGS_2D = $(CXXFLAGS) $(QT_CXXFLAGS)
-LDFLAGS_2D = $(LDFLAGS_ALL) \
-             -L../qt -lsvtqt \
-             -L../qt2d -lsvtqt2d \
-             $(QT_LDFLAGS)
-
-CXXFLAGS_3D = $(CXXFLAGS) $(QT_CXXFLAGS) $(COIN_CXXFLAGS) $(SOQT_CXXFLAGS)
-LDFLAGS_3D = $(LDFLAGS_ALL) \
-             -L../coin3d -lsvtcoin3d \
-             -L../qt -lsvtqt \
-             $(QT_LDFLAGS) $(COIN_LDFLAGS) $(SOQT_LDFLAGS)
-
-CXXFLAGS_SVG = $(CXXFLAGS) $(QT_CXXFLAGS)
-LDFLAGS_SVG = $(LDFLAGS_ALL)
-
-TARGETS = svt-viewer svt-to-svg svt-viewer-2d
-#IV_VIEWER_OBJS = iv-viewer.o
-#VIEWER_LIVE_OBJS = viewer-live.o viewer-live-common.o common_coin.o settings.o
+TARGETS = svt svt-viewer-3d svt-viewer-2d svt-to-svg
+OBJS = main.o viewer-2d.o viewer-3d.o to-svg.o
 
 all: $(TARGETS)
 
-svt-viewer: viewer-3d.cpp
-	$(CXX) $(CXXFLAGS_3D) -o $@ $^ $(LDFLAGS_3D)
-svt-to-svg: to-svg.cpp
-	$(CXX) $(CXXFLAGS_SVG) -o $@ $^ $(LDFLAGS_SVG)
-svt-viewer-2d: viewer-2d.cpp
-	$(CXX) $(CXXFLAGS_2D) -o $@ $^ $(LDFLAGS_2D)
+svt: $(OBJS)
+	$(CXX) $(CXXFLAGS_3D) -o $@ $^ $(LDFLAGS)
+svt-viewer-3d: svt
+	rm -f $@; ln $< $@
+svt-to-svg: svt
+	rm -f $@; ln $< $@
+svt-viewer-2d: svt
+	rm -f $@; ln $< $@
 
 
 #svt-iv-viewer: $(IV_VIEWER_OBJS)

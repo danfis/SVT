@@ -36,7 +36,7 @@ using namespace std;
 
 static void changeDefaultSettings();
 
-int main(int argc, char *argv[])
+int main2d(int argc, char *argv[])
 {
     char **args;
     int num_args;

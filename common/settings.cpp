@@ -37,6 +37,11 @@ Settings settings;
 
 enum Options {
     HELP = 'h',
+
+    VIEWER2D,
+    VIEWER3D,
+    TO_SVG,
+
     ALL_OFF,
     POINTS_OFF,
     EDGES_OFF,
@@ -61,6 +66,11 @@ enum Options {
 
 struct option options[] = {
     { "help", no_argument, NULL, HELP },
+
+    { "2d", no_argument, NULL, VIEWER2D },
+    { "3d", no_argument, NULL, VIEWER3D },
+    { "to-svg", no_argument, NULL, TO_SVG },
+
     { "all-off", no_argument, NULL, ALL_OFF },
     { "points-off", no_argument, NULL, POINTS_OFF },
     { "edges-off", no_argument, NULL, EDGES_OFF },
@@ -85,6 +95,8 @@ struct option options[] = {
 Settings::Settings()
 {
     // default settings
+    type = TYPE_VIEWER2D;
+
     all_off    = false;
     points_off = false;
     edges_off  = false;
@@ -106,6 +118,8 @@ Settings::Settings()
     colour_points = false;
     colour_edges  = false;
     colour_faces  = false;
+
+    point_color_changed = false;
 
     svg_width = 500;
     svg_view_box_enabled = false;
@@ -152,6 +166,17 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
             case HELP:
                 usag = true;
                 break;
+
+            case VIEWER2D:
+                type = TYPE_VIEWER2D;
+                break;
+            case VIEWER3D:
+                type = TYPE_VIEWER3D;
+                break;
+            case TO_SVG:
+                type = TYPE_TO_SVG;
+                break;
+
             case ALL_OFF:
                 all_off = true;
                 break;
@@ -177,6 +202,7 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
                 point_color[0] = fl[0];
                 point_color[1] = fl[1];
                 point_color[2] = fl[2];
+                point_color_changed = true;
                 break;
             case EDGE_COLOR:
                 FLOAT3("--edge-color");
