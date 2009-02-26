@@ -22,7 +22,8 @@
 
 #include <iostream>
 #include "painter.hpp"
-#include "../common/functions.hpp"
+#include "common/functions.hpp"
+#include "common/msg.hpp"
 using namespace std;
 
 
@@ -88,16 +89,7 @@ void Painter::fitToWin()
             if (objs_on == 0){
                 brect = (*it)->boundingRect();
             }else{
-                const QRectF &br = (*it)->boundingRect();
-
-                if (br.left() < brect.left())
-                    brect.setLeft(br.left());
-                if (br.right() > brect.right())
-                    brect.setRight(br.right());
-                if (br.top() < brect.top())
-                    brect.setTop(br.top());
-                if (br.bottom() > brect.bottom())
-                    brect.setBottom(br.bottom());
+                brect = brect.united((*it)->boundingRect());
             }
 
             objs_on++;
@@ -121,8 +113,7 @@ void Painter::fitToWin()
     dx = wcenter.x() - center.x();
     dy = wcenter.y() - center.y();
 
-    setTranslation(dx, dy);
-    setScale(scale);
+    setTransf(dx, dy, scale);
     update();
 }
 
@@ -218,20 +209,15 @@ void Painter::update(Common::Obj *o)
     }
 }
 
-void Painter::setScale(double val)
+void Painter::setTransf(qreal dx, qreal dy, qreal scale)
 {
-    _scale = val;
+    _scale = scale;
     if (_scale < 0.){
         _scale = MIN_SCALE;
     }
 
-    emit scaleChanged(val);
+    emit scaleChanged((double)scale);
 
-    update();
-}
-
-void Painter::setTranslation(double dx, double dy)
-{
     _dx = dx;
     _dy = dy;
 

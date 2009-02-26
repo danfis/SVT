@@ -73,8 +73,9 @@ class Painter : public QWidget {
 
   public slots:
     void update(Common::Obj *o = 0);
-    void setScale(double val);
-    void setTranslation(double dx, double dy);
+    void setScale(qreal val) { setTransf(_dx, _dy, val); }
+    void setTranslation(qreal dx, qreal dy) { setTransf(dx, dy, _scale); }
+    void setTransf(qreal dx, qreal dy, qreal scale);
     void fitToWin();
 
   signals:

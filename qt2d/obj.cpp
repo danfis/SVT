@@ -26,6 +26,7 @@
 SVT::Qt2D::Obj::Obj(svt_obj_t *obj)
     : _points(0), _edges(0), _faces(0), _all_on(true), _painter(0)
 {
+    bool brect_init = false;
     const char *name;
 
     name = svtObjName(obj);
@@ -43,37 +44,21 @@ SVT::Qt2D::Obj::Obj(svt_obj_t *obj)
 
 
     // set up bounding rectangle
-    if (_points != 0)
+    if (_points != 0){
         _brect = _points->boundingRect();
-    else if (_edges != 0)
-        _brect = _edges->boundingRect();
-    else if (_faces != 0)
-        _brect = _faces->boundingRect();
-
-    if (_points != 0 && _edges != 0){
-        const QRectF &br = _edges->boundingRect();
-
-        if (br.left() < _brect.left())
-            _brect.setLeft(br.left());
-        if (br.right() > _brect.right())
-            _brect.setRight(br.right());
-        if (br.top() < _brect.top())
-            _brect.setTop(br.top());
-        if (br.bottom() > _brect.bottom())
-            _brect.setBottom(br.bottom());
-    }
-
-    if ((_points != 0 || _edges != 0) && _faces != 0){
-        const QRectF &br = _faces->boundingRect();
-
-        if (br.left() < _brect.left())
-            _brect.setLeft(br.left());
-        if (br.right() > _brect.right())
-            _brect.setRight(br.right());
-        if (br.top() < _brect.top())
-            _brect.setTop(br.top());
-        if (br.bottom() > _brect.bottom())
-            _brect.setBottom(br.bottom());
+        brect_init = true;
+    }else if (_edges != 0){
+        if (!brect_init){
+            _brect = _edges->boundingRect();
+        }else{
+            _brect = _brect.united(_edges->boundingRect());
+        }
+    }else if (_faces != 0){
+        if (!brect_init){
+            _brect = _faces->boundingRect();
+        }else{
+            _brect = _brect.united(_faces->boundingRect());
+        }
     }
 }
 
