@@ -42,7 +42,7 @@ class Painter : public QWidget {
 
   private:
     std::list<Obj *> _objs;
-    qreal _scale, _dx, _dy; /*! world transfomataions */
+    double _scale, _dx, _dy; /*! world transfomataions */
     bool _mouse_pressed; /*! indicates if mouse's left button is pressed */
     QPoint _mouse_pos; /*! last position of mouse */
 
@@ -73,9 +73,12 @@ class Painter : public QWidget {
 
   public slots:
     void update(Common::Obj *o = 0);
-    void setScale(qreal val) { setTransf(_dx, _dy, val); }
-    void setTranslation(qreal dx, qreal dy) { setTransf(dx, dy, _scale); }
-    void setTransf(qreal dx, qreal dy, qreal scale);
+
+    void setTransf(double dx, double dy, double scale);
+
+    void scale(double val, double center_x = 0., double center_y = 0.);
+    void translate(double dx, double dy);
+
     void fitToWin();
 
   signals:

@@ -34,20 +34,13 @@ namespace Qt2D {
 class ConfigWidget : public QGroupBox {
     Q_OBJECT
 
-    QDoubleSpinBox *_scale;
-
   public:
     ConfigWidget(QWidget *parent = 0);
 
-  public slots:
-    void setScale(double val) { _scale->setValue(val); }
-
   private slots:
-    void _scaleSlot(double val);
     void _fitToWinSlot(bool ch);
 
   signals:
-    void scaleChanged(double val);
     void fitToWin();
 };
 

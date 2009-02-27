@@ -61,6 +61,7 @@ void Painter::_setUpReverseTransf(QMatrix &m) const
     m.translate(-_dx, -_dy);
 }
 
+
 void Painter::addObj(Obj *o)
 {
     _objs.push_back(o);
@@ -156,7 +157,8 @@ void Painter::paintEvent(QPaintEvent *event)
 
 void Painter::wheelEvent(QWheelEvent *event)
 {
-    setScale(_scale + event->delta() * 1.E-3);
+    //setScale(_scale + event->delta() * 1.E-3);
+    scale(event->delta() * 1E-3);
 }
 
 void Painter::mousePressEvent(QMouseEvent *event)
@@ -181,8 +183,8 @@ void Painter::mouseMoveEvent(QMouseEvent *event)
     if (_mouse_pressed){
         QPoint pos = event->globalPos();
 
-        setTranslation(_dx + pos.x() - _mouse_pos.x(),
-                       _dy + pos.y() - _mouse_pos.y());
+        translate(pos.x() - _mouse_pos.x(),
+                  pos.y() - _mouse_pos.y());
 
         _mouse_pos = pos;
     }
@@ -209,20 +211,37 @@ void Painter::update(Common::Obj *o)
     }
 }
 
-void Painter::setTransf(qreal dx, qreal dy, qreal scale)
+void Painter::setTransf(double dx, double dy, double scale)
 {
     _scale = scale;
-    if (_scale < 0.){
-        _scale = MIN_SCALE;
-    }
-
-    emit scaleChanged((double)scale);
-
     _dx = dx;
     _dy = dy;
 
     update();
 }
+
+void Painter::scale(double val, double center_x, double center_y)
+{
+    double relscale;
+
+    relscale = 1. + val;
+    //DBG("relscale: " << relscale);
+
+    _scale *= relscale;
+    _dx *= relscale;
+    _dy *= relscale;
+
+    update();
+}
+
+void Painter::translate(double dx, double dy)
+{
+    _dx += dx;
+    _dy += dy;
+
+    update();
+}
+
 
 } /* Qt2D */
 

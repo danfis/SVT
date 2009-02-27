@@ -41,7 +41,7 @@ class Elements {
   protected:
     QPen _pen;
     QColor _color;
-    qreal _size;
+    double _size;
     bool _on;
     QRectF _brect; /*! bounding rectangle */
     bool _brect_init;
@@ -67,7 +67,7 @@ class Elements {
     void setOn(bool on) { _on = on; }
 
     const QColor &color() const { return _color; }
-    qreal size() const { return _size; }
+    double size() const { return _size; }
     const QPen &pen() const { return _pen; }
     bool on() const { return _on; }
 
