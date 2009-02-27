@@ -74,8 +74,6 @@ int main(int argc, char *argv[])
         type = TO_SVG;
     }
 
-    std::cerr << "AVRG[0]: " << argv[0] << std::endl;
-
     if (type == VIEWER2D){
         return main2d(argc, argv);
     }else if (type == VIEWER3D){
