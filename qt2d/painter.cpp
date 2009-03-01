@@ -228,8 +228,14 @@ void Painter::scale(double val, double center_x, double center_y)
     //DBG("relscale: " << relscale);
 
     _scale *= relscale;
+
+    // scale also translation
     _dx *= relscale;
     _dy *= relscale;
+
+    // and center window
+    _dx -= width() * (relscale - 1) / 2.;
+    _dy -= height() * (relscale - 1) / 2.;
 
     update();
 }
