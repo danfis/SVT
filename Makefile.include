@@ -18,6 +18,6 @@ QT_CXXFLAGS = $(shell pkg-config QtGui QtCore --cflags)
 QT_LDFLAGS = $(shell pkg-config QtGui QtCore --libs)
 COIN_CXXFLAGS = $(shell coin-config --cppflags)
 COIN_LDFLAGS = $(shell coin-config --ldflags --libs)
-SOQT_CXXFLAGS = $(shell soqt-config --cppflags)
-SOQT_LDFLAGS = $(shell soqt-config --ldflags --libs)
+QUARTER_CXXFLAGS = $(shell pkg-config Quarter --cflags)
+QUARTER_LDFLAGS = $(shell pkg-config Quarter --libs)
 

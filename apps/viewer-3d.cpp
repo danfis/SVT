@@ -28,12 +28,14 @@
 #include <QApplication>
 #include <QStatusBar>
 #include <QMainWindow>
+#include <Quarter/Quarter.h>
 using namespace std;
+using namespace SIM::Coin3D::Quarter;
 
 #include "common/settings.hpp"
 #include "common/functions.hpp"
 #include "common/msg.hpp"
-#include "coin3d/coin3d.hpp"
+#include "coin3d/main_window.hpp"
 #include "parser/parser.h"
 #include "parser/obj.h"
 
@@ -47,7 +49,10 @@ int main3d(int argc, char *argv[])
 
     args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
 
-    SVT::Coin3d::Coin3d::init("viewer");
+    QApplication app(argc, argv);
+    Quarter::init();
+
+    SVT::Coin3d::MainWindow mw;
 
     parser = svtParserNew();
 
@@ -57,16 +62,16 @@ int main3d(int argc, char *argv[])
     while (o != 0){
         obj = new SVT::Coin3d::Obj(o);
         SVT::Common::settings.apply(obj);
-        SVT::Coin3d::Coin3d::addObj(obj);
+        mw.addObj(obj);
 
         o = svtObjNext(o);
     }
 
     svtParserDelete(parser);
 
-    SVT::Coin3d::Coin3d::mainLoop();
 
-    SVT::Coin3d::Coin3d::free();
+    mw.show();
+    app.exec();
 
     return 0;
 }

@@ -1,13 +1,13 @@
 include ../Makefile.include
 
-CXXFLAGS += $(QT_CXXFLAGS) $(COIN_CXXFLAGS) $(SOQT_CXXFLAGS)
+CXXFLAGS += $(QT_CXXFLAGS) $(COIN_CXXFLAGS) $(QUARTER_CXXFLAGS)
 LDFLAGS = -L../parser -lsvtparser \
           -L../common -lsvtcommon \
           -L../coin3d -lsvtcoin3d \
           -L../qt2d -lsvtqt2d \
           -L../qt -lsvtqt \
           -lfl \
-          $(QT_LDFLAGS) $(COIN_LDFLAGS) $(SOQT_LDFLAGS)
+          $(QT_LDFLAGS) $(COIN_LDFLAGS) $(QUARTER_LDFLAGS)
 
 TARGETS = svt svt-viewer-3d svt-viewer-2d svt-to-svg
 OBJS = main.o viewer-2d.o viewer-3d.o to-svg.o
