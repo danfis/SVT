@@ -20,27 +20,40 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COIN3D_VIEWER_HPP
-#define COIN3D_VIEWER_HPP
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include "config.hpp"
 
-#include <Inventor/nodes/SoSwitch.h>
-#include <Inventor/nodes/SoPointLight.h>
-#include <QWidget>
-#include <Quarter/QuarterWidget.h>
+
+#include "config.moc"
 
 namespace SVT {
 
 namespace Coin3d {
 
+ConfigWidget::ConfigWidget(QWidget *parent)
+    : QGroupBox("Config", parent)
+{
+    QVBoxLayout *layout = new QVBoxLayout;
+    QPushButton *button;
 
-class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
-  public:
-    Viewer();
-    ~Viewer();
-};
+    // fit to win button
+    button = new QPushButton("Fit to win");
+    layout->addWidget(button);
+    connect(button, SIGNAL(clicked(bool)),
+            this, SLOT(_fitToWinSlot(bool)));
 
-} /* namespace Coin3d */
+    setLayout(layout);
+}
 
-} /* namespace SVT */
 
-#endif
+void ConfigWidget::_fitToWinSlot(bool ch)
+{
+    emit fitToWin();
+}
+
+}
+
+}

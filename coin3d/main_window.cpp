@@ -1,3 +1,5 @@
+#include <Inventor/SoEventManager.h>
+
 #include "main_window.hpp"
 using namespace SIM::Coin3D::Quarter;
 
@@ -8,10 +10,16 @@ namespace Coin3d {
 MainWindow::MainWindow()
     : Qt::MainWindow()
 {
-    _qw = new QuarterWidget();
-    _qw->setSceneGraph(_om.root());
+    _config = new ConfigWidget();
+    _obj_widgets->push(_config);
 
-    setCentralWidget(_qw);
+    _viewer = new Viewer();
+    _viewer->setSceneGraph(_om.root());
+
+    connect(_config, SIGNAL(fitToWin()),
+            _viewer, SLOT(viewAll()));
+
+    setCentralWidget(_viewer);
 }
 
 MainWindow::~MainWindow()

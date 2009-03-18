@@ -23,12 +23,12 @@
 #ifndef COIN3D_MAIN_WINDOW_HPP_
 #define COIN3D_MAIN_WINDOW_HPP_
 
-#include <Quarter/QuarterWidget.h>
-
 #include "qt/main_window.hpp"
 #include "qt/obj_style_widget.hpp"
 #include "qt/obj_widget.hpp"
 #include "obj_manager.hpp"
+#include "viewer.hpp"
+#include "config.hpp"
 
 namespace SVT {
 
@@ -37,7 +37,8 @@ namespace Coin3d {
 class MainWindow : public Qt::MainWindow{
   private:
     ObjManager _om;
-    SIM::Coin3D::Quarter::QuarterWidget *_qw;
+    Viewer *_viewer;
+    ConfigWidget *_config;
 
   public:
     MainWindow();

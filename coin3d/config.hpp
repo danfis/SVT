@@ -20,27 +20,32 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COIN3D_VIEWER_HPP
-#define COIN3D_VIEWER_HPP
+#ifndef COIN3D_CONFIG_HPP_
+#define COIN3D_CONFIG_HPP_
 
-#include <Inventor/nodes/SoSwitch.h>
-#include <Inventor/nodes/SoPointLight.h>
-#include <QWidget>
-#include <Quarter/QuarterWidget.h>
+#include <QGroupBox>
+#include <QDoubleSpinBox>
 
 namespace SVT {
 
 namespace Coin3d {
 
 
-class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
+class ConfigWidget : public QGroupBox {
+    Q_OBJECT
+
   public:
-    Viewer();
-    ~Viewer();
+    ConfigWidget(QWidget *parent = 0);
+
+  private slots:
+    void _fitToWinSlot(bool ch);
+
+  signals:
+    void fitToWin();
 };
 
-} /* namespace Coin3d */
+}
 
-} /* namespace SVT */
+}
 
 #endif
