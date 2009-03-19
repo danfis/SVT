@@ -3,12 +3,14 @@ CC ?= gcc
 MOC ?= moc
 FLEX ?= flex
 
-ifeq '$(NDEBUG)' 'yes'
-  CXXFLAGS +=
-  CFLAGS +=
-else
+DEBUG = yes
+
+ifeq '$(DEBUG)' 'yes'
   CXXFLAGS = -g
   CFLAGS = -g
+else
+  CXXFLAGS +=
+  CFLAGS +=
 endif
 
 CXXFLAGS += -Wall -pedantic -I../

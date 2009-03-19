@@ -15,7 +15,7 @@ OBJS = main.o viewer-2d.o viewer-3d.o to-svg.o
 all: $(TARGETS)
 
 svt: $(OBJS)
-	$(CXX) $(CXXFLAGS_3D) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 svt-viewer-3d: svt
 	rm -f $@; ln $< $@
 svt-to-svg: svt
