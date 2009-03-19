@@ -105,9 +105,9 @@ Settings::Settings()
     point_size = 2.;
     edge_width = 1.;
 
-    point_color[0] = 1.;
-    point_color[1] = 1.;
-    point_color[2] = 1.;
+    point_color[0] = 0.;
+    point_color[1] = 0.;
+    point_color[2] = 0.;
     edge_color[0]  = 0.;
     edge_color[1]  = 0.;
     edge_color[2]  = 1.;
@@ -128,9 +128,9 @@ Settings::Settings()
     svg_view_box[2] = 100.;
     svg_view_box[3] = 100.;
     svg_precision = 5;
-    svg_bg_color[0] = 0.;
-    svg_bg_color[1] = 0.;
-    svg_bg_color[2] = 0.;
+    svg_bg_color[0] = 1.;
+    svg_bg_color[1] = 1.;
+    svg_bg_color[2] = 1.;
 }
 
 

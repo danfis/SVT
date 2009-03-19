@@ -26,25 +26,34 @@
 #include "qt/main_window.hpp"
 #include "qt/obj_style_widget.hpp"
 #include "qt/obj_widget.hpp"
+#include "qt/config.hpp"
 #include "obj_manager.hpp"
 #include "viewer.hpp"
-#include "config.hpp"
 
 namespace SVT {
 
 namespace Coin3d {
 
 class MainWindow : public Qt::MainWindow{
+    Q_OBJECT
+
   private:
     ObjManager _om;
     Viewer *_viewer;
-    ConfigWidget *_config;
+    QColor _bgcolor;
+    Qt::ConfigWidget *_config;
 
   public:
     MainWindow();
     ~MainWindow();
 
     void addObj(Obj *obj);
+
+  public slots:
+    void setBgColor(double r, double g, double b);
+    void setBgColorR(double v);
+    void setBgColorG(double v);
+    void setBgColorB(double v);
 };
 
 } /* Qt2D */

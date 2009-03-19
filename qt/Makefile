@@ -5,7 +5,7 @@ LDFLAGS += $(QT_LDFLAGS)
 
 TARGETS = libsvtqt.a test
 OBJS = obj_widget.o obj_style_widget.o widget_stack.o \
-       main_window.o
+       main_window.o config.o
 
 all: $(TARGETS)
 
@@ -22,6 +22,7 @@ test: test.o libsvtqt.a
 obj_widget.cpp: obj_widget.moc
 obj_style_widget.cpp: obj_style_widget.moc
 main_window.cpp: main_window.moc
+config.cpp: config.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 

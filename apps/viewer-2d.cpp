@@ -34,8 +34,6 @@ using namespace std;
 #include "qt2d/main_window.hpp"
 
 
-static void changeDefaultSettings();
-
 int main2d(int argc, char *argv[])
 {
     char **args;
@@ -43,8 +41,6 @@ int main2d(int argc, char *argv[])
     svt_parser_t *parser;
     svt_obj_t *o;
     SVT::Qt2D::Obj *obj;
-
-    changeDefaultSettings();
 
     args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
 
@@ -71,11 +67,4 @@ int main2d(int argc, char *argv[])
     app.exec();
 
     return 0;
-}
-
-static void changeDefaultSettings()
-{
-    SVT::Common::settings.point_color[0] = 0.;
-    SVT::Common::settings.point_color[1] = 0.;
-    SVT::Common::settings.point_color[2] = 0.;
 }

@@ -2,14 +2,13 @@ include ../Makefile.include
 
 CXXFLAGS += $(QT_CXXFLAGS)
 
-TEST_LDFLAGS = -L./ -L../qt -lsvtqt -lsvtqt2d \
+TEST_LDFLAGS = -L./ -lsvtqt2d -L../qt -lsvtqt \
 			   -L../parser -lsvtparser \
                $(QT_LDFLAGS)
 
 
 TARGETS = libsvtqt2d.a test
-OBJS = painter.o elements.o points.o edges.o faces.o obj.o main_window.o \
-       config.o
+OBJS = painter.o elements.o points.o edges.o faces.o obj.o main_window.o
 
 all: $(TARGETS)
 
@@ -23,7 +22,6 @@ libsvtqt2d.a: $(OBJS)
 viewer.cpp: viewer.moc
 viewer_live.cpp: viewer_live.moc
 painter.cpp: painter.moc
-config.cpp: config.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@
 

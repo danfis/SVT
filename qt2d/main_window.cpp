@@ -21,7 +21,6 @@
  */
 
 #include "obj.hpp"
-#include "config.hpp"
 #include "main_window.hpp"
 
 
@@ -32,7 +31,7 @@ namespace Qt2D {
 MainWindow::MainWindow()
     : Qt::MainWindow(), _painter(0)
 {
-    _config = new ConfigWidget();
+    _config = new Qt::ConfigWidget();
     _obj_widgets->push(_config);
 
     _painter = new Painter();

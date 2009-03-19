@@ -28,8 +28,8 @@
 #include "qt/main_window.hpp"
 #include "qt/obj_style_widget.hpp"
 #include "qt/obj_widget.hpp"
+#include "qt/config.hpp"
 #include "painter.hpp"
-#include "config.hpp"
 
 namespace SVT {
 
@@ -39,7 +39,7 @@ class MainWindow : public Qt::MainWindow{
   private:
     std::list<Obj *> _objs;
     Painter *_painter;
-    ConfigWidget *_config;
+    Qt::ConfigWidget *_config;
 
   public:
     MainWindow();
