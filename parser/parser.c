@@ -550,7 +550,7 @@ static void svtParserParseError(svt_parser_t *parser)
         buffer[i++] = parser->yylval.c;
 
         if (i > 99){
-            buffer[i] = 0;
+            buffer[99] = 0;
             fprintf(stderr, "%s", buffer);
             i = 0;
         }
