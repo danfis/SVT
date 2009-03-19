@@ -38,6 +38,12 @@ MainWindow::MainWindow()
 
     connect(_config, SIGNAL(fitToWin()),
             _painter, SLOT(fitToWin()));
+    connect(_config, SIGNAL(bgColorR(double)),
+            _painter, SLOT(setBgColorR(double)));
+    connect(_config, SIGNAL(bgColorG(double)),
+            _painter, SLOT(setBgColorG(double)));
+    connect(_config, SIGNAL(bgColorB(double)),
+            _painter, SLOT(setBgColorB(double)));
 
     setCentralWidget(_painter);
 }

@@ -45,6 +45,7 @@ class Painter : public QWidget {
     double _scale, _dx, _dy; /*! world transfomataions */
     bool _mouse_pressed; /*! indicates if mouse's left button is pressed */
     QPoint _mouse_pos; /*! last position of mouse */
+    QColor _bgcolor;
 
 
     /**
@@ -80,6 +81,11 @@ class Painter : public QWidget {
     void translate(double dx, double dy);
 
     void fitToWin();
+
+    void setBgColor(double r, double g, double b);
+    void setBgColorR(double v);
+    void setBgColorG(double v);
+    void setBgColorB(double v);
 
   signals:
     void scaleChanged(double val);

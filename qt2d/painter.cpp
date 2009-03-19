@@ -127,6 +127,9 @@ void Painter::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     list<Obj *>::iterator it, it_end;
 
+    // set up bg color
+    painter.fillRect(0, 0, width(), height(), _bgcolor);
+
     // set up transformations
     _setUpTransf(tr);
     _setUpReverseTransf(tr_rev);
@@ -190,6 +193,29 @@ void Painter::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+void Painter::setBgColor(double r, double g, double b)
+{
+    _bgcolor.setRgbF(r, g, b);
+    update();
+}
+
+void Painter::setBgColorR(double v)
+{
+    _bgcolor.setRedF(v);
+    update();
+}
+
+void Painter::setBgColorG(double v)
+{
+    _bgcolor.setGreenF(v);
+    update();
+}
+
+void Painter::setBgColorB(double v)
+{
+    _bgcolor.setBlueF(v);
+    update();
+}
 
 void Painter::update(Common::Obj *o)
 {
