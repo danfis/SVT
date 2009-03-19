@@ -1,5 +1,6 @@
 #include <Inventor/SoEventManager.h>
 
+#include "common/msg.hpp"
 #include "main_window.hpp"
 using namespace SIM::Coin3D::Quarter;
 
@@ -41,6 +42,12 @@ void MainWindow::addObj(Obj *o)
 {
     _om.add(o);
     addObjWidget(o);
+}
+
+void MainWindow::show()
+{
+    _viewer->show();
+    Qt::MainWindow::show();
 }
 
 void MainWindow::setBgColor(double r, double g, double b)

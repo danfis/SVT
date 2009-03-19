@@ -49,6 +49,7 @@ class MainWindow : public Qt::MainWindow{
 
     void addObj(Obj *obj);
 
+    void show();
   public slots:
     void setBgColor(double r, double g, double b);
     void setBgColorR(double v);

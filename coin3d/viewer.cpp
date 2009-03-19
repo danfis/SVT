@@ -35,15 +35,91 @@ namespace SVT {
 
 namespace Coin3d {
 
-Viewer::Viewer()
-    : QuarterWidget()
+void ViewerCameraChangedCallback(void *data, SoSensor *)
 {
-    setNavigationModeFile(QUrl("coin:/scxml/navigation/examiner.xml"));
-    //setBackgroundColor(QColor(255, 255, 255));
+    Viewer *viewer = (Viewer *)data;
+    viewer->_setUpLightPosition();
+}
+
+Viewer::Viewer()
+    : QuarterWidget(), _scene(0)
+{
+    //setNavigationModeFile(QUrl("coin:/scxml/navigation/examiner.xml"));
+    setNavigationModeFile();
+
+    _root = new SoSwitch;
+    _root->ref();
+    _root->whichChild = SO_SWITCH_ALL;
+
+    _light = new SoPointLight;
+    _light->ref();
+    _light->on = true;
+    _light->intensity = 1.;
+    _light->color.setValue(1., 1., 1.);
+
+    _root->addChild(_light);
+
+    _light_transform.setValue(0, 0, 0);
 }
 
 Viewer::~Viewer()
 {
+    _light->unref();
+    _root->unref();
+}
+
+void Viewer::setSceneGraph(SoNode *n)
+{
+    if (_scene != 0){
+        _root->removeChild(_scene);
+    }
+
+    _scene = n;
+    _root->addChild(_scene);
+
+    QuarterWidget::setSceneGraph(_root);
+}
+
+void Viewer::show()
+{
+    QuarterWidget::show();
+
+    SoCamera *camera = this->getSoEventManager()->getCamera();
+    if (camera != NULL){
+        SoFieldSensor *cam_sensor =
+            new SoFieldSensor(ViewerCameraChangedCallback, this);
+        cam_sensor->attach(&camera->position);
+    }
+
+    viewAll();
+
+    this->_setUpLightPosition();
+}
+
+void Viewer::_setUpLightPosition()
+{
+    SoCamera *cam = this->getSoEventManager()->getCamera();
+    SbVec3f pos;
+    float x, y, z;
+
+    if (cam != NULL){
+        pos = cam->position.getValue();
+        x = pos[0];
+        y = pos[1];
+        z = pos[2];
+
+        x = pos[0]*cos(_light_transform[0]) - pos[2]*sin(_light_transform[0]);
+        y = pos[1]*cos(_light_transform[1]) - pos[2]*sin(_light_transform[1]);
+        z = pos[2]*cos(_light_transform[0]) + pos[1]*sin(_light_transform[0]) +
+            pos[2]*cos(_light_transform[1]) + pos[1]*sin(_light_transform[1]);
+        z = z / 2;
+
+        pos.setValue(x * -100, y * -100, z * -100);
+
+        _light->location.setValue(pos);
+    }else{
+        _light->location.setValue(0,0,0);
+    }
 }
 
 } /* namespace Coin3d */

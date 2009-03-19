@@ -32,11 +32,29 @@ namespace SVT {
 
 namespace Coin3d {
 
+void ViewerCameraChangedCallback(void *data, SoSensor *);
 
 class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
+    SoSwitch *_root;
+    SoPointLight *_light;
+    SoNode *_scene;
+    SbVec3f _light_transform; /*! vector which holds data used for relative
+                                  transformation of _light from camera
+                                  position */
   public:
     Viewer();
     ~Viewer();
+
+    void setSceneGraph(SoNode *);
+    void show();
+
+  private:
+    /**
+     * Callback which is called when camera position is changed
+     */
+    friend void ViewerCameraChangedCallback(void *data, SoSensor *);
+
+    void _setUpLightPosition();
 };
 
 } /* namespace Coin3d */
