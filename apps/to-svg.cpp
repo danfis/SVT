@@ -120,7 +120,7 @@ void toSvg(svt_obj_t *objs)
         << "       xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
 
     // background:
-    colorToHex(color, settings.svg_bg_color);
+    colorToHex(color, settings.bg_color);
     out << "<rect"
         << " x=\"" << view_box[0] << "\""
         << " y=\"" << view_box[1] << "\""

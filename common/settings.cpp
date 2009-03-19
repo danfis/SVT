@@ -128,9 +128,9 @@ Settings::Settings()
     svg_view_box[2] = 100.;
     svg_view_box[3] = 100.;
     svg_precision = 5;
-    svg_bg_color[0] = 1.;
-    svg_bg_color[1] = 1.;
-    svg_bg_color[2] = 1.;
+    bg_color[0] = 1.;
+    bg_color[1] = 1.;
+    bg_color[2] = 1.;
 }
 
 
@@ -244,9 +244,9 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
                 break;
             case BG_COLOR:
                 FLOAT3("--bg-color");
-                svg_bg_color[0] = fl[0];
-                svg_bg_color[1] = fl[1];
-                svg_bg_color[2] = fl[2];
+                bg_color[0] = fl[0];
+                bg_color[1] = fl[1];
+                bg_color[2] = fl[2];
                 break;
             default:
                 usag = true;
@@ -379,6 +379,12 @@ void Settings::apply(Obj *obj)
         obj->setFaceColor(r, g, b);
     }
 }
+
+void Settings::applyGlobal(Qt::MainWindow &mw)
+{
+    mw.setBgColor(bg_color[0], bg_color[1], bg_color[2]);
+}
+
 }
 
 }

@@ -54,6 +54,8 @@ int main3d(int argc, char *argv[])
 
     SVT::Coin3d::MainWindow mw;
 
+    SVT::Common::settings.applyGlobal(mw);
+
     parser = svtParserNew();
 
     SVT::Common::parseAll(num_args, args, parser);

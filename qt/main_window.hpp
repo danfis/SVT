@@ -56,6 +56,7 @@ class MainWindow : public QMainWindow {
 
     virtual void showMsgInStatusBarSignal(const QString &msg);
 
+    virtual void setBgColor(double r, double g, double b) {}
   signals:
     virtual void _showMsgInStatusBarSignal(const QString &msg);
   public slots:

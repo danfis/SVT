@@ -26,6 +26,7 @@
 #include <list>
 
 #include "common/obj.hpp"
+#include "qt/main_window.hpp"
 
 namespace SVT {
 
@@ -56,13 +57,14 @@ struct Settings {
     bool colour_edges;
     bool colour_faces;
 
+    float bg_color[3];
+
     bool point_color_changed;
 
     int svg_width;
     bool svg_view_box_enabled;
     float svg_view_box[4];
     int svg_precision;
-    float svg_bg_color[3];
 
     std::list<char *> errors;
 
@@ -90,6 +92,8 @@ struct Settings {
     void usage(int argc, char *argv[]);
 
     void apply(Obj *);
+
+    void applyGlobal(Qt::MainWindow &);
 };
 
 extern Settings settings;

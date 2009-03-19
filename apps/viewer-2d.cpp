@@ -47,6 +47,8 @@ int main2d(int argc, char *argv[])
     QApplication app(argc, argv);
     SVT::Qt2D::MainWindow mw;
 
+    SVT::Common::settings.applyGlobal(mw);
+
     parser = svtParserNew();
 
     SVT::Common::parseAll(num_args, args, parser);
