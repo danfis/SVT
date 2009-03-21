@@ -26,6 +26,7 @@
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/SoEventManager.h>
 #include <Inventor/nodes/SoCamera.h>
+#include <Inventor/scxml/SoScXMLStateMachine.h>
 #include "viewer.hpp"
 #include "common/msg.hpp"
 using namespace SIM::Coin3D::Quarter;
@@ -35,11 +36,17 @@ namespace SVT {
 
 namespace Coin3d {
 
-void ViewerCameraChangedCallback(void *data, SoSensor *)
+
+
+/**
+ * Callback called everytime camera changed.
+ */
+static void cameraChangedCB(void *data, SoSensor *)
 {
     Viewer *viewer = (Viewer *)data;
-    viewer->_setUpLightPosition();
+    viewer->updateLight();
 }
+
 
 Viewer::Viewer()
     : QuarterWidget(), _scene(0)
@@ -70,6 +77,8 @@ Viewer::~Viewer()
 
 void Viewer::setSceneGraph(SoNode *n)
 {
+    SoCamera *cam;
+
     if (_scene != 0){
         _root->removeChild(_scene);
     }
@@ -78,25 +87,15 @@ void Viewer::setSceneGraph(SoNode *n)
     _root->addChild(_scene);
 
     QuarterWidget::setSceneGraph(_root);
-}
 
-void Viewer::show()
-{
-    QuarterWidget::show();
-
-    SoCamera *camera = this->getSoEventManager()->getCamera();
-    if (camera != NULL){
-        SoFieldSensor *cam_sensor =
-            new SoFieldSensor(ViewerCameraChangedCallback, this);
-        cam_sensor->attach(&camera->position);
+    cam = this->getSoEventManager()->getCamera();
+    if (cam != NULL){
+        SoFieldSensor *cam_sensor = new SoFieldSensor(cameraChangedCB, this);
+        cam_sensor->attach(&cam->position);
     }
-
-    viewAll();
-
-    this->_setUpLightPosition();
 }
 
-void Viewer::_setUpLightPosition()
+void Viewer::updateLight()
 {
     SoCamera *cam = this->getSoEventManager()->getCamera();
     SbVec3f pos;

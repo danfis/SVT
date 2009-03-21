@@ -46,8 +46,10 @@ void MainWindow::addObj(Obj *o)
 
 void MainWindow::show()
 {
-    _viewer->show();
     Qt::MainWindow::show();
+
+    _viewer->viewAll();
+    _viewer->updateLight();
 }
 
 void MainWindow::setBgColor(double r, double g, double b)
