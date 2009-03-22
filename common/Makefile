@@ -3,7 +3,7 @@ include ../Makefile.include
 CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
 
 TARGETS = libsvtcommon.a
-OBJS = settings.o functions.o
+OBJS = settings.o functions.o obj.o
 
 all: $(TARGETS)
 

@@ -54,7 +54,7 @@ int main3d(int argc, char *argv[])
 
     SVT::Coin3d::MainWindow mw;
 
-    SVT::Common::settings.applyGlobal(mw);
+    mw.applySettings(SVT::Common::settings);
 
     parser = svtParserNew();
 
@@ -63,7 +63,7 @@ int main3d(int argc, char *argv[])
     o = svtParserObjs(parser, 0);
     while (o != 0){
         obj = new SVT::Coin3d::Obj(o);
-        SVT::Common::settings.apply(obj);
+        obj->applySettings(SVT::Common::settings);
         mw.addObj(obj);
 
         o = svtObjNext(o);

@@ -25,9 +25,6 @@
 
 #include <list>
 
-#include "common/obj.hpp"
-#include "qt/main_window.hpp"
-
 namespace SVT {
 
 namespace Common {
@@ -90,10 +87,6 @@ struct Settings {
      * Prints usage text to stderr.
      */
     void usage(int argc, char *argv[]);
-
-    void apply(Obj *);
-
-    void applyGlobal(Qt::MainWindow &);
 };
 
 extern Settings settings;

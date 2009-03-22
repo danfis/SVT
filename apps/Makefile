@@ -2,10 +2,10 @@ include ../Makefile.include
 
 CXXFLAGS += $(QT_CXXFLAGS) $(COIN_CXXFLAGS) $(QUARTER_CXXFLAGS)
 LDFLAGS = -L../parser -lsvtparser \
-          -L../common -lsvtcommon \
           -L../coin3d -lsvtcoin3d \
           -L../qt2d -lsvtqt2d \
           -L../qt -lsvtqt \
+          -L../common -lsvtcommon \
           -lfl \
           $(QT_LDFLAGS) $(COIN_LDFLAGS) $(QUARTER_LDFLAGS)
 

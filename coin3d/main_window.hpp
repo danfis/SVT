@@ -52,6 +52,8 @@ class MainWindow : public Qt::MainWindow{
 
     Viewer *viewer() { return _viewer; }
     const Viewer *viewer() const { return _viewer; }
+
+    void applySettings(const Common::Settings &s);
 };
 
 } /* Qt2D */

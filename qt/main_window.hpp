@@ -29,6 +29,7 @@
 #include <QString>
 
 #include "common/obj.hpp"
+#include "common/settings.hpp"
 
 #include "obj_widget.hpp"
 #include "obj_style_widget.hpp"
@@ -56,7 +57,8 @@ class MainWindow : public QMainWindow {
 
     virtual void showMsgInStatusBarSignal(const QString &msg);
 
-    virtual void setBgColor(double r, double g, double b) {}
+    virtual void applySettings(const Common::Settings &s) = 0;
+
   signals:
     virtual void _showMsgInStatusBarSignal(const QString &msg);
   public slots:

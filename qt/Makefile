@@ -3,7 +3,7 @@ include ../Makefile.include
 CXXFLAGS += $(QT_CXXFLAGS)
 LDFLAGS += $(QT_LDFLAGS)
 
-TARGETS = libsvtqt.a test
+TARGETS = libsvtqt.a #test
 OBJS = obj_widget.o obj_style_widget.o widget_stack.o \
        main_window.o config.o
 

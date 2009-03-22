@@ -47,9 +47,7 @@ class MainWindow : public Qt::MainWindow{
 
     void addObj(Obj *obj);
 
-    void setBgColor(double r, double g, double b)
-        { _painter->setBgColor(r, g, b);
-          _config->setBgColor(r, g, b); }
+    void applySettings(const Common::Settings &s);
 };
 
 } /* Qt2D */

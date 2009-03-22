@@ -336,54 +336,6 @@ void Settings::usage(int argc, char *argv[])
     exit(-1);
 }
 
-void Settings::apply(Obj *obj)
-{
-    float r, g, b;
-
-    obj->setAllOn(!all_off);
-    obj->setPointsOn(!points_off);
-    obj->setEdgesOn(!edges_off);
-    obj->setFacesOn(!faces_off);
-
-    obj->setPointSize(point_size);
-    obj->setEdgeWidth(edge_width);
-
-    // colour elemets if requested
-    if (colour_points){
-        chooseRandomColor(&r, &g, &b);
-        obj->setPointColor(r, g, b);
-    }else if (!obj->pointColorAlreadySet()){
-        r = point_color[0];
-        g = point_color[1];
-        b = point_color[2];
-        obj->setPointColor(r, g, b);
-    }
-
-    if (colour_edges){
-        chooseRandomColor(&r, &g, &b);
-        obj->setEdgeColor(r, g, b);
-    }else if (!obj->edgeColorAlreadySet()){
-        r = edge_color[0];
-        g = edge_color[1];
-        b = edge_color[2];
-        obj->setEdgeColor(r, g, b);
-    }
-
-    if (colour_faces){
-        chooseRandomColor(&r, &g, &b);
-        obj->setFaceColor(r, g, b);
-    }else if (!obj->faceColorAlreadySet()){
-        r = face_color[0];
-        g = face_color[1];
-        b = face_color[2];
-        obj->setFaceColor(r, g, b);
-    }
-}
-
-void Settings::applyGlobal(Qt::MainWindow &mw)
-{
-    mw.setBgColor(bg_color[0], bg_color[1], bg_color[2]);
-}
 
 }
 

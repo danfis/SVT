@@ -71,6 +71,12 @@ void MainWindow::addObj(Obj *o)
     _objs.push_back(o);
 }
 
+void MainWindow::applySettings(const Common::Settings &s)
+{
+    _painter->setBgColor(s.bg_color[0], s.bg_color[1], s.bg_color[2]);
+    _config->setBgColor(s.bg_color[0], s.bg_color[1], s.bg_color[2]);
+}
+
 
 }
 

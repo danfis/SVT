@@ -25,6 +25,8 @@
 
 #include <string>
 
+#include "common/settings.hpp"
+
 namespace SVT {
 
 namespace Common {
@@ -114,6 +116,8 @@ class Obj {
     virtual void setFaceColorRed(float v) = 0;
     virtual void setFaceColorGreen(float v) = 0;
     virtual void setFaceColorBlue(float v) = 0;
+
+    virtual void applySettings(const Settings &s);
 };
 
 } /* Common */

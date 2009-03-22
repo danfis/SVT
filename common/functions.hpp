@@ -26,7 +26,6 @@
 #include <QRect>
 #include <QRectF>
 
-#include "common/obj.hpp"
 #include "parser/parser.h"
 #include "parser/obj.h"
 

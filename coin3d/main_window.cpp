@@ -50,6 +50,12 @@ void MainWindow::show()
     _viewer->updateLight();
 }
 
+void MainWindow::applySettings(const Common::Settings &s)
+{
+    _viewer->setBgColor(s.bg_color[0], s.bg_color[1], s.bg_color[2]);
+    _config->setBgColor(s.bg_color[0], s.bg_color[1], s.bg_color[2]);
+}
+
 }
 
 }
