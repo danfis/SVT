@@ -23,15 +23,13 @@ MainWindow::MainWindow()
     connect(_config, SIGNAL(fitToWin()),
             _viewer, SLOT(viewAll()));
     connect(_config, SIGNAL(bgColorR(double)),
-            this, SLOT(setBgColorR(double)));
+            _viewer, SLOT(setBgColorR(double)));
     connect(_config, SIGNAL(bgColorG(double)),
-            this, SLOT(setBgColorG(double)));
+            _viewer, SLOT(setBgColorG(double)));
     connect(_config, SIGNAL(bgColorB(double)),
-            this, SLOT(setBgColorB(double)));
+            _viewer, SLOT(setBgColorB(double)));
 
     setCentralWidget(_viewer);
-
-    setBgColor(_bgcolor.redF(), _bgcolor.greenF(), _bgcolor.blueF());
 }
 
 MainWindow::~MainWindow()
@@ -52,30 +50,6 @@ void MainWindow::show()
     _viewer->updateLight();
 }
 
-void MainWindow::setBgColor(double r, double g, double b)
-{
-    _bgcolor.setRgbF(r, g, b);
-    _viewer->setBackgroundColor(_bgcolor);
-    _config->setBgColor(r, g, b);
 }
 
-void MainWindow::setBgColorR(double v)
-{
-    _bgcolor.setRedF(v);
-    _viewer->setBackgroundColor(_bgcolor);
-}
-
-void MainWindow::setBgColorG(double v)
-{
-    _bgcolor.setGreenF(v);
-    _viewer->setBackgroundColor(_bgcolor);
-}
-
-void MainWindow::setBgColorB(double v)
-{
-    _bgcolor.setBlueF(v);
-    _viewer->setBackgroundColor(_bgcolor);
-}
-
-}
 }

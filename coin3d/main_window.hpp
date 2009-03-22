@@ -40,7 +40,6 @@ class MainWindow : public Qt::MainWindow{
   private:
     ObjManager _om;
     Viewer *_viewer;
-    QColor _bgcolor;
     Qt::ConfigWidget *_config;
 
   public:
@@ -50,11 +49,9 @@ class MainWindow : public Qt::MainWindow{
     void addObj(Obj *obj);
 
     void show();
-  public slots:
-    void setBgColor(double r, double g, double b);
-    void setBgColorR(double v);
-    void setBgColorG(double v);
-    void setBgColorB(double v);
+
+    Viewer *viewer() { return _viewer; }
+    const Viewer *viewer() const { return _viewer; }
 };
 
 } /* Qt2D */

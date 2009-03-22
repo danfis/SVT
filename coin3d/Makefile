@@ -21,7 +21,7 @@ libsvtcoin3d.a: $(OBJS)
 
 config.cpp: config.moc
 main_window.cpp: main_window.moc
-#viewer.cpp: viewer.moc
+viewer.cpp: viewer.moc
 viewer_live.cpp: viewer_live.moc
 %.moc: %.hpp
 	$(MOC) -p'.' $< > $@

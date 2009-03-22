@@ -32,6 +32,8 @@
 using namespace SIM::Coin3D::Quarter;
 
 
+#include "viewer.moc"
+
 namespace SVT {
 
 namespace Coin3d {
@@ -67,6 +69,8 @@ Viewer::Viewer()
     _root->addChild(_light);
 
     _light_transform.setValue(0, 0, 0);
+
+    setBgColor(_bgcolor.redF(), _bgcolor.greenF(), _bgcolor.blueF());
 }
 
 Viewer::~Viewer()
@@ -119,6 +123,31 @@ void Viewer::updateLight()
     }else{
         _light->location.setValue(0,0,0);
     }
+}
+
+
+void Viewer::setBgColor(double r, double g, double b)
+{
+    _bgcolor.setRgbF(r, g, b);
+    setBackgroundColor(_bgcolor);
+}
+
+void Viewer::setBgColorR(double v)
+{
+    _bgcolor.setRedF(v);
+    setBackgroundColor(_bgcolor);
+}
+
+void Viewer::setBgColorG(double v)
+{
+    _bgcolor.setGreenF(v);
+    setBackgroundColor(_bgcolor);
+}
+
+void Viewer::setBgColorB(double v)
+{
+    _bgcolor.setBlueF(v);
+    setBackgroundColor(_bgcolor);
 }
 
 } /* namespace Coin3d */

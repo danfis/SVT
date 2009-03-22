@@ -34,10 +34,13 @@ namespace SVT {
 namespace Coin3d {
 
 class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
+    Q_OBJECT
+
     SoSwitch *_root;
-    SoPointLight *_light;
     SoCamera *_cam;
     SoNode *_scene;
+    QColor _bgcolor;
+    SoPointLight *_light;
     SbVec3f _light_transform; /*! vector which holds data used for relative
                                   transformation of _light from camera
                                   position */
@@ -48,6 +51,14 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
 
     void setSceneGraph(SoNode *);
     void updateLight();
+
+    const QColor &bgcolor() const { return _bgcolor; }
+
+  public slots:
+    void setBgColor(double r, double g, double b);
+    void setBgColorR(double v);
+    void setBgColorG(double v);
+    void setBgColorB(double v);
 };
 
 } /* namespace Coin3d */
