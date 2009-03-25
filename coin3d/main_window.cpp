@@ -18,7 +18,6 @@ MainWindow::MainWindow()
     _obj_widgets->push(_config);
 
     _viewer = new Viewer();
-    _viewer->setSceneGraph(_om.root());
 
     connect(_config, SIGNAL(fitToWin()),
             _viewer, SLOT(viewAll()));
@@ -38,7 +37,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::addObj(Obj *o)
 {
-    _om.add(o);
+    _viewer->addObj(o);
     addObjWidget(o);
 }
 

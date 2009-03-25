@@ -28,6 +28,7 @@
 #include <Inventor/nodes/SoCamera.h>
 #include <QWidget>
 #include <Quarter/QuarterWidget.h>
+#include "obj_manager.hpp"
 
 namespace SVT {
 
@@ -37,8 +38,8 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
     Q_OBJECT
 
     SoSwitch *_root;
-    SoCamera *_cam;
-    SoNode *_scene;
+    ObjManager _scene;
+    ObjManager _scene_dyn;
     QColor _bgcolor;
     SoPointLight *_light;
     SbVec3f _light_transform; /*! vector which holds data used for relative
@@ -49,7 +50,7 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
     Viewer();
     ~Viewer();
 
-    void setSceneGraph(SoNode *);
+    void addObj(Obj *o);
     void updateLight();
 
     const QColor &bgcolor() const { return _bgcolor; }

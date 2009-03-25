@@ -51,7 +51,7 @@ static void cameraChangedCB(void *data, SoSensor *)
 
 
 Viewer::Viewer()
-    : QuarterWidget(), _scene(0)
+    : QuarterWidget()
 {
     //setNavigationModeFile(QUrl("coin:/scxml/navigation/examiner.xml"));
     setNavigationModeFile();
@@ -67,6 +67,15 @@ Viewer::Viewer()
     _light->color.setValue(1., 1., 1.);
 
     _root->addChild(_light);
+    _root->addChild(_scene.root());
+    _root->addChild(_scene_dyn.root());
+    QuarterWidget::setSceneGraph(_root);
+
+    SoCamera *cam = this->getSoEventManager()->getCamera();
+    if (cam != NULL){
+        SoFieldSensor *cam_sensor = new SoFieldSensor(cameraChangedCB, this);
+        cam_sensor->attach(&cam->position);
+    }
 
     _light_transform.setValue(0, 0, 0);
 
@@ -79,25 +88,11 @@ Viewer::~Viewer()
     _root->unref();
 }
 
-void Viewer::setSceneGraph(SoNode *n)
+void Viewer::addObj(Obj *o)
 {
-    SoCamera *cam;
-
-    if (_scene != 0){
-        _root->removeChild(_scene);
-    }
-
-    _scene = n;
-    _root->addChild(_scene);
-
-    QuarterWidget::setSceneGraph(_root);
-
-    cam = this->getSoEventManager()->getCamera();
-    if (cam != NULL){
-        SoFieldSensor *cam_sensor = new SoFieldSensor(cameraChangedCB, this);
-        cam_sensor->attach(&cam->position);
-    }
+    _scene.add(o);
 }
+
 
 void Viewer::updateLight()
 {

@@ -38,7 +38,6 @@ class MainWindow : public Qt::MainWindow{
     Q_OBJECT
 
   private:
-    ObjManager _om;
     Viewer *_viewer;
     Qt::ConfigWidget *_config;
 
