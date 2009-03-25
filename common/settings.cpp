@@ -61,6 +61,9 @@ enum Options {
     PRECISION,
     BG_COLOR,
 
+    SLEEPTIME,
+    HUNKSIZE,
+
     OPTIONS_END
 };
 
@@ -90,6 +93,9 @@ struct option options[] = {
     { "view-box", required_argument, NULL, VIEW_BOX },
     { "precision", required_argument, NULL, PRECISION },
     { "bg-color", required_argument, NULL, BG_COLOR },
+
+    { "sleeptime", required_argument, NULL, SLEEPTIME },
+    { "hunksize", required_argument, NULL, HUNKSIZE },
 
     { NULL, 0, NULL, 0 }
 };
@@ -133,6 +139,9 @@ Settings::Settings()
     bg_color[0] = 1.;
     bg_color[1] = 1.;
     bg_color[2] = 1.;
+
+    sleeptime = 1000; // default sleeptime is 1s
+    hunksize = 1;
 }
 
 
@@ -154,6 +163,10 @@ Settings::Settings()
     if (!parseInt(optarg, &i)) \
         addError("Error: option \"" option_name "\"  requires int argument.")
 
+#define LONG(option_name) \
+    if (!parseLong(optarg, &l)) \
+        addError("Error: option \"" option_name "\"  requires int argument.")
+
 char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
 {
     int c, option_index;
@@ -161,6 +174,7 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
     char **args;
     float fl[4];
     int i;
+    long l;
     bool usag = false;
 
     while ((c = getopt_long(argc, argv, "h", options, &option_index)) != -1){
@@ -253,6 +267,16 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
                 bg_color[1] = fl[1];
                 bg_color[2] = fl[2];
                 break;
+
+            case SLEEPTIME:
+                LONG("--sleeptime");
+                sleeptime = l;
+                break;
+            case HUNKSIZE:
+                INT("--hunksize");
+                hunksize = i;
+                break;
+
             default:
                 usag = true;
         }
@@ -337,6 +361,10 @@ void Settings::usage(int argc, char *argv[])
     std::cerr << "                                          Parameters are: x, y, width, height with respect to svg coordinate system" << std::endl;
     std::cerr << "  --precision    int    Set up precision of floating point numbers when priting them out." << std::endl;
     std::cerr << "  --bg-color     float,float,float  Background color." << std::endl;
+
+    std::cerr << std::endl;
+    std::cerr << "  --sleeptime    int    Sleeptime between frames in 'live' mode." << std::endl;
+    std::cerr << "  --hunksize     int    Number of objects per frame in 'live' mode." << std::endl;
 
     exit(-1);
 }

@@ -41,6 +41,11 @@ bool parseInt(const char *str, int *i)
     return svtParseInt(str, i) == 0;
 }
 
+bool parseLong(const char *str, long *l)
+{
+    return svtParseLong(str, l) == 0;
+}
+
 bool parseFloatList(const char *str, int len, float *nums)
 {
     static char buffer[100];

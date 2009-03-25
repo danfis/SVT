@@ -36,6 +36,7 @@ namespace Common {
 
 bool parseFloat(const char *str, float *f);
 bool parseInt(const char *str, int *i);
+bool parseLong(const char *str, long *l);
 bool parseFloatList(const char *str, int len, float *nums);
 
 void chooseRandomColor(float *r, float *g, float *b);

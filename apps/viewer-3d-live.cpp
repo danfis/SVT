@@ -108,8 +108,16 @@ void *thStart(void *a)
     svt_obj_t *o;
     SVT::Coin3d::Obj *obj;
     int len, counter, frame;
-    int hunks = 1;
-    unsigned int sleeptime = 1;
+    int hunks = SVT::Common::settings.hunksize;
+    struct timespec sleeptime;
+
+    // set up sleeptime
+    {
+    long tmp = SVT::Common::settings.sleeptime;
+    sleeptime.tv_sec = tmp / 1000;
+    tmp -= sleeptime.tv_sec * 1000;
+    sleeptime.tv_nsec = tmp * 1000000;
+    }
 
     svtParserClear(parser);
     svtParserSetInput(parser, stdin);
@@ -136,7 +144,7 @@ void *thStart(void *a)
             o = svtObjDelete(o);
         }
 
-        sleep(sleeptime);
+        nanosleep(&sleeptime, NULL);
     }
 
     fprintf(stderr, "\n");

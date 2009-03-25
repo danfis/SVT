@@ -38,6 +38,12 @@ int svtParseFloat(const char *str, float *val);
  */
 int svtParseInt(const char *str, int *val);
 
+
+/**
+ * Exactly same as svtParseInt() but returning value is long.
+ */
+int svtParseLong(const char *str, long *val);
+
 #ifdef __cplusplus
 }
 #endif

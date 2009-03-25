@@ -64,6 +64,9 @@ struct Settings {
     float svg_view_box[4];
     int svg_precision;
 
+    long sleeptime; // in miliseconds
+    unsigned int hunksize;
+
     std::list<char *> errors;
 
     Settings();

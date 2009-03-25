@@ -115,14 +115,25 @@ int svtParseFloat(const char *str, float *val)
 
 int svtParseInt(const char *str, int *val)
 {
+    long l;
+    int ret;
+
+    ret = svtParseLong(str, &l);
+    *val = (int)l;
+
+    return ret;
+}
+
+int svtParseLong(const char *str, long *val)
+{
     char c = *str;
 
-    *val = 0;
+    *val = 0L;
 
     while (c != 0){
         if (c < 48 || c > 57)
             return -1;
-        *val = *val * 10 + (c - 48);
+        *val = *val * 10L + (long)(c - 48);
         c = *++str;
     }
 
