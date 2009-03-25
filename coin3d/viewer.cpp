@@ -51,7 +51,7 @@ static void cameraChangedCB(void *data, SoSensor *)
 
 
 Viewer::Viewer()
-    : QuarterWidget()
+    : QuarterWidget(), _scene_dyn_clear(false)
 {
     //setNavigationModeFile(QUrl("coin:/scxml/navigation/examiner.xml"));
     setNavigationModeFile();
@@ -106,6 +106,10 @@ void Viewer::addObjDyn(Obj *o)
 
 void Viewer::_addObjDynSlot(Obj *o)
 {
+    if (_scene_dyn_clear){
+        _scene_dyn.clear();
+        _scene_dyn_clear = false;
+    }
     _scene_dyn.add(o);
 }
 
@@ -117,7 +121,7 @@ void Viewer::clearObjsDyn()
 
 void Viewer::_clearObjsDynSlot()
 {
-    _scene_dyn.clear();
+    _scene_dyn_clear = true;
 }
 
 

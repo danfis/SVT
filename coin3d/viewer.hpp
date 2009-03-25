@@ -40,6 +40,8 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
     SoSwitch *_root;
     ObjManager _scene;
     ObjManager _scene_dyn;
+    bool _scene_dyn_clear; /*! true if _scene_dyn should be cleared before
+                               adding new obj */
     QColor _bgcolor;
     SoPointLight *_light;
     SbVec3f _light_transform; /*! vector which holds data used for relative
