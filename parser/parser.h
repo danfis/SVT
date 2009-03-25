@@ -67,6 +67,11 @@ svt_parser_t *svtParserNew();
 void svtParserDelete(svt_parser_t *);
 
 /**
+ * Deletes all internal stored objects.
+ */
+void svtParserClear(svt_parser_t *);
+
+/**
  * Changes input stream.
  */
 void svtParserSetInput(svt_parser_t *parser, FILE *input);

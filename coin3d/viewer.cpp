@@ -80,6 +80,11 @@ Viewer::Viewer()
     _light_transform.setValue(0, 0, 0);
 
     setBgColor(_bgcolor.redF(), _bgcolor.greenF(), _bgcolor.blueF());
+
+    connect(this, SIGNAL(_addObjDynSignal(Obj *)),
+            this, SLOT(_addObjDynSlot(Obj *)));
+    connect(this, SIGNAL(_clearObjsDynSignal()),
+            this, SLOT(_clearObjsDynSlot()));
 }
 
 Viewer::~Viewer()
@@ -91,6 +96,28 @@ Viewer::~Viewer()
 void Viewer::addObj(Obj *o)
 {
     _scene.add(o);
+}
+
+void Viewer::addObjDyn(Obj *o)
+{
+    // serialization in one! Qt thread
+    emit _addObjDynSignal(o);
+}
+
+void Viewer::_addObjDynSlot(Obj *o)
+{
+    _scene_dyn.add(o);
+}
+
+void Viewer::clearObjsDyn()
+{
+    // serialization in one! Qt thread
+    emit _clearObjsDynSignal();
+}
+
+void Viewer::_clearObjsDynSlot()
+{
+    _scene_dyn.clear();
 }
 
 

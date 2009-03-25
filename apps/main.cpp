@@ -37,6 +37,7 @@ using namespace std;
 
 int main2d(int argc, char *argv[]);
 int main3d(int argc, char *argv[]);
+int main3dLive(int argc, char *argv[]);
 int mainToSVG(int argc, char *argv[]);
 
 
@@ -44,6 +45,7 @@ int mainToSVG(int argc, char *argv[]);
 enum Type {
     VIEWER2D,
     VIEWER3D,
+    VIEWER3DLIVE,
     TO_SVG
 };
 
@@ -60,6 +62,9 @@ int main(int argc, char *argv[])
         }else if (strcmp(argv[i], "--3d") == 0){
             type = VIEWER3D;
             break;
+        }else if (strcmp(argv[i], "--3d-live") == 0){
+            type = VIEWER3DLIVE;
+            break;
         }else if (strcmp(argv[i], "--to-svg") == 0){
             type = TO_SVG;
             break;
@@ -70,6 +75,8 @@ int main(int argc, char *argv[])
         type = VIEWER2D;
     }else if (cmpend(argv[0], "svt-viewer-3d") == 0){
         type = VIEWER3D;
+    }else if (cmpend(argv[0], "svt-viewer-3d-live") == 0){
+        type = VIEWER3DLIVE;
     }else if (cmpend(argv[0], "svt-to-svg") == 0){
         type = TO_SVG;
     }
@@ -78,6 +85,8 @@ int main(int argc, char *argv[])
         return main2d(argc, argv);
     }else if (type == VIEWER3D){
         return main3d(argc, argv);
+    }else if (type == VIEWER3DLIVE){
+        return main3dLive(argc, argv);
     }else if (type == TO_SVG){
         return mainToSVG(argc, argv);
     }

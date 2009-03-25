@@ -41,6 +41,16 @@ void MainWindow::addObj(Obj *o)
     addObjWidget(o);
 }
 
+void MainWindow::addObjDyn(Obj *o)
+{
+    _viewer->addObjDyn(o);
+}
+
+void MainWindow::clearObjsDyn()
+{
+    _viewer->clearObjsDyn();
+}
+
 void MainWindow::show()
 {
     Qt::MainWindow::show();

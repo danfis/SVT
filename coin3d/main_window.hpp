@@ -46,6 +46,8 @@ class MainWindow : public Qt::MainWindow{
     ~MainWindow();
 
     void addObj(Obj *obj);
+    void addObjDyn(Obj *obj);
+    void clearObjsDyn();
 
     void show();
 

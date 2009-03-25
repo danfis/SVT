@@ -33,6 +33,7 @@ struct Settings {
     enum Type {
         TYPE_VIEWER2D,
         TYPE_VIEWER3D,
+        TYPE_VIEWER3DLIVE,
         TYPE_TO_SVG
     };
 

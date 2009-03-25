@@ -51,6 +51,9 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
     ~Viewer();
 
     void addObj(Obj *o);
+    void addObjDyn(Obj *o);
+    void clearObjsDyn();
+
     void updateLight();
 
     const QColor &bgcolor() const { return _bgcolor; }
@@ -60,6 +63,14 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
     void setBgColorR(double v);
     void setBgColorG(double v);
     void setBgColorB(double v);
+
+  signals:
+    void _addObjDynSignal(Obj *o);
+    void _clearObjsDynSignal();
+
+  private slots:
+    void _addObjDynSlot(Obj *o);
+    void _clearObjsDynSlot();
 };
 
 } /* namespace Coin3d */

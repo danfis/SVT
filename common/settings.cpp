@@ -40,6 +40,7 @@ enum Options {
 
     VIEWER2D,
     VIEWER3D,
+    VIEWER3DLIVE,
     TO_SVG,
 
     ALL_OFF,
@@ -69,6 +70,7 @@ struct option options[] = {
 
     { "2d", no_argument, NULL, VIEWER2D },
     { "3d", no_argument, NULL, VIEWER3D },
+    { "3d-live", no_argument, NULL, VIEWER3DLIVE },
     { "to-svg", no_argument, NULL, TO_SVG },
 
     { "all-off", no_argument, NULL, ALL_OFF },
@@ -172,6 +174,9 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
                 break;
             case VIEWER3D:
                 type = TYPE_VIEWER3D;
+                break;
+            case VIEWER3DLIVE:
+                type = TYPE_VIEWER3DLIVE;
                 break;
             case TO_SVG:
                 type = TYPE_TO_SVG;

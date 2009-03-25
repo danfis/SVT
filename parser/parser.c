@@ -47,9 +47,14 @@ svt_parser_t *svtParserNew()
 
 void svtParserDelete(svt_parser_t *parser)
 {
+    svtParserClear(parser);
+    free(parser);
+}
+
+void svtParserClear(svt_parser_t *parser)
+{
     while (parser->objs_head != NULL)
         parser->objs_head = svtObjDelete(parser->objs_head);
-    free(parser);
 }
 
 void svtParserSetInput(svt_parser_t *parser, FILE *input)

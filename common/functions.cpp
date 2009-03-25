@@ -116,28 +116,43 @@ void colorToHex(char str[7], const float colorf[3])
 void parseAll(int argc, char *argv[], svt_parser_t *parser)
 {
     if (argc > 0){
-        FILE *fin;
-
-        for (int i=0; i < argc; i++){
-            std::cerr << "Parsing file " << argv[i] << " ..." << std::endl;
-            fin = fopen(argv[i], "r");
-            if (fin == NULL){
-                ERR("Can't read file " << argv[i]);
-                continue;
-            }
-
-            svtParserSetInput(parser, fin);
-
-            if (svtParserParse(parser) != 0){
-                ERR("Can't parse file " << argv[i]);
-            }
-
-            fclose(fin);
-        }
+        parseCmd(argc, argv, parser);
     }else{
-        if (svtParserParse(parser) != 0){
-            ERR("Can't parse input");
+        parseStdin(parser);
+    }
+}
+
+void parseCmd(int argc, char *argv[], svt_parser_t *parser)
+{
+    FILE *fin;
+
+    if (argc <= 0)
+        return;
+
+    for (int i=0; i < argc; i++){
+        std::cerr << "Parsing file " << argv[i] << " ..." << std::endl;
+        fin = fopen(argv[i], "r");
+        if (fin == NULL){
+            ERR("Can't read file " << argv[i]);
+            continue;
         }
+
+        svtParserSetInput(parser, fin);
+
+        if (svtParserParse(parser) != 0){
+            ERR("Can't parse file " << argv[i]);
+        }
+
+        fclose(fin);
+    }
+}
+
+void parseStdin(svt_parser_t *parser)
+{
+    svtParserSetInput(parser, stdin);
+
+    if (svtParserParse(parser) != 0){
+        ERR("Can't parse input");
     }
 }
 
