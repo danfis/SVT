@@ -63,6 +63,7 @@ enum Options {
 
     SLEEPTIME,
     HUNKSIZE,
+    DELAY,
 
     OPTIONS_END
 };
@@ -96,6 +97,7 @@ struct option options[] = {
 
     { "sleeptime", required_argument, NULL, SLEEPTIME },
     { "hunksize", required_argument, NULL, HUNKSIZE },
+    { "delay", required_argument, NULL, DELAY },
 
     { NULL, 0, NULL, 0 }
 };
@@ -276,6 +278,10 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
                 INT("--hunksize");
                 hunksize = i;
                 break;
+            case DELAY:
+                LONG("--delay");
+                delay = l;
+                break;
 
             default:
                 usag = true;
@@ -363,8 +369,9 @@ void Settings::usage(int argc, char *argv[])
     std::cerr << "  --bg-color     float,float,float  Background color." << std::endl;
 
     std::cerr << std::endl;
-    std::cerr << "  --sleeptime    int    Sleeptime between frames in 'live' mode." << std::endl;
+    std::cerr << "  --sleeptime    int    Sleeptime (in ms) between frames in 'live' mode." << std::endl;
     std::cerr << "  --hunksize     int    Number of objects per frame in 'live' mode." << std::endl;
+    std::cerr << "  --delay        int    Time before svt starts to read objects from stdin (in ms) in 'live' mode." << std::endl;
 
     exit(-1);
 }

@@ -66,6 +66,7 @@ struct Settings {
 
     long sleeptime; // in miliseconds
     unsigned int hunksize;
+    long delay;
 
     std::list<char *> errors;
 

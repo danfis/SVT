@@ -161,6 +161,15 @@ void parseStdin(svt_parser_t *parser)
     }
 }
 
+void fromMSToTimespec(long ms, struct timespec *ts)
+{
+    long tmp = ms;
+
+    ts->tv_sec = tmp / 1000;
+    tmp -= ts->tv_sec * 1000;
+    ts->tv_nsec = tmp * 1000000;
+}
+
 }
 
 }

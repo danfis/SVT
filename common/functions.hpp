@@ -65,6 +65,8 @@ void parseAll(int argc, char *argv[], svt_parser_t *parser);
 void parseCmd(int argc, char *argv[], svt_parser_t *parser);
 void parseStdin(svt_parser_t *parser);
 
+void fromMSToTimespec(long ms, struct timespec *ts);
+
 }
 
 }

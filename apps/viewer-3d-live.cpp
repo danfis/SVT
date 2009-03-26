@@ -110,14 +110,13 @@ void *thStart(void *a)
     int len, counter, frame;
     int hunks = SVT::Common::settings.hunksize;
     struct timespec sleeptime;
+    struct timespec delay;
 
     // set up sleeptime
-    {
-    long tmp = SVT::Common::settings.sleeptime;
-    sleeptime.tv_sec = tmp / 1000;
-    tmp -= sleeptime.tv_sec * 1000;
-    sleeptime.tv_nsec = tmp * 1000000;
-    }
+    SVT::Common::fromMSToTimespec(SVT::Common::settings.sleeptime, &sleeptime);
+    SVT::Common::fromMSToTimespec(SVT::Common::settings.delay, &delay);
+
+    nanosleep(&delay, NULL);
 
     svtParserClear(parser);
     svtParserSetInput(parser, stdin);
