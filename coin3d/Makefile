@@ -1,6 +1,6 @@
 include ../Makefile.include
 
-CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(SOQT_CXXFLAGS)
+CXXFLAGS += $(COIN_CXXFLAGS) $(QT_CXXFLAGS) $(QUARTER_CXXFLAGS)
 
 TEST_LDFLAGS = -L./ -lsvtcoin3d -L../qt -lsvtqt \
                $(QT_LDFLAGS) $(COIN_LDFLAGS) $(SOQT_LDFLAGS)

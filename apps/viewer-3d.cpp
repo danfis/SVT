@@ -23,7 +23,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <getopt.h>
-#include <Inventor/Qt/SoQt.h>
 #include <Inventor/nodes/SoGroup.h>
 #include <QApplication>
 #include <QStatusBar>
