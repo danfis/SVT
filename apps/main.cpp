@@ -33,7 +33,6 @@ using namespace std;
 #include "parser/parser.h"
 #include "parser/obj.h"
 #include "qt2d/main_window.hpp"
-#include "coin3d/coin3d.hpp"
 
 int main2d(int argc, char *argv[]);
 int main3d(int argc, char *argv[]);
