@@ -43,6 +43,7 @@ ConfigWidget::ConfigWidget(QWidget *parent)
 
     // fit to win button
     button = new QPushButton("Fit to win");
+    button->setShortcut(::Qt::Key_F);
     layout->addWidget(button);
 
     // Bg Color
