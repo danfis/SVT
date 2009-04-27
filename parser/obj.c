@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -25,6 +25,54 @@
 #include "obj.h"
 #include "utils.h"
 
+/** POLYFACE **/
+svt_polyface_t *svtPolyfaceNew(void)
+{
+    svt_polyface_t *pf;
+
+    pf = ALLOC(svt_polyface_t);
+
+    pf->points = ALLOC_ARR(svt_point_t, 10);
+    pf->points_len = 0;
+    pf->points_alloc = 10;
+
+    return pf;
+}
+
+void svtPolyfaceDelete(svt_polyface_t *pf)
+{
+    if (pf->points != NULL)
+        free(pf->points);
+    free(pf);
+}
+
+void svtPolyfaceAddPoint(svt_polyface_t *pf, float x, float y, float z)
+{
+    if (pf->points_len >= pf->points_alloc){
+        pf->points_alloc *= 2;
+        pf->points = REALLOC_ARR(svt_point_t, pf->points, pf->points_alloc);
+    }
+
+    pf->points[pf->points_len][0] = x;
+    pf->points[pf->points_len][1] = y;
+    pf->points[pf->points_len][2] = z;
+    pf->points_len++;
+}
+
+size_t svtPolyfaceNumPoints(const svt_polyface_t *pf)
+{
+    return pf->points_len;
+}
+
+const svt_point_t *svtPolyfacePoints(const svt_polyface_t *pf, size_t *len)
+{
+    *len = pf->points_len;
+    return (const svt_point_t *)pf->points;
+}
+/** POLYFACE END **/
+
+
+
 svt_obj_t *svtObjNew()
 {
     svt_obj_t *obj = ALLOC(svt_obj_t);
@@ -41,6 +89,10 @@ svt_obj_t *svtObjNew()
     obj->faces_len = 0;
     obj->faces_alloc = 0;
 
+    obj->polyfaces = NULL;
+    obj->polyfaces_len = 0;
+    obj->polyfaces_alloc = 0;
+
     obj->name = NULL;
 
     obj->point_color = obj->edge_color = obj->face_color = NULL;
@@ -52,6 +104,7 @@ svt_obj_t *svtObjNew()
 
 svt_obj_t *svtObjDelete(svt_obj_t *obj)
 {
+    int i;
     svt_obj_t *next;
 
     next = obj->next;
@@ -70,6 +123,12 @@ svt_obj_t *svtObjDelete(svt_obj_t *obj)
         free(obj->edge_color);
     if (obj->face_color != NULL)
         free(obj->face_color);
+
+    for (i=0; i < obj->polyfaces_len; i++){
+        svtPolyfaceDelete(obj->polyfaces[i]);
+    }
+    free(obj->polyfaces);
+
     free(obj);
 
     return next;
@@ -121,6 +180,18 @@ void svtObjAddFace(svt_obj_t *obj, int a, int b, int c)
     obj->faces_len++;
 }
 
+void svtObjAddPolyface(svt_obj_t *obj, svt_polyface_t *pf)
+{
+    if (obj->polyfaces_len >= obj->polyfaces_alloc){
+        obj->polyfaces_alloc += SVT_OBJ_ALLOC_PORTION;
+        obj->polyfaces = REALLOC_ARR(svt_polyface_t *, obj->polyfaces,
+                                     obj->polyfaces_alloc);
+    }
+
+    obj->polyfaces[obj->polyfaces_len] = pf;
+    obj->polyfaces_len++;
+}
+
 void svtObjSetName(svt_obj_t *obj, const char *name)
 {
     int len = strlen(name);
@@ -169,6 +240,12 @@ const svt_face_t *svtObjFaces(svt_obj_t *obj, int *len)
 {
     *len = obj->faces_len;
     return (const svt_face_t *)obj->faces;
+}
+
+const svt_polyface_t **svtObjPolyFaces(svt_obj_t *obj, int *len)
+{
+    *len = obj->polyfaces_len;
+    return (const svt_polyface_t **)obj->polyfaces;
 }
 
 const char *svtObjName(svt_obj_t *obj)

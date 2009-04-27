@@ -108,6 +108,7 @@ static void svtParserParsePolyline(svt_parser_t *parser);
 static void svtParserParsePointColor(svt_parser_t *parser);
 static void svtParserParseEdgetColor(svt_parser_t *parser);
 static void svtParserParseFaceColor(svt_parser_t *parser);
+static void svtParserParsePolyface(svt_parser_t *parser);
 static void svtParserParseError(svt_parser_t *parser);
 
 int svtParserParse(svt_parser_t *parser)
@@ -236,6 +237,9 @@ static void svtParserParseObj(svt_parser_t *parser)
                 break;
             case T_FACE_COLOR:
                 svtParserParseFaceColor(parser);
+                break;
+            case T_POLYFACE:
+                svtParserParsePolyface(parser);
                 break;
             case T_ERROR:
                 svtParserParseError(parser);
@@ -539,6 +543,46 @@ static void svtParserParseFaceColor(svt_parser_t *parser)
             parser->cur_obj = svtObjNew();
 
         svtObjSetFaceColor(parser->cur_obj, nums[0], nums[1], nums[2]);
+    }
+}
+
+static void svtParserParsePolyface(svt_parser_t *parser)
+{
+    float coords[3];
+    int i = 0;
+    svt_polyface_t *pf;
+
+    pf = svtPolyfaceNew();
+
+    NEXT;
+    while (parser->cur_tok == T_FLT_NUM){
+        coords[i] = parser->yylval.flt_num;
+        i = (i + 1) % 3;
+
+        // three coords already read
+        if (i == 0){
+            svtPolyfaceAddPoint(pf, coords[0], coords[1], coords[2]);
+        }
+
+        NEXT;
+    }
+
+    if (svtPolyfaceNumPoints(pf) > 0){
+        if (parser->cur_obj == NULL)
+            parser->cur_obj = svtObjNew();
+        svtObjAddPolyface(parser->cur_obj, pf);
+    }else{
+        svtPolyfaceDelete(pf);
+    }
+
+    if (i != 0){
+        fprintf(stderr, "In section Points unparsed numbers on line %d: ",
+                parser->yylval.lineno);
+        if (i == 1)
+            fprintf(stderr, "%f", coords[0]);
+        if (i == 2)
+            fprintf(stderr, "%f %f", coords[0], coords[1]);
+        fprintf(stderr, "\n");
     }
 }
 
