@@ -32,7 +32,7 @@ svt_polyface_t *svtPolyfaceNew(void)
 
     pf = ALLOC(svt_polyface_t);
 
-    pf->points = ALLOC_ARR(svt_point_t, 10);
+    pf->points = ALLOC_ARR(int, 10);
     pf->points_len = 0;
     pf->points_alloc = 10;
 
@@ -46,16 +46,14 @@ void svtPolyfaceDelete(svt_polyface_t *pf)
     free(pf);
 }
 
-void svtPolyfaceAddPoint(svt_polyface_t *pf, float x, float y, float z)
+void svtPolyfaceAddPoint(svt_polyface_t *pf, int pointpos)
 {
     if (pf->points_len >= pf->points_alloc){
         pf->points_alloc *= 2;
-        pf->points = REALLOC_ARR(svt_point_t, pf->points, pf->points_alloc);
+        pf->points = REALLOC_ARR(int, pf->points, pf->points_alloc);
     }
 
-    pf->points[pf->points_len][0] = x;
-    pf->points[pf->points_len][1] = y;
-    pf->points[pf->points_len][2] = z;
+    pf->points[pf->points_len] = pointpos;
     pf->points_len++;
 }
 
@@ -64,10 +62,10 @@ size_t svtPolyfaceNumPoints(const svt_polyface_t *pf)
     return pf->points_len;
 }
 
-const svt_point_t *svtPolyfacePoints(const svt_polyface_t *pf, size_t *len)
+const int *svtPolyfacePoints(const svt_polyface_t *pf, size_t *len)
 {
     *len = pf->points_len;
-    return (const svt_point_t *)pf->points;
+    return (const int *)pf->points;
 }
 /** POLYFACE END **/
 
@@ -242,7 +240,7 @@ const svt_face_t *svtObjFaces(svt_obj_t *obj, int *len)
     return (const svt_face_t *)obj->faces;
 }
 
-const svt_polyface_t **svtObjPolyFaces(svt_obj_t *obj, int *len)
+const svt_polyface_t **svtObjPolyfaces(svt_obj_t *obj, int *len)
 {
     *len = obj->polyfaces_len;
     return (const svt_polyface_t **)obj->polyfaces;

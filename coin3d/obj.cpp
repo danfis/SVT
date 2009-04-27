@@ -20,6 +20,7 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <Inventor/nodes/SoShapeHints.h>
 #include "obj.hpp"
 
 namespace SVT {
@@ -119,6 +120,9 @@ Obj::Obj(svt_obj_t *obj)
     sw_faces->ref();
     sw_faces->whichChild = SO_SWITCH_ALL;
 
+    SoShapeHints *facehints = new SoShapeHints;
+    facehints->faceType = SoShapeHints::UNKNOWN_FACE_TYPE;
+    sw_faces->addChild(facehints);
     sw_faces->addChild(style_faces);
     sw_faces->addChild(material_faces);
     sw_faces->addChild(faces);
@@ -130,9 +134,12 @@ Obj::Obj(svt_obj_t *obj)
     const svt_point_t *opoints;
     const svt_edge_t *oedges;
     const svt_face_t *ofaces;
+    const svt_polyface_t **pfaces;
     const char *oname;
     int *ilist;
-    int len;
+    int len, i, start;
+    const int *ppoints;
+    size_t slen;
     const float *color;
 
     opoints = svtObjPoints(obj, &len);
@@ -171,6 +178,18 @@ Obj::Obj(svt_obj_t *obj)
         num_faces = len;
 
         delete [] ilist;
+    }
+
+    pfaces = svtObjPolyfaces(obj, &len);
+    if (len > 0){
+        start = num_faces + 4;
+        for (i=0; i < len; i++){
+            ppoints = svtPolyfacePoints(pfaces[i], &slen);
+            faces->coordIndex.setValues(start, slen, ppoints);
+            faces->coordIndex.set1Value(start + slen, -1);
+            start += slen + 1;
+            num_faces++;
+        }
     }
 
     oname = svtObjName(obj);

@@ -27,6 +27,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#include <string.h>
 
 /** TYPES **/
 typedef float svt_point_t[3];
@@ -34,7 +35,7 @@ typedef int svt_edge_t[2];
 typedef int svt_face_t[3];
 
 struct _svt_polyface_t {
-    svt_point_t *points;
+    int *points;
     size_t points_len;
     size_t points_alloc;
 };
@@ -45,9 +46,9 @@ void svtPolyfaceDelete(svt_polyface_t *);
 
 size_t svtPolyfaceNumPoints(const svt_polyface_t *pf);
 
-const svt_point_t *svtPolyfacePoints(const svt_polyface_t *pf, size_t *len);
+const int *svtPolyfacePoints(const svt_polyface_t *pf, size_t *len);
 
-void svtPolyfaceAddPoint(svt_polyface_t *pf, float x, float y, float z);
+void svtPolyfaceAddPoint(svt_polyface_t *pf, int pointpos);
 /** TYPES END **/
 
 #ifndef SVT_OBJ_ALLOC_PORTION
@@ -134,7 +135,7 @@ void svtObjTruncate(svt_obj_t *);
 const svt_point_t *svtObjPoints(svt_obj_t *, int *len);
 const svt_edge_t *svtObjEdges(svt_obj_t *, int *len);
 const svt_face_t *svtObjFaces(svt_obj_t *, int *len);
-const svt_polyface_t **svtObjPolyFaces(svt_obj_t *, int *len);
+const svt_polyface_t **svtObjPolyfaces(svt_obj_t *, int *len);
 const char *svtObjName(svt_obj_t *obj);
 
 #define svtObjPointColor(o) ((const float *)(o)->point_color)

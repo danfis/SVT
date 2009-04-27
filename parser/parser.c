@@ -550,6 +550,7 @@ static void svtParserParsePolyface(svt_parser_t *parser)
 {
     float coords[3];
     int i = 0;
+    int pos;
     svt_polyface_t *pf;
 
     pf = svtPolyfaceNew();
@@ -561,15 +562,18 @@ static void svtParserParsePolyface(svt_parser_t *parser)
 
         // three coords already read
         if (i == 0){
-            svtPolyfaceAddPoint(pf, coords[0], coords[1], coords[2]);
+            if (parser->cur_obj == NULL)
+                parser->cur_obj = svtObjNew();
+
+            pos = svtObjAddPoint(parser->cur_obj,
+                                 coords[0], coords[1], coords[2]);
+            svtPolyfaceAddPoint(pf, pos);
         }
 
         NEXT;
     }
 
     if (svtPolyfaceNumPoints(pf) > 0){
-        if (parser->cur_obj == NULL)
-            parser->cur_obj = svtObjNew();
         svtObjAddPolyface(parser->cur_obj, pf);
     }else{
         svtPolyfaceDelete(pf);
