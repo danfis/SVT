@@ -104,6 +104,12 @@ EXP [eE]
     return T_POLY;
 }
 
+[Pp][Oo][Ll][Yy][3][Dd]: {
+    BEGIN(poly);
+    yyextra->lineno = yylineno;
+    return T_POLY3D;
+}
+
 [Pp][Oo][Ll][Yy][Ll][Ii][Nn][Ee]: {
     BEGIN(polyline);
     yyextra->lineno = yylineno;

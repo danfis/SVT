@@ -109,6 +109,7 @@ static void svtParserParsePointColor(svt_parser_t *parser);
 static void svtParserParseEdgetColor(svt_parser_t *parser);
 static void svtParserParseFaceColor(svt_parser_t *parser);
 static void svtParserParsePolyface(svt_parser_t *parser);
+static void svtParserParsePoly3d(svt_parser_t *parser);
 static void svtParserParseError(svt_parser_t *parser);
 
 int svtParserParse(svt_parser_t *parser)
@@ -240,6 +241,9 @@ static void svtParserParseObj(svt_parser_t *parser)
                 break;
             case T_POLYFACE:
                 svtParserParsePolyface(parser);
+                break;
+            case T_POLY3D:
+                svtParserParsePoly3d(parser);
                 break;
             case T_ERROR:
                 svtParserParseError(parser);
@@ -581,6 +585,52 @@ static void svtParserParsePolyface(svt_parser_t *parser)
 
     if (i != 0){
         fprintf(stderr, "In section Points unparsed numbers on line %d: ",
+                parser->yylval.lineno);
+        if (i == 1)
+            fprintf(stderr, "%f", coords[0]);
+        if (i == 2)
+            fprintf(stderr, "%f %f", coords[0], coords[1]);
+        fprintf(stderr, "\n");
+    }
+}
+
+static void svtParserParsePoly3d(svt_parser_t *parser)
+{
+    float coords[3];
+    int edge = -1, pos, start = -1;
+    int i = 0;
+
+    NEXT;
+    while (parser->cur_tok == T_FLT_NUM){
+        coords[i] = parser->yylval.flt_num;
+        i = (i + 1) % 3;
+
+        // three coords already read
+        if (i == 0){
+            if (parser->cur_obj == NULL)
+                parser->cur_obj = svtObjNew();
+
+            pos = svtObjAddPoint(parser->cur_obj,
+                                 coords[0], coords[1], coords[2]);
+            if (start == -1)
+                start = pos;
+
+            if (edge == -1){
+                edge = pos;
+            }else{
+                svtObjAddEdge(parser->cur_obj, edge, pos);
+                edge = pos;
+            }
+        }
+
+        NEXT;
+    }
+
+    if (start != edge)
+        svtObjAddEdge(parser->cur_obj, edge, start);
+
+    if (i != 0){
+        fprintf(stderr, "In section Poly3d unparsed numbers on line %d: ",
                 parser->yylval.lineno);
         if (i == 1)
             fprintf(stderr, "%f", coords[0]);

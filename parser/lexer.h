@@ -43,6 +43,7 @@ extern "C" {
 #define T_EDGE_COLOR 271
 #define T_FACE_COLOR 272
 #define T_POLYFACE 273
+#define T_POLY3D 274
 
 #define YY_BUFSIZE 1000
 
