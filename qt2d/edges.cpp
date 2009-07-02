@@ -21,6 +21,7 @@
  */
 
 #include "edges.hpp"
+#include "common/msg.hpp"
 
 
 
@@ -33,6 +34,7 @@ SVT::Qt2D::Edges::Edges(svt_obj_t *obj)
     int points_len;
     int id1, id2;
     const float *color;
+    QLineF *line;
 
     // save edges to path
     points = svtObjPoints(obj, &points_len);
@@ -40,8 +42,10 @@ SVT::Qt2D::Edges::Edges(svt_obj_t *obj)
     for (int i=0; i < edges_len; i++){
         id1 = edges[i][0];
         id2 = edges[i][1];
-        _path.moveTo(points[id1][0], -1. * points[id1][1]);
-        _path.lineTo(points[id2][0], -1. * points[id2][1]);
+
+        line = new QLineF(points[id1][0], -1. * points[id1][1],
+                          points[id2][0], -1. * points[id2][1]);
+        _lines.push_back(line);
 
         _setPointInBoundingRect(points[id1]);
         _setPointInBoundingRect(points[id2]);
@@ -59,6 +63,13 @@ SVT::Qt2D::Edges::Edges(svt_obj_t *obj)
 
 SVT::Qt2D::Edges::~Edges()
 {
+    std::list<QLineF *>::iterator it, it_end;
+
+    it = _lines.begin();
+    it_end = _lines.end();
+    for (; it != it_end; ++it){
+        delete *it;
+    }
 }
 
 void SVT::Qt2D::Edges::paint(QPainter &painter, const QRectF &rect)
@@ -66,6 +77,7 @@ void SVT::Qt2D::Edges::paint(QPainter &painter, const QRectF &rect)
     QPen cpen = pen(); // current pen
     qreal fx, tx, omit; // for recomputing of width
     qreal size;
+    std::list<QLineF *>::iterator it, it_end;
 
     if (!on())
         return;
@@ -77,5 +89,12 @@ void SVT::Qt2D::Edges::paint(QPainter &painter, const QRectF &rect)
     cpen.setWidthF(size);
 
     painter.setPen(cpen);
-    painter.drawPath(_path);
+
+    it = _lines.begin();
+    it_end = _lines.end();
+    for (; it != it_end; ++it){
+        if (rect.contains((*it)->p1()) || rect.contains((*it)->p2())){
+            painter.drawLine(**it);
+        }
+    }
 }

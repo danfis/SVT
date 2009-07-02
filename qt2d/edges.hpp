@@ -23,6 +23,8 @@
 #ifndef SVT_QT2D_EDGES_HPP
 #define SVT_QT2D_EDGES_HPP
 
+#include <QLineF>
+#include <list>
 #include "parser/obj.h"
 #include "elements.hpp"
 
@@ -32,7 +34,7 @@ namespace Qt2D {
 
 class Edges : public Elements {
   private:
-    QPainterPath _path;
+    std::list<QLineF *> _lines;
     int _num_edges;
 
   public:
