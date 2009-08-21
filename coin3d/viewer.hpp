@@ -24,8 +24,7 @@
 #define COIN3D_VIEWER_HPP
 
 #include <Inventor/nodes/SoSwitch.h>
-#include <Inventor/nodes/SoPointLight.h>
-#include <Inventor/nodes/SoCamera.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
 #include <QWidget>
 #include <Quarter/QuarterWidget.h>
 #include "obj_manager.hpp"
@@ -43,10 +42,7 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
     bool _scene_dyn_clear; /*! true if _scene_dyn should be cleared before
                                adding new obj */
     QColor _bgcolor;
-    SoPointLight *_light;
-    SbVec3f _light_transform; /*! vector which holds data used for relative
-                                  transformation of _light from camera
-                                  position */
+    SoDirectionalLight *_light;
 
   public:
     Viewer();
