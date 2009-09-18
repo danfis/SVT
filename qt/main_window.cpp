@@ -20,6 +20,7 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QShortcut>
 #include "main_window.hpp"
 
 
@@ -31,6 +32,8 @@ namespace Qt {
 
 MainWindow::MainWindow()
 {
+    QShortcut *shortcut;
+
     _obj_widgets = new WidgetStack;
 
     _left_dock = new QDockWidget;
@@ -44,6 +47,11 @@ MainWindow::MainWindow()
 
     _status = new QStatusBar;
     setStatusBar(_status);
+
+    // shortcut for close window
+    shortcut = new QShortcut(::Qt::Key_Q, this);
+    connect(shortcut, SIGNAL(activated()),
+            this, SLOT(close()));
 
     connect(this, SIGNAL(_showMsgInStatusBarSignal(const QString &)),
             _status, SLOT(showMessage(const QString &)));
