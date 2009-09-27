@@ -35,7 +35,6 @@ extern "C" {
 #define T_FACES 262
 #define T_DELIM 263
 #define T_ERROR 264
-#define T_POINTS2D 265
 #define T_NAME 267
 #define T_POLY 268
 #define T_POLYLINE 269
@@ -43,7 +42,7 @@ extern "C" {
 #define T_EDGE_COLOR 271
 #define T_FACE_COLOR 272
 #define T_POLYFACE 273
-#define T_POLY3D 274
+#define T_EOL 275
 
 #define YY_BUFSIZE 1000
 

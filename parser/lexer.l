@@ -43,6 +43,8 @@
 %option noyywrap
 %option yylineno
 %option reentrant
+%option nounput
+%option noinput
 %option extra-type="svt_yylval_t *"
 
 DIGIT [0-9]
@@ -52,93 +54,93 @@ SIGN [-+]
 DOT "."
 WHITESPACE [ \t\n]
 COMMENT "#"
-DELIM [-=+]
 EXP [eE]
+EOL ([ \t]*\n)+
+INT {SIGN}?({ZERO})|({NONZERO}{DIGIT}*)
+FLOAT {SIGN}?({ZERO}|{NONZERO}{DIGIT}*)({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?
+HEADER_POINTS ^((?i:points:)|(?i:points2d:)){WHITESPACE}*
+HEADER_EDGES ^(?i:edges:){WHITESPACE}*
+HEADER_FACES ^(?i:faces:){WHITESPACE}*
+HEADER_POLY ^((?i:poly:)|(?i:poly3d:)){WHITESPACE}*
+HEADER_POLYLINE ^(?i:polyline:){WHITESPACE}*
+HEADER_POINT_COLOR ^(?i:point[ ]color):{WHITESPACE}*
+HEADER_EDGE_COLOR ^(?i:edge[ ]color):{WHITESPACE}*
+HEADER_FACE_COLOR ^(?i:face[ ]color):{WHITESPACE}*
+HEADER_POLYFACE ^(?i:polyface:){WHITESPACE}*
+HEADER_NAME ^(?i:name:)[ \t]*
+DELIM ([-=+]+{WHITESPACE}*)+
 
-%s points points2d edges faces name poly polyline color polyface
+%s flts ints name
 %%
-<INITIAL,points,points2d,poly,polyline,color,polyface>{SIGN}?{ZERO}({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -0.1234e-23 */
+<INITIAL,flts>{FLOAT} {
     PARSE_FLOAT(T_FLT_NUM);
 }
 
-<INITIAL,points,points2d,poly,polyline,color,polyface>{SIGN}?{NONZERO}{DIGIT}*({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?  { /* -1043.1234e-23 */
-    PARSE_FLOAT(T_FLT_NUM);
+<ints>{INT} {
+    PARSE_INT(T_INT_NUM);
 }
 
-<edges,faces>{NONZERO}{DIGIT}* {
-    PARSE_INT(T_INT_NUM);
-}
-<edges,faces>{ZERO} {
-    PARSE_INT(T_INT_NUM);
-}
+<flts>{EOL} { return T_EOL; }
 
 {WHITESPACE}+ {}
 
 {COMMENT}[^\n]*\n {}
 
-[Pp][Oo][Ii][Nn][Tt][Ss]: {
-    BEGIN(points);
+{HEADER_POINTS} {
+    BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_POINTS;
 }
-[Pp][Oo][Ii][Nn][Tt][Ss][2][Dd]: {
-    BEGIN(points2d);
-    yyextra->lineno = yylineno;
-    return T_POINTS2D;
-}
 
-[Ee][Dd][Gg][Ee][Ss]: {
-    BEGIN(edges);
+{HEADER_EDGES} {
+    BEGIN(ints);
     yyextra->lineno = yylineno;
     return T_EDGES;
 }
-[Ff][Aa][Cc][Ee][Ss]: {
-    BEGIN(faces);
+
+{HEADER_FACES} {
+    BEGIN(ints);
     yyextra->lineno = yylineno;
     return T_FACES;
 }
 
-[Pp][Oo][Ll][Yy]: {
-    BEGIN(poly);
+{HEADER_POLY} {
+    BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_POLY;
 }
 
-[Pp][Oo][Ll][Yy][3][Dd]: {
-    BEGIN(poly);
-    yyextra->lineno = yylineno;
-    return T_POLY3D;
-}
-
-[Pp][Oo][Ll][Yy][Ll][Ii][Nn][Ee]: {
-    BEGIN(polyline);
+{HEADER_POLYLINE} {
+    BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_POLYLINE;
 }
 
-[Pp][Oo][Ii][Nn][Tt][ ][Cc][Oo][Ll][Oo][Rr]: {
-    BEGIN(color);
+{HEADER_POINT_COLOR} {
+    BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_POINT_COLOR;
 }
-[Ee][Dd][Gg][Ee][ ][Cc][Oo][Ll][Oo][Rr]: {
-    BEGIN(color);
+
+{HEADER_EDGE_COLOR} {
+    BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_EDGE_COLOR;
 }
-[Ff][Aa][Cc][Ee][ ][Cc][Oo][Ll][Oo][Rr]: {
-    BEGIN(color);
+
+{HEADER_FACE_COLOR} {
+    BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_FACE_COLOR;
 }
 
-[Pp][Oo][Ll][Yy][Ff][Aa][Cc][Ee]: {
-    BEGIN(polyface);
+{HEADER_POLYFACE} {
+    BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_POLYFACE;
 }
 
-[Nn][Aa][Mm][Ee]:[ \t]* {
+{HEADER_NAME} {
     BEGIN(name);
     yyextra->lineno = yylineno;
     yyextra->buffer[0] = 0x0;
@@ -149,7 +151,7 @@ EXP [eE]
     return T_NAME;
 }
 
-{DELIM}+\n {
+{DELIM} {
     BEGIN(INITIAL);
     yyextra->lineno = yylineno;
     return T_DELIM;

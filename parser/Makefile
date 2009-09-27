@@ -15,7 +15,7 @@ libsvtparser.a: $(OBJS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 lexer.c: lexer.l
-	$(FLEX) --nounput --header-file=lexer_gen.h -o $@ $<
+	$(FLEX) --header-file=lexer_gen.h -o $@ $<
 lexer.o: lexer.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
