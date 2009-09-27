@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2009 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -21,29 +21,33 @@
  */
 
 %{
-#include "lexer.h"
+//#include "lexer.h"
+#include "svt.h"
+#include "svt.parser.h"
 #include "parse_func.h"
 
+
 #define PARSE_FLOAT(ret) \
-    if (svtParseFloat(yytext, &yyextra->flt_num) != 0){ \
+    if (svtParseFloat(yytext, &(yylval->f)) != 0){ \
         return T_ERROR; \
     } \
-    yyextra->lineno = yylineno; \
     return ret
 
 #define PARSE_INT(ret) \
-    if (svtParseInt(yytext, &yyextra->int_num) != 0){ \
+    if (svtParseInt(yytext, &yylval->i) != 0){ \
         return T_ERROR; \
     } \
-    yyextra->lineno = yylineno; \
     return ret
 
 %}
 
 %option noyywrap
 %option yylineno
-%option reentrant
+%option nounput
+%option noinput
 %option extra-type="svt_yylval_t *"
+%option reentrant
+%option bison-bridge
 
 DIGIT [0-9]
 NONZERO [1-9]
@@ -52,7 +56,7 @@ SIGN [-+]
 DOT "."
 WHITESPACE [ \t\n]
 COMMENT #[^\n]*\n
-DELIM [-=+]
+DELIM ([-=+]+{WHITESPACE}*)+
 EXP [eE]
 INT {SIGN}?({ZERO})|({NONZERO}{DIGIT}*)
 FLOAT {SIGN}?({ZERO}|{NONZERO}{DIGIT}*)({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?
@@ -69,16 +73,19 @@ HEADER_EDGE_COLOR ^(?i:edge[ ]color):{WHITESPACE}*
 HEADER_FACE_COLOR ^(?i:face[ ]color):{WHITESPACE}*
 HEADER_POLYFACE ^(?i:polyface){HEADER_END}
 HEADER_NAME ^(?i:name):[ \t]*
+EOL ([ \t]*\n)+
 
 %s points points2d edges faces name poly polyline color polyface
 %%
 <INITIAL,points,points2d,poly,polyline,color,polyface>{FLOAT} {
-    PARSE_FLOAT(T_FLT_NUM);
+    PARSE_FLOAT(T_FLT);
 }
 
 <edges,faces>{INT} {
-    PARSE_INT(T_INT_NUM);
+    PARSE_INT(T_INT);
 }
+
+{EOL} { return T_EOL; }
 
 {WHITESPACE}+ {}
 
@@ -86,86 +93,67 @@ HEADER_NAME ^(?i:name):[ \t]*
 
 {HEADER_POINTS} {
     BEGIN(points);
-    yyextra->lineno = yylineno;
+    printf("Points:\n");
     return T_POINTS;
-}
-{HEADER_POINTS2D} {
-    BEGIN(points2d);
-    yyextra->lineno = yylineno;
-    return T_POINTS2D;
 }
 
 {HEADER_EDGES} {
     BEGIN(edges);
-    yyextra->lineno = yylineno;
+    printf("Edges:\n");
     return T_EDGES;
 }
 {HEADER_FACES} {
     BEGIN(faces);
-    yyextra->lineno = yylineno;
+    printf("Faces:\n");
     return T_FACES;
 }
 
 {HEADER_POLY} {
     BEGIN(poly);
-    yyextra->lineno = yylineno;
     return T_POLY;
-}
-
-{HEADER_POLY3D} {
-    BEGIN(poly);
-    yyextra->lineno = yylineno;
-    return T_POLY3D;
 }
 
 {HEADER_POLYLINE} {
     BEGIN(polyline);
-    yyextra->lineno = yylineno;
     return T_POLYLINE;
 }
 
 {HEADER_POINT_COLOR} {
     BEGIN(color);
-    yyextra->lineno = yylineno;
     return T_POINT_COLOR;
 }
 {HEADER_EDGE_COLOR} {
     BEGIN(color);
-    yyextra->lineno = yylineno;
     return T_EDGE_COLOR;
 }
 {HEADER_FACE_COLOR} {
     BEGIN(color);
-    yyextra->lineno = yylineno;
     return T_FACE_COLOR;
 }
 
 {HEADER_POLYFACE} {
     BEGIN(polyface);
-    yyextra->lineno = yylineno;
     return T_POLYFACE;
 }
 
 {HEADER_NAME} {
     BEGIN(name);
-    yyextra->lineno = yylineno;
-    yyextra->buffer[0] = 0x0;
 }
-<name>[^\n]* {
+<name>{EOL} {
     BEGIN(INITIAL);
-    strncpy(yyextra->buffer, yytext, YY_BUFSIZE);
+    yylval->s = strdup(yytext);
     return T_NAME;
 }
 
-{DELIM}+\n {
+{DELIM} {
     BEGIN(INITIAL);
-    yyextra->lineno = yylineno;
+    printf("DELIM\n");
     return T_DELIM;
 }
 
 . {
-    yyextra->lineno = yylineno;
-    yyextra->c = yytext[0];
+    yylval->c = yytext[0];
     return T_ERROR;
 }
+
 %%

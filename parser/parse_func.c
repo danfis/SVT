@@ -127,8 +127,17 @@ int svtParseInt(const char *str, int *val)
 int svtParseLong(const char *str, long *val)
 {
     char c = *str;
+    long sign;
 
+    sign = 1;
     *val = 0L;
+
+    if (c == '-'){
+        sign = -1;
+        c = *++str;
+    }else if (c == '+'){
+        c = *++str;
+    }
 
     while (c != 0){
         if (c < 48 || c > 57)
@@ -136,6 +145,8 @@ int svtParseLong(const char *str, long *val)
         *val = *val * 10L + (long)(c - 48);
         c = *++str;
     }
+
+    *val *= sign;
 
     return 0;
 }

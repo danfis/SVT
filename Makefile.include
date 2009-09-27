@@ -2,6 +2,7 @@ CXX ?= g++
 CC ?= gcc
 MOC ?= moc
 FLEX ?= flex
+BISON ?= bison
 
 DEBUG = yes
 
