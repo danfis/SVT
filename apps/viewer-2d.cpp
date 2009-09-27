@@ -34,24 +34,15 @@ using namespace std;
 #include "qt2d/main_window.hpp"
 
 
-int main2d(int argc, char *argv[])
+int main2d(int argc, char *argv[], svt_parser_t *parser)
 {
-    char **args;
-    int num_args;
-    svt_parser_t *parser;
     svt_obj_t *o;
     SVT::Qt2D::Obj *obj;
-
-    args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
 
     QApplication app(argc, argv);
     SVT::Qt2D::MainWindow mw;
 
     mw.applySettings(SVT::Common::settings);
-
-    parser = svtParserNew();
-
-    SVT::Common::parseAll(num_args, args, parser);
 
     o = svtParserObjs(parser, 0);
     while (o != 0){
@@ -61,9 +52,6 @@ int main2d(int argc, char *argv[])
 
         o = svtObjNext(o);
     }
-
-    svtParserDelete(parser);
-
 
     mw.show();
     app.exec();

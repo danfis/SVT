@@ -38,15 +38,10 @@ using namespace SIM::Coin3D::Quarter;
 #include "parser/parser.h"
 #include "parser/obj.h"
 
-int main3d(int argc, char *argv[])
+int main3d(int argc, char *argv[], svt_parser_t *parser)
 {
-    char **args;
-    int num_args;
-    svt_parser_t *parser;
     svt_obj_t *o;
     SVT::Coin3d::Obj *obj;
-
-    args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
 
     QApplication app(argc, argv);
     Quarter::init();
@@ -54,10 +49,6 @@ int main3d(int argc, char *argv[])
     SVT::Coin3d::MainWindow mw;
 
     mw.applySettings(SVT::Common::settings);
-
-    parser = svtParserNew();
-
-    SVT::Common::parseAll(num_args, args, parser);
 
     o = svtParserObjs(parser, 0);
     while (o != 0){
@@ -67,9 +58,6 @@ int main3d(int argc, char *argv[])
 
         o = svtObjNext(o);
     }
-
-    svtParserDelete(parser);
-
 
     mw.show();
     app.exec();

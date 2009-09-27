@@ -42,6 +42,8 @@ svt_parser_t *svtParserNew()
     parser->cur_tok = -1;
     parser->cur_obj = NULL;
 
+    parser->has_3d_points = 0;
+
     return parser;
 }
 
@@ -263,6 +265,10 @@ static int svtParserParsePoint(svt_parser_t *parser, float *coords)
         coords[i] = parser->yylval.flt_num;
         i++;
         NEXT;
+    }
+
+    if (i == 3){
+        parser->has_3d_points = 1;
     }
 
     if (parser->cur_tok != T_EOL){

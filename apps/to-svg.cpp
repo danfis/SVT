@@ -53,24 +53,14 @@ static void size(svt_obj_t *objs,
                  int *width, int *height, float view_box[4]);
 
 
-int mainToSVG(int argc, char *argv[])
+int mainToSVG(int argc, char *argv[], svt_parser_t *parser)
 {
-    char **args;
-    int num_args;
     int len;
-    svt_parser_t *parser;
     svt_obj_t *o;
-
-    args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
-
-    parser = svtParserNew();
-    SVT::Common::parseAll(num_args, args, parser);
 
     o = svtParserObjs(parser, &len);
     if (len > 0)
         toSvg(o);
-
-    svtParserDelete(parser);
 
     return 0;
 }

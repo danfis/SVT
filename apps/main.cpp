@@ -34,14 +34,15 @@ using namespace std;
 #include "parser/obj.h"
 #include "qt2d/main_window.hpp"
 
-int main2d(int argc, char *argv[]);
-int main3d(int argc, char *argv[]);
+int main2d(int argc, char *argv[], svt_parser_t *parser);
+int main3d(int argc, char *argv[], svt_parser_t *parser);
 int main3dLive(int argc, char *argv[]);
-int mainToSVG(int argc, char *argv[]);
+int mainToSVG(int argc, char *argv[], svt_parser_t *parser);
 
 
 
 enum Type {
+    NONE,
     VIEWER2D,
     VIEWER3D,
     VIEWER3DLIVE,
@@ -52,7 +53,10 @@ static int cmpend(const char *a, const char *b);
 
 int main(int argc, char *argv[])
 {
-    Type type = VIEWER2D;
+    Type type = NONE;
+    svt_parser_t *parser;
+    char **args;
+    int num_args;
 
     for (int i=1; i < argc; i++){
         if (strcmp(argv[i], "--2d") == 0){
@@ -80,17 +84,32 @@ int main(int argc, char *argv[])
         type = TO_SVG;
     }
 
-    if (type == VIEWER2D){
-        return main2d(argc, argv);
-    }else if (type == VIEWER3D){
-        return main3d(argc, argv);
-    }else if (type == VIEWER3DLIVE){
+    if (type == VIEWER3DLIVE){
         return main3dLive(argc, argv);
-    }else if (type == TO_SVG){
-        return mainToSVG(argc, argv);
+    }else{
+        args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
+
+        parser = svtParserNew();
+        SVT::Common::parseAll(num_args, args, parser);
+
+        if (type == NONE){
+            if (svtParserHas3DPoints(parser)){
+                main3d(argc, argv, parser);
+            }else{
+                main2d(argc, argv, parser);
+            }
+        }else if (type == VIEWER2D){
+            main2d(argc, argv, parser);
+        }else if (type == VIEWER3D){
+            main3d(argc, argv, parser);
+        }else if (type == TO_SVG){
+            return mainToSVG(argc, argv, parser);
+        }
+
+        svtParserDelete(parser);
     }
 
-    return main3d(argc, argv);
+    return 0;
 }
 
 

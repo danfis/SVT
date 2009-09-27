@@ -3,7 +3,7 @@ CC ?= gcc
 MOC ?= moc
 FLEX ?= flex
 
-DEBUG = yes
+DEBUG = no
 
 ifeq '$(DEBUG)' 'yes'
   CXXFLAGS = -g

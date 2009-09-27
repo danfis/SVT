@@ -46,6 +46,8 @@ struct _svt_parser_t {
 
     svt_obj_t *objs_head, *objs_tail;
     int objs_len;
+
+    int has_3d_points;
 };
 typedef struct _svt_parser_t svt_parser_t;
 
@@ -143,6 +145,12 @@ void svtParserParseEnd(svt_parser_t *parser);
  */
 int svtParserParseHunk(svt_parser_t *parser, int num_objs);
 
+
+/**
+ * Returns true if parser parsed any 3d point.
+ */
+static inline int svtParserHas3DPoints(svt_parser_t *parser)
+    { return parser->has_3d_points; }
 
 #ifdef __cplusplus
 }
