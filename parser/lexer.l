@@ -80,7 +80,7 @@ DELIM ([-=+]+{WHITESPACE}*)+
     PARSE_INT(T_INT_NUM);
 }
 
-<flts>{EOL} { return T_EOL; }
+<INITIAL,flts>{EOL} { return T_EOL; }
 
 {WHITESPACE}+ {}
 
