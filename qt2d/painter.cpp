@@ -160,8 +160,7 @@ void Painter::paintEvent(QPaintEvent *event)
 
 void Painter::wheelEvent(QWheelEvent *event)
 {
-    //setScale(_scale + event->delta() * 1.E-3);
-    scale(event->delta() * 1E-3);
+    scale(-event->delta() * 1E-3);
 }
 
 void Painter::mousePressEvent(QMouseEvent *event)
