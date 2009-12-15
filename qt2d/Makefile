@@ -14,6 +14,7 @@ OBJS = painter.o elements.o points.o edges.o faces.o obj.o main_window.o
 all: $(TARGETS)
 
 libsvtqt2d.a: $(OBJS)
+	touch ../apps/viewer-2d.cpp
 	ar cr $@ $^
 	ranlib $@
 
