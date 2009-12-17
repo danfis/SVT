@@ -55,7 +55,7 @@ DOT "."
 WHITESPACE [ \t\n]
 COMMENT "#"
 EXP [eE]
-EOL ([ \t]*\n)+
+EOL ([ \t]*\n[ \t]*)+
 INT {SIGN}?({ZERO})|({NONZERO}{DIGIT}*)
 FLOAT {SIGN}?({ZERO}|{NONZERO}{DIGIT}*)({DOT}{DIGIT}*)?({EXP}{SIGN}?{DIGIT}+)?
 HEADER_POINTS ^((?i:points:)|(?i:points2d:)){WHITESPACE}*
