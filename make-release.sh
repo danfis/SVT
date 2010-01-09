@@ -4,8 +4,9 @@
 # Takes one argument - identification of commit
 
 COMMIT="$1"
-PREFIX=cu-$COMMIT
-FN=cu-$COMMIT.tar.gz
+PRJ_NAME=svt
+PREFIX=$PRJ_NAME-$COMMIT
+FN=$PRJ_NAME-$COMMIT.tar.gz
 CMD="git archive"
 
 if [ "$COMMIT" = "" ]; then
@@ -15,8 +16,8 @@ fi;
 
 if echo "$COMMIT" | grep '^v[0-9]\.[0-9]\+' >/dev/null 2>&1; then
     tmp=$(echo "$COMMIT" | sed 's/^v//')
-    PREFIX=svt-$tmp/
-    FN=cu-$tmp.tar.gz
+    PREFIX=$PRJ_NAME-$tmp/
+    FN=$PRJ_NAME-$tmp.tar.gz
 fi
 
 
