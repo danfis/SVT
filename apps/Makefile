@@ -9,13 +9,19 @@ LDFLAGS = -L../parser -lsvtparser \
           -lfl \
           $(QT_LDFLAGS) $(COIN_LDFLAGS) $(QUARTER_LDFLAGS)
 
+SVT_DEPS = ../parser/libsvtparser.a \
+           ../coin3d/libsvtcoin3d.a \
+           ../qt2d/libsvtqt2d.a \
+           ../qt/libsvtqt.a \
+           ../common/libsvtcommon.a
+
 TARGETS = svt svt-viewer-3d svt-viewer-2d svt-to-svg svt-viewer-3d-live
 OBJS = main.o viewer-2d.o viewer-3d.o to-svg.o viewer-3d-live.o
 
 all: $(TARGETS)
 
-svt: $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+svt: $(OBJS) $(SVT_DEPS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDFLAGS)
 svt-viewer-3d: svt
 	rm -f $@; ln $< $@
 svt-viewer-3d-live: svt
