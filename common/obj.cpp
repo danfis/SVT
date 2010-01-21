@@ -32,9 +32,13 @@ void Obj::applySettings(const Settings &s)
     float r, g, b;
 
     setAllOn(!s.all_off);
-    setPointsOn(!s.points_off);
-    setEdgesOn(!s.edges_off);
-    setFacesOn(!s.faces_off);
+
+    if (!pointsOffAlreadySet())
+        setPointsOn(!s.points_off);
+    if (!edgesOffAlreadySet())
+        setEdgesOn(!s.edges_off);
+    if (!facesOffAlreadySet())
+        setFacesOn(!s.faces_off);
 
     setPointSize(s.point_size);
     setEdgeWidth(s.edge_width);

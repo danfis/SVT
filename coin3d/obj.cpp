@@ -138,6 +138,7 @@ Obj::Obj(svt_obj_t *obj)
     const char *oname;
     int *ilist;
     int len, i, start;
+    int off;
     const int *ppoints;
     size_t slen;
     const float *color;
@@ -215,6 +216,24 @@ Obj::Obj(svt_obj_t *obj)
         _face_color_set = true;
         SbColor c(color[0], color[1], color[2]);
         material_faces->diffuseColor.setValue(c);
+    }
+
+    off = svtObjPointsOff(obj);
+    if (off >= 0){
+        setPointsOn(!off);
+        _points_off_set = true;
+    }
+
+    off = svtObjEdgesOff(obj);
+    if (off >= 0){
+        setEdgesOn(!off);
+        _edges_off_set = true;
+    }
+
+    off = svtObjFacesOff(obj);
+    if (off >= 0){
+        setFacesOn(!off);
+        _faces_off_set = true;
     }
 }
 

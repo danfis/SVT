@@ -38,6 +38,19 @@
     yyextra->lineno = yylineno; \
     return ret
 
+#define PARSE_OFF(ret) \
+    if (strncmp(yytext, "off", 3) == 0){ \
+        yyextra->off = 1; \
+    }else if (strncmp(yytext, "on", 2) == 0){ \
+        yyextra->off = 0; \
+    }else if (strncmp(yytext, "1", 1) == 0){ \
+        yyextra->off = 1; \
+    }else if (strncmp(yytext, "0", 1) == 0){ \
+        yyextra->off = 0; \
+    } \
+    yyextra->lineno = yylineno; \
+    return ret
+
 %}
 
 %option noyywrap
@@ -68,9 +81,13 @@ HEADER_EDGE_COLOR ^(?i:edge[ ]color):{WHITESPACE}*
 HEADER_FACE_COLOR ^(?i:face[ ]color):{WHITESPACE}*
 HEADER_POLYFACE ^(?i:polyface:){WHITESPACE}*
 HEADER_NAME ^(?i:name:)[ \t]*
+HEADER_POINTS_OFF ^(?i:points[ ]off):{WHITESPACE}*
+HEADER_EDGES_OFF ^(?i:edges[ ]off):{WHITESPACE}*
+HEADER_FACES_OFF ^(?i:faces[ ]off):{WHITESPACE}*
+OFF_VAL (?i:off)|(?i:on)|0|1
 DELIM ([-=+]+{WHITESPACE}*)+
 
-%s flts ints name
+%s flts ints name pointsoff edgesoff facesoff
 %%
 <INITIAL,flts>{FLOAT} {
     PARSE_FLOAT(T_FLT_NUM);
@@ -81,6 +98,21 @@ DELIM ([-=+]+{WHITESPACE}*)+
 }
 
 <INITIAL,flts>{EOL} { return T_EOL; }
+
+<pointsoff>{OFF_VAL} {
+    BEGIN(INITIAL);
+    PARSE_OFF(T_POINTS_OFF);
+}
+
+<edgesoff>{OFF_VAL} {
+    BEGIN(INITIAL);
+    PARSE_OFF(T_EDGES_OFF);
+}
+
+<facesoff>{OFF_VAL} {
+    BEGIN(INITIAL);
+    PARSE_OFF(T_FACES_OFF);
+}
 
 {WHITESPACE}+ {}
 
@@ -132,6 +164,16 @@ DELIM ([-=+]+{WHITESPACE}*)+
     BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_FACE_COLOR;
+}
+
+{HEADER_POINTS_OFF} {
+    BEGIN(pointsoff);
+}
+{HEADER_EDGES_OFF} {
+    BEGIN(edgesoff);
+}
+{HEADER_FACES_OFF} {
+    BEGIN(facesoff);
 }
 
 {HEADER_POLYFACE} {

@@ -43,12 +43,16 @@ extern "C" {
 #define T_FACE_COLOR 272
 #define T_POLYFACE 273
 #define T_EOL 275
+#define T_POINTS_OFF 276
+#define T_EDGES_OFF 277
+#define T_FACES_OFF 278
 
 #define YY_BUFSIZE 1000
 
 struct _svt_yylval_t {
     float flt_num;
     int int_num;
+    int off;
     int lineno;
     char c;
     char buffer[YY_BUFSIZE];

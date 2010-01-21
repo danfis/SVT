@@ -115,6 +115,9 @@ static void svtParserParseEdgetColor(svt_parser_t *parser);
 static void svtParserParseFaceColor(svt_parser_t *parser);
 static void svtParserParsePolyface(svt_parser_t *parser);
 static void svtParserParseError(svt_parser_t *parser);
+static void svtParserParsePointsOff(svt_parser_t *parser);
+static void svtParserParseEdgesOff(svt_parser_t *parser);
+static void svtParserParseFacesOff(svt_parser_t *parser);
 
 int svtParserParse(svt_parser_t *parser)
 {
@@ -240,6 +243,15 @@ static void svtParserParseObj(svt_parser_t *parser)
                 break;
             case T_POLYFACE:
                 svtParserParsePolyface(parser);
+                break;
+            case T_POINTS_OFF:
+                svtParserParsePointsOff(parser);
+                break;
+            case T_EDGES_OFF:
+                svtParserParseEdgesOff(parser);
+                break;
+            case T_FACES_OFF:
+                svtParserParseFacesOff(parser);
                 break;
             case T_ERROR:
                 svtParserParseError(parser);
@@ -555,4 +567,33 @@ static void svtParserParseError(svt_parser_t *parser)
     fflush(stderr);
 }
 
+static void svtParserParsePointsOff(svt_parser_t *parser)
+{
+    if (parser->cur_obj == NULL)
+        parser->cur_obj = svtObjNew();
+
+    svtObjSetPointsOff(parser->cur_obj, parser->yylval.off);
+
+    NEXT;
+}
+
+static void svtParserParseEdgesOff(svt_parser_t *parser)
+{
+    if (parser->cur_obj == NULL)
+        parser->cur_obj = svtObjNew();
+
+    svtObjSetEdgesOff(parser->cur_obj, parser->yylval.off);
+
+    NEXT;
+}
+
+static void svtParserParseFacesOff(svt_parser_t *parser)
+{
+    if (parser->cur_obj == NULL)
+        parser->cur_obj = svtObjNew();
+
+    svtObjSetFacesOff(parser->cur_obj, parser->yylval.off);
+
+    NEXT;
+}
 /*** PARSE END ***/

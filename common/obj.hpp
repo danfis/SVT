@@ -36,12 +36,16 @@ namespace Common {
  */
 class Obj {
   protected:
-    /*! Indicates, if colors weren't already set up. */
+    /*! Indicates, if colors weren't already set up or something wasn't
+     *  already turned on/off */
     bool _point_color_set, _edge_color_set, _face_color_set;
+    bool _points_off_set, _edges_off_set, _faces_off_set;
 
   public:
     Obj() : _point_color_set(false), _edge_color_set(false),
-            _face_color_set(false){}
+            _face_color_set(false),
+            _points_off_set(false), _edges_off_set(false),
+            _faces_off_set(false){}
     //~Obj()
 
     virtual const std::string &name() const = 0;
@@ -86,6 +90,10 @@ class Obj {
     virtual float faceColorGreen() const = 0;
     virtual float faceColorBlue() const = 0;
     bool faceColorAlreadySet() { return _face_color_set; }
+
+    bool pointsOffAlreadySet() { return _points_off_set; }
+    bool edgesOffAlreadySet() { return _edges_off_set; }
+    bool facesOffAlreadySet() { return _faces_off_set; }
 
     virtual void setAllOn(bool on = true) = 0;
 
