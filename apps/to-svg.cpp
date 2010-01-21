@@ -129,7 +129,7 @@ void toSvg(svt_obj_t *objs)
         out << "<g id=\"" << i << "\">" << endl;
 
         // FACES:
-        if (!settings.faces_off){
+        if (!settings.faces_off && svtObjFacesOff(objs) != 1){
             col = settings.face_color;
             if (settings.colour_faces){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
@@ -152,7 +152,7 @@ void toSvg(svt_obj_t *objs)
         }
 
         // EDGES:
-        if (!settings.edges_off){
+        if (!settings.edges_off && svtObjEdgesOff(objs) != 1){
             col = settings.edge_color;
             if (settings.colour_edges){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
@@ -172,7 +172,7 @@ void toSvg(svt_obj_t *objs)
         }
 
         // POINTS:
-        if (!settings.points_off){
+        if (!settings.points_off && svtObjPointsOff(objs) != 1){
             col = settings.point_color;
             if (settings.colour_points){
                 chooseRandomColor(colorf, colorf + 1, colorf + 2);
