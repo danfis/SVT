@@ -51,7 +51,7 @@ static void cameraChangedCB(void *data, SoSensor *)
 
 
 Viewer::Viewer()
-    : QuarterWidget(), _scene_dyn_clear(false)
+    : QuarterWidget(), _scene_dyn_clear(false), _disabled_rotation(false)
 {
     //setNavigationModeFile(QUrl("coin:/scxml/navigation/examiner.xml"));
     setNavigationModeFile();
@@ -138,6 +138,26 @@ void Viewer::updateLight()
     }else{
          _light->direction.setValue(orig);
     }
+}
+
+bool Viewer::processSoEvent(const SoEvent *event)
+{
+    if (_disabled_rotation){
+        // Disabling rotation. Rotation is performed in QuarterWidget using
+        // left button of mouse. So this only identifies when left button
+        // is down and simply ignore event.
+        // This solution, of course, isn't ideal but I wasn't able to find
+        // how to do this better.
+        if (event->getTypeId() == SoMouseButtonEvent::getClassTypeId()
+                && !event->wasShiftDown()
+                && !event->wasCtrlDown()
+                && !event->wasAltDown()
+                && ((SoMouseButtonEvent *)event)->getButton() == SoMouseButtonEvent::BUTTON1
+                ){
+            return false;
+        }
+    }
+    return QuarterWidget::processSoEvent(event);
 }
 
 

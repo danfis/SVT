@@ -43,19 +43,17 @@ struct _th_data_t {
 void startDyn(SVT::Coin3d::MainWindow *mw);
 void stopDyn();
 
-int main3dLive(int argc, char *argv[])
+int main2d3dLive(int argc, char *argv[], char *args[], int num_args, bool disable_rotation)
 {
-    char **args;
-    int num_args;
     svt_obj_t *o;
     SVT::Coin3d::Obj *obj;
-
-    args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
 
     QApplication app(argc, argv);
     Quarter::init();
 
     SVT::Coin3d::MainWindow mw;
+    if (disable_rotation)
+        mw.viewer()->disableRotation();
 
     mw.applySettings(SVT::Common::settings);
 

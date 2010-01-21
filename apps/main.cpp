@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007,2008,2009,2010 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -34,17 +34,26 @@ using namespace std;
 #include "parser/obj.h"
 #include "qt2d/main_window.hpp"
 
-int main2d(int argc, char *argv[], svt_parser_t *parser);
-int main3d(int argc, char *argv[], svt_parser_t *parser);
-int main3dLive(int argc, char *argv[]);
+int main2d3d(int argc, char *argv[], svt_parser_t *parser, bool disable_rotation);
+int main2d3dLive(int argc, char *argv[], char *args[], int num_args, bool disable_rotation);
 int mainToSVG(int argc, char *argv[], svt_parser_t *parser);
 
+static int main2d(int argc, char *argv[], svt_parser_t *parser)
+    { return main2d3d(argc, argv, parser, true); }
+static int main3d(int argc, char *argv[], svt_parser_t *parser)
+    { return main2d3d(argc, argv, parser, false); }
+
+static int main2dLive(int argc, char *argv[], char *args[], int num_args)
+    { return main2d3dLive(argc, argv, args, num_args, true); }
+static int main3dLive(int argc, char *argv[], char *args[], int num_args)
+    { return main2d3dLive(argc, argv, args, num_args, false); }
 
 
 enum Type {
     NONE,
     VIEWER2D,
     VIEWER3D,
+    VIEWER2DLIVE,
     VIEWER3DLIVE,
     TO_SVG
 };
@@ -58,37 +67,47 @@ int main(int argc, char *argv[])
     char **args;
     int num_args;
 
-    for (int i=1; i < argc; i++){
-        if (strcmp(argv[i], "--2d") == 0){
+    args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
+
+    switch (SVT::Common::settings.type){
+        case SVT::Common::Settings::TYPE_VIEWER2D:
             type = VIEWER2D;
             break;
-        }else if (strcmp(argv[i], "--3d") == 0){
+        case SVT::Common::Settings::TYPE_VIEWER3D:
             type = VIEWER3D;
             break;
-        }else if (strcmp(argv[i], "--3d-live") == 0){
+        case SVT::Common::Settings::TYPE_VIEWER2DLIVE:
+            type = VIEWER2DLIVE;
+            break;
+        case SVT::Common::Settings::TYPE_VIEWER3DLIVE:
             type = VIEWER3DLIVE;
             break;
-        }else if (strcmp(argv[i], "--to-svg") == 0){
+        case SVT::Common::Settings::TYPE_TO_SVG:
             type = TO_SVG;
             break;
-        }
+        default:
+            type = NONE;
+            break;
     }
 
     if (cmpend(argv[0], "svt-viewer-2d") == 0){
         type = VIEWER2D;
     }else if (cmpend(argv[0], "svt-viewer-3d") == 0){
         type = VIEWER3D;
+    }else if (cmpend(argv[0], "svt-viewer-2d-live") == 0){
+        type = VIEWER2DLIVE;
     }else if (cmpend(argv[0], "svt-viewer-3d-live") == 0){
         type = VIEWER3DLIVE;
     }else if (cmpend(argv[0], "svt-to-svg") == 0){
         type = TO_SVG;
     }
 
-    if (type == VIEWER3DLIVE){
-        return main3dLive(argc, argv);
-    }else{
-        args = SVT::Common::settings.setUpFromOptions(argc, argv, &num_args);
 
+    if (type == VIEWER2DLIVE){
+        return main2dLive(argc, argv, args, num_args);
+    }else if (type == VIEWER3DLIVE){
+        return main3dLive(argc, argv, args, num_args);
+    }else{
         parser = svtParserNew();
         SVT::Common::parseAll(num_args, args, parser);
 

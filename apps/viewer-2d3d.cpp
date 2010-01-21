@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2010 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -21,32 +21,41 @@
  */
 
 #include <iostream>
+#include <cstdlib>
+#include <getopt.h>
+#include <Inventor/nodes/SoGroup.h>
 #include <QApplication>
 #include <QStatusBar>
 #include <QMainWindow>
+#include <Quarter/Quarter.h>
 using namespace std;
+using namespace SIM::Coin3D::Quarter;
 
-#include "common/msg.hpp"
 #include "common/settings.hpp"
 #include "common/functions.hpp"
+#include "common/msg.hpp"
+#include "coin3d/main_window.hpp"
 #include "parser/parser.h"
 #include "parser/obj.h"
-#include "qt2d/main_window.hpp"
 
-
-int main2d(int argc, char *argv[], svt_parser_t *parser)
+int main2d3d(int argc, char *argv[], svt_parser_t *parser, bool disable_rotation)
 {
     svt_obj_t *o;
-    SVT::Qt2D::Obj *obj;
+    SVT::Coin3d::Obj *obj;
 
     QApplication app(argc, argv);
-    SVT::Qt2D::MainWindow mw;
+    Quarter::init();
+
+    SVT::Coin3d::MainWindow mw;
 
     mw.applySettings(SVT::Common::settings);
 
+    if (disable_rotation)
+        mw.viewer()->disableRotation();
+
     o = svtParserObjs(parser, 0);
     while (o != 0){
-        obj = new SVT::Qt2D::Obj(o);
+        obj = new SVT::Coin3d::Obj(o);
         obj->applySettings(SVT::Common::settings);
         mw.addObj(obj);
 
@@ -58,3 +67,4 @@ int main2d(int argc, char *argv[], svt_parser_t *parser)
 
     return 0;
 }
+

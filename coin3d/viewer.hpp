@@ -43,6 +43,7 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
                                adding new obj */
     QColor _bgcolor;
     SoDirectionalLight *_light;
+    bool _disabled_rotation;
 
   public:
     Viewer();
@@ -53,14 +54,18 @@ class Viewer : public SIM::Coin3D::Quarter::QuarterWidget {
     void clearObjsDyn();
 
     void updateLight();
+    bool processSoEvent(const SoEvent *event);
 
     const QColor &bgcolor() const { return _bgcolor; }
+
+    bool disabledRotation() const { return _disabled_rotation; }
 
   public slots:
     void setBgColor(double r, double g, double b);
     void setBgColorR(double v);
     void setBgColorG(double v);
     void setBgColorB(double v);
+    void disableRotation(double d = true) { _disabled_rotation = d; }
 
   signals:
     void _addObjDynSignal(Obj *o);

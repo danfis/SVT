@@ -15,8 +15,9 @@ SVT_DEPS = ../parser/libsvtparser.a \
            ../qt/libsvtqt.a \
            ../common/libsvtcommon.a
 
-TARGETS = svt svt-viewer-3d svt-viewer-2d svt-to-svg svt-viewer-3d-live
-OBJS = main.o viewer-2d.o viewer-3d.o to-svg.o viewer-3d-live.o
+TARGETS = svt svt-viewer-3d svt-viewer-2d svt-to-svg svt-viewer-3d-live \
+          svt-viewer-2d-live
+OBJS = main.o to-svg.o viewer-2d3d-live.o viewer-2d3d.o
 
 all: $(TARGETS)
 
@@ -25,6 +26,8 @@ svt: $(OBJS) $(SVT_DEPS)
 svt-viewer-3d: svt
 	rm -f $@; ln $< $@
 svt-viewer-3d-live: svt
+	rm -f $@; ln $< $@
+svt-viewer-2d-live: svt
 	rm -f $@; ln $< $@
 svt-to-svg: svt
 	rm -f $@; ln $< $@
