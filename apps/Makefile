@@ -3,7 +3,6 @@ include ../Makefile.include
 CXXFLAGS += $(QT_CXXFLAGS) $(COIN_CXXFLAGS) $(QUARTER_CXXFLAGS)
 LDFLAGS = -L../parser -lsvtparser \
           -L../coin3d -lsvtcoin3d \
-          -L../qt2d -lsvtqt2d \
           -L../qt -lsvtqt \
           -L../common -lsvtcommon \
           -lfl \
@@ -11,7 +10,6 @@ LDFLAGS = -L../parser -lsvtparser \
 
 SVT_DEPS = ../parser/libsvtparser.a \
            ../coin3d/libsvtcoin3d.a \
-           ../qt2d/libsvtqt2d.a \
            ../qt/libsvtqt.a \
            ../common/libsvtcommon.a
 

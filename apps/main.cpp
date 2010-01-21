@@ -32,7 +32,6 @@ using namespace std;
 #include "common/functions.hpp"
 #include "parser/parser.h"
 #include "parser/obj.h"
-#include "qt2d/main_window.hpp"
 
 int main2d3d(int argc, char *argv[], svt_parser_t *parser, bool disable_rotation);
 int main2d3dLive(int argc, char *argv[], char *args[], int num_args, bool disable_rotation);
