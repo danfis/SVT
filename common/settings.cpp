@@ -107,7 +107,7 @@ struct option options[] = {
 Settings::Settings()
 {
     // default settings
-    type = TYPE_VIEWER2D;
+    type = TYPE_NONE;
 
     all_off    = false;
     points_off = false;

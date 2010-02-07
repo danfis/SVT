@@ -117,6 +117,7 @@ DELIM ([-=+]+{WHITESPACE}*)+
 {WHITESPACE}+ {}
 
 {COMMENT}[^\n]*\n {}
+<flts>{COMMENT}[^\n]*\n { return T_EOL; }
 
 {HEADER_POINTS} {
     BEGIN(flts);

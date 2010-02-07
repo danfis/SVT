@@ -35,7 +35,8 @@ struct Settings {
         TYPE_VIEWER3D,
         TYPE_VIEWER3DLIVE,
         TYPE_VIEWER2DLIVE,
-        TYPE_TO_SVG
+        TYPE_TO_SVG,
+        TYPE_NONE
     };
 
     Type type;
