@@ -127,6 +127,12 @@ int svtParserParse(svt_parser_t *parser)
     if (ret != 0)
         return ret;
 
+    // skip initial empty lines
+    NEXT;
+    while (parser->cur_tok == T_EOL){
+        NEXT;
+    }
+
     do {
         parser->cur_obj = NULL;
 
