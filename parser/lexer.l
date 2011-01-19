@@ -80,6 +80,7 @@ HEADER_POINT_COLOR ^(?i:point[ ]color):{WHITESPACE}*
 HEADER_EDGE_COLOR ^(?i:edge[ ]color):{WHITESPACE}*
 HEADER_FACE_COLOR ^(?i:face[ ]color):{WHITESPACE}*
 HEADER_POINT_SIZE ^(?i:point[ ]size):{WHITESPACE}*
+HEADER_EDGE_WIDTH ^(?i:edge[ ]width):{WHITESPACE}*
 HEADER_POLYFACE ^(?i:polyface:){WHITESPACE}*
 HEADER_NAME ^(?i:name:)[ \t]*
 HEADER_POINTS_OFF ^(?i:points[ ]off):{WHITESPACE}*
@@ -172,6 +173,12 @@ DELIM ([-=+]+{WHITESPACE}*)+
     BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_POINT_SIZE;
+}
+
+{HEADER_EDGE_WIDTH} {
+    BEGIN(flts);
+    yyextra->lineno = yylineno;
+    return T_EDGE_WIDTH;
 }
 
 {HEADER_POINTS_OFF} {

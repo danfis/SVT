@@ -224,6 +224,11 @@ Obj::Obj(svt_obj_t *obj)
         _point_size_set = true;
         style_points->pointSize.setValue(size);
     }
+    size = svtObjEdgeWidth(obj);
+    if (size > 0.f){
+        _edge_width_set = true;
+        style_edges->lineWidth.setValue(size);
+    }
 
     off = svtObjPointsOff(obj);
     if (off >= 0){

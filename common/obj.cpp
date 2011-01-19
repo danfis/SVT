@@ -43,7 +43,9 @@ void Obj::applySettings(const Settings &s)
     if (!pointSizeAlreadySet()){
         setPointSize(s.point_size);
     }
-    setEdgeWidth(s.edge_width);
+    if (!edgeWidthAlreadySet()){
+        setEdgeWidth(s.edge_width);
+    }
 
     // colour elemets if requested
     if (s.colour_points){

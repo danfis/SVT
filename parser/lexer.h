@@ -47,6 +47,7 @@ extern "C" {
 #define T_EDGES_OFF 277
 #define T_FACES_OFF 278
 #define T_POINT_SIZE 279
+#define T_EDGE_WIDTH 280
 
 #define YY_BUFSIZE 1000
 

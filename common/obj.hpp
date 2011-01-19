@@ -39,12 +39,13 @@ class Obj {
     /*! Indicates, if colors weren't already set up or something wasn't
      *  already turned on/off */
     bool _point_color_set, _edge_color_set, _face_color_set;
-    bool _point_size_set;
+    bool _point_size_set, _edge_width_set;
     bool _points_off_set, _edges_off_set, _faces_off_set;
 
   public:
     Obj() : _point_color_set(false), _edge_color_set(false),
-            _face_color_set(false), _point_size_set(false),
+            _face_color_set(false),
+            _point_size_set(false), _edge_width_set(false),
             _points_off_set(false), _edges_off_set(false),
             _faces_off_set(false){}
     //~Obj()
@@ -68,6 +69,7 @@ class Obj {
     virtual float pointSize() const = 0;
     bool pointSizeAlreadySet() const { return _point_size_set; }
     virtual float edgeWidth() const = 0;
+    bool edgeWidthAlreadySet() const { return _edge_width_set; }
 
     virtual void pointColor(float *r, float *g, float *b) const = 0;
     virtual void pointColor(float rgb[3]) const

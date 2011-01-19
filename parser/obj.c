@@ -96,6 +96,7 @@ svt_obj_t *svtObjNew()
     obj->point_color = obj->edge_color = obj->face_color = NULL;
     obj->points_off = obj->edges_off = obj->faces_off = -1;
     obj->point_size = -1.f;
+    obj->edge_width = -1.f;
 
     obj->next = NULL;
 
@@ -310,6 +311,11 @@ void svtObjSetFaceColor(svt_obj_t *o, float r, float g, float b)
 void svtObjSetPointSize(svt_obj_t *o, float s)
 {
     o->point_size = s;
+}
+
+void svtObjSetEdgeWidth(svt_obj_t *o, float s)
+{
+    o->edge_width = s;
 }
 
 void svtObjSetPointsOff(svt_obj_t *o, int off)
