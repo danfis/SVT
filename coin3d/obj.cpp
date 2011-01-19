@@ -142,6 +142,7 @@ Obj::Obj(svt_obj_t *obj)
     const int *ppoints;
     size_t slen;
     const float *color;
+    float size;
 
     opoints = svtObjPoints(obj, &len);
     if (len > 0){
@@ -216,6 +217,12 @@ Obj::Obj(svt_obj_t *obj)
         _face_color_set = true;
         SbColor c(color[0], color[1], color[2]);
         material_faces->diffuseColor.setValue(c);
+    }
+
+    size = svtObjPointSize(obj);
+    if (size > 0.f){
+        _point_size_set = true;
+        style_points->pointSize.setValue(size);
     }
 
     off = svtObjPointsOff(obj);

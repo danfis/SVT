@@ -40,7 +40,9 @@ void Obj::applySettings(const Settings &s)
     if (!facesOffAlreadySet())
         setFacesOn(!s.faces_off);
 
-    setPointSize(s.point_size);
+    if (!pointSizeAlreadySet()){
+        setPointSize(s.point_size);
+    }
     setEdgeWidth(s.edge_width);
 
     // colour elemets if requested

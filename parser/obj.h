@@ -81,6 +81,7 @@ struct _svt_obj_t {
 
     float *point_color, *edge_color, *face_color;
     int points_off, edges_off, faces_off;
+    float point_size;
 
     struct _svt_obj_t *next;
 };
@@ -126,6 +127,7 @@ void svtObjSetName(svt_obj_t *, const char *name);
 void svtObjSetPointColor(svt_obj_t *, float r, float g, float b);
 void svtObjSetEdgeColor(svt_obj_t *, float r, float g, float b);
 void svtObjSetFaceColor(svt_obj_t *, float r, float g, float b);
+void svtObjSetPointSize(svt_obj_t *, float s);
 void svtObjSetPointsOff(svt_obj_t *, int off);
 void svtObjSetEdgesOff(svt_obj_t *, int off);
 void svtObjSetFacesOff(svt_obj_t *, int off);
@@ -145,6 +147,7 @@ const char *svtObjName(svt_obj_t *obj);
 #define svtObjPointColor(o) ((const float *)(o)->point_color)
 #define svtObjEdgeColor(o) ((const float *)(o)->edge_color)
 #define svtObjFaceColor(o) ((const float *)(o)->face_color)
+#define svtObjPointSize(o) ((o)->point_size)
 
 #define svtObjPointsOff(o) ((o)->points_off)
 #define svtObjEdgesOff(o) ((o)->edges_off)

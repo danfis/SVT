@@ -113,6 +113,7 @@ static void svtParserParsePolyline(svt_parser_t *parser);
 static void svtParserParsePointColor(svt_parser_t *parser);
 static void svtParserParseEdgetColor(svt_parser_t *parser);
 static void svtParserParseFaceColor(svt_parser_t *parser);
+static void svtParserParsePointSize(svt_parser_t *parser);
 static void svtParserParsePolyface(svt_parser_t *parser);
 static void svtParserParseError(svt_parser_t *parser);
 static void svtParserParsePointsOff(svt_parser_t *parser);
@@ -246,6 +247,9 @@ static void svtParserParseObj(svt_parser_t *parser)
                 break;
             case T_FACE_COLOR:
                 svtParserParseFaceColor(parser);
+                break;
+            case T_POINT_SIZE:
+                svtParserParsePointSize(parser);
                 break;
             case T_POLYFACE:
                 svtParserParsePolyface(parser);
@@ -511,6 +515,27 @@ static void svtParserParseFaceColor(svt_parser_t *parser)
             parser->cur_obj = svtObjNew();
 
         svtObjSetFaceColor(parser->cur_obj, nums[0], nums[1], nums[2]);
+    }
+}
+
+static void svtParserParsePointSize(svt_parser_t *parser)
+{
+    float size;
+    int num = 0;
+
+    NEXT;
+    while (parser->cur_tok == T_FLT_NUM){
+        size = parser->yylval.flt_num;
+        NEXT;
+        num++;
+    }
+
+    if (num > 0){
+        fprintf(stderr, "size: %f\n", size);
+        if (parser->cur_obj == NULL)
+            parser->cur_obj = svtObjNew();
+
+        svtObjSetPointSize(parser->cur_obj, size);
     }
 }
 
