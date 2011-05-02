@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007-2011 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -58,13 +58,14 @@ class Obj : public Common::Obj {
      *  sw holds switch of whole object and sw_... hold switches of each
      *  part of object.
      */
-    SoSwitch *sw, *sw_points, *sw_edges, *sw_faces;
+    SoSwitch *sw, *sw_points, *sw_edges, *sw_faces, *sw_spheres;
 
     /*! Styles of each part of object */
     SoDrawStyle *style_points, *style_edges, *style_faces;
 
     /*! Materials of each part of object */
-    SoMaterial *material_points, *material_edges, *material_faces;
+    SoMaterial *material_points, *material_edges, *material_faces,
+               *material_spheres;
 
   public:
     /**
@@ -87,6 +88,8 @@ class Obj : public Common::Obj {
         { return sw_edges->whichChild.getValue() == SO_SWITCH_ALL; }
     bool facesOn() const
         { return sw_faces->whichChild.getValue() == SO_SWITCH_ALL; }
+    bool spheresOn() const
+        { return sw_spheres->whichChild.getValue() == SO_SWITCH_ALL; }
     bool allOn() const
         { return sw->whichChild.getValue() == SO_SWITCH_ALL; }
 
@@ -111,11 +114,18 @@ class Obj : public Common::Obj {
     float faceColorGreen() const { return material_faces->diffuseColor[0][1]; }
     float faceColorBlue() const { return material_faces->diffuseColor[0][2]; }
 
+    void sphereColor(float *r, float *g, float *b) const
+        { material_spheres->diffuseColor[0].getValue(*r, *g, *b); }
+    float sphereColorRed() const { return material_spheres->diffuseColor[0][0]; }
+    float sphereColorGreen() const { return material_spheres->diffuseColor[0][1]; }
+    float sphereColorBlue() const { return material_spheres->diffuseColor[0][2]; }
+
     void setAllOn(bool on = true);
 
     void setPointsOn(bool on = true);
     void setEdgesOn(bool on = true);
     void setFacesOn(bool on = true);
+    void setSpheresOn(bool on = true);
 
     void setPointSize(float size);
     void setEdgeWidth(float width);
@@ -155,6 +165,18 @@ class Obj : public Common::Obj {
     void setFaceColorBlue(float v)
         { setFaceColor(material_faces->diffuseColor[0][0],
                 material_faces->diffuseColor[0][1], v); }
+
+    void setSphereColor(float r, float g, float b);
+    void setSphereColorRed(float v)
+        { setSphereColor(v,
+                material_spheres->diffuseColor[0][1],
+                material_spheres->diffuseColor[0][2]); }
+    void setSphereColorGreen(float v)
+        { setSphereColor(material_spheres->diffuseColor[0][0],
+                v, material_spheres->diffuseColor[0][2]); }
+    void setSphereColorBlue(float v)
+        { setSphereColor(material_spheres->diffuseColor[0][0],
+                material_spheres->diffuseColor[0][1], v); }
 };
 
 } /* Coin3d */

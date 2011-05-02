@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007-2011 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -91,6 +91,10 @@ svt_obj_t *svtObjNew()
     obj->polyfaces_len = 0;
     obj->polyfaces_alloc = 0;
 
+    obj->spheres = NULL;
+    obj->spheres_len = 0;
+    obj->spheres_alloc = 0;
+
     obj->name = NULL;
 
     obj->point_color = obj->edge_color = obj->face_color = NULL;
@@ -116,6 +120,8 @@ svt_obj_t *svtObjDelete(svt_obj_t *obj)
         free(obj->edges);
     if (obj->faces != NULL)
         free(obj->faces);
+    if (obj->spheres != NULL)
+        free(obj->spheres);
     if (obj->name != NULL)
         free(obj->name);
     if (obj->point_color != NULL)
@@ -193,6 +199,19 @@ void svtObjAddPolyface(svt_obj_t *obj, svt_polyface_t *pf)
     obj->polyfaces_len++;
 }
 
+void svtObjAddSphere(svt_obj_t *obj, float radius, float x, float y, float z)
+{
+    if (obj->spheres_len >= obj->spheres_alloc){
+        obj->spheres_alloc += SVT_OBJ_ALLOC_PORTION;
+        obj->spheres = REALLOC_ARR(svt_sphere_t, obj->spheres, obj->spheres_alloc);
+    }
+    obj->spheres[obj->spheres_len][0] = radius;
+    obj->spheres[obj->spheres_len][1] = x;
+    obj->spheres[obj->spheres_len][2] = y;
+    obj->spheres[obj->spheres_len][3] = z;
+    obj->spheres_len++;
+}
+
 void svtObjSetName(svt_obj_t *obj, const char *name)
 {
     int len = strlen(name);
@@ -247,6 +266,12 @@ const svt_polyface_t **svtObjPolyfaces(svt_obj_t *obj, int *len)
 {
     *len = obj->polyfaces_len;
     return (const svt_polyface_t **)obj->polyfaces;
+}
+
+const svt_sphere_t *svtObjSpheres(svt_obj_t *obj, int *len)
+{
+    *len = obj->spheres_len;
+    return (const svt_sphere_t *)obj->spheres;
 }
 
 const char *svtObjName(svt_obj_t *obj)

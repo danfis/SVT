@@ -21,6 +21,9 @@
  */
 
 #include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoSeparator.h>
 #include "obj.hpp"
 
 namespace SVT {
@@ -86,6 +89,19 @@ Obj::Obj(svt_obj_t *obj)
     material_faces->transparency = 0;
     */
 
+    material_spheres = new SoMaterial;
+    material_spheres->ref();
+    material_spheres->diffuseColor.setValue(0.7, 0.7, 0);
+    material_spheres->transparency = 0.1;
+    /*
+    material_edges->ambientColor.setValue(0, 0, 0);
+    material_edges->diffuseColor.setValue(0.18, 0.22, 0.6);
+    material_edges->specularColor.setValue(0, 0, 0);
+    material_edges->emissiveColor.setValue(0, 0, 0);
+    material_edges->shininess = 0.01;
+    material_edges->transparency = 0.5;
+    */
+
     sw = new SoSwitch;
     sw->ref();
     sw->whichChild = SO_SWITCH_ALL;
@@ -129,12 +145,21 @@ Obj::Obj(svt_obj_t *obj)
 
     sw->addChild(sw_faces);
 
+    // spheres
+    sw_spheres = new SoSwitch;
+    sw_spheres->ref();
+    sw_spheres->whichChild = SO_SWITCH_ALL;
+
+    sw_spheres->addChild(material_spheres);
+
+    sw->addChild(sw_spheres);
 
     /* Set up data from obj */
     const svt_point_t *opoints;
     const svt_edge_t *oedges;
     const svt_face_t *ofaces;
     const svt_polyface_t **pfaces;
+    const svt_sphere_t *ospheres;
     const char *oname;
     int *ilist;
     int len, i, start;
@@ -192,6 +217,21 @@ Obj::Obj(svt_obj_t *obj)
             start += slen + 1;
             num_faces++;
         }
+    }
+
+    ospheres = svtObjSpheres(obj, &len);
+    for (int i = 0; i < len; i++){
+        SoSeparator *g = new SoSeparator;
+
+        SoTranslation *tr = new SoTranslation;
+        tr->translation.setValue(ospheres[i][1], ospheres[i][2], ospheres[i][3]);
+
+        SoSphere *s = new SoSphere;
+        s->radius = ospheres[i][0];
+
+        g->addChild(tr);
+        g->addChild(s);
+        sw_spheres->addChild(g);
     }
 
     oname = svtObjName(obj);
@@ -322,6 +362,14 @@ void Obj::setFacesOn(bool on)
     }
 }
 
+void Obj::setSpheresOn(bool on)
+{
+    if (on){
+        sw_spheres->whichChild = SO_SWITCH_ALL;
+    }else{
+        sw_spheres->whichChild = SO_SWITCH_NONE;
+    }
+}
 
 void Obj::setPointSize(float size)
 {

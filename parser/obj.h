@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008,2009 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007-2011 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -33,6 +33,9 @@ extern "C" {
 typedef float svt_point_t[3];
 typedef int svt_edge_t[2];
 typedef int svt_face_t[3];
+
+/* radius, x, y, z */
+typedef float svt_sphere_t[4];
 
 struct _svt_polyface_t {
     int *points;
@@ -75,6 +78,10 @@ struct _svt_obj_t {
     svt_polyface_t **polyfaces;
     int polyfaces_len;
     int polyfaces_alloc;
+
+    svt_sphere_t *spheres;
+    int spheres_len;
+    int spheres_alloc;
 
     char *name;
     int name_alloc;
@@ -123,6 +130,7 @@ int svtObjAddPoint(svt_obj_t *, float x, float y, float z);
 void svtObjAddEdge(svt_obj_t *, int a, int b);
 void svtObjAddFace(svt_obj_t *, int a, int b, int c);
 void svtObjAddPolyface(svt_obj_t *o, svt_polyface_t *pf);
+void svtObjAddSphere(svt_obj_t *o, float radius, float x, float y, float z);
 void svtObjSetName(svt_obj_t *, const char *name);
 void svtObjSetPointColor(svt_obj_t *, float r, float g, float b);
 void svtObjSetEdgeColor(svt_obj_t *, float r, float g, float b);
@@ -143,6 +151,7 @@ const svt_point_t *svtObjPoints(svt_obj_t *, int *len);
 const svt_edge_t *svtObjEdges(svt_obj_t *, int *len);
 const svt_face_t *svtObjFaces(svt_obj_t *, int *len);
 const svt_polyface_t **svtObjPolyfaces(svt_obj_t *, int *len);
+const svt_sphere_t *svtObjSpheres(svt_obj_t *, int *len);
 const char *svtObjName(svt_obj_t *obj);
 
 #define svtObjPointColor(o) ((const float *)(o)->point_color)

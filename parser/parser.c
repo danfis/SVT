@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007-2011 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -101,6 +101,7 @@ static void svtParserParseClean(svt_parser_t *parser);
 static void svtParserParseObj(svt_parser_t *parser);
 
 static int svtParserParsePoint(svt_parser_t *parser, float *);
+static int svtParserParse4Flts(svt_parser_t *parser, float *);
 static int svtParserParse2Ints(svt_parser_t *parser, int *);
 static int svtParserParse3Ints(svt_parser_t *parser, int *);
 
@@ -110,6 +111,7 @@ static void svtParserParseFaces(svt_parser_t *parser);
 static void svtParserParseName(svt_parser_t *parser);
 static void svtParserParsePoly(svt_parser_t *parser);
 static void svtParserParsePolyline(svt_parser_t *parser);
+static void svtParserParseSpheres(svt_parser_t *parser);
 static void svtParserParsePointColor(svt_parser_t *parser);
 static void svtParserParseEdgetColor(svt_parser_t *parser);
 static void svtParserParseFaceColor(svt_parser_t *parser);
@@ -240,6 +242,9 @@ static void svtParserParseObj(svt_parser_t *parser)
             case T_POLYLINE:
                 svtParserParsePolyline(parser);
                 break;
+            case T_SPHERES:
+                svtParserParseSpheres(parser);
+                break;
             case T_POINT_COLOR:
                 svtParserParsePointColor(parser);
                 break;
@@ -303,6 +308,26 @@ static int svtParserParsePoint(svt_parser_t *parser, float *coords)
     }
     return 0;
 }
+
+static int svtParserParse4Flts(svt_parser_t *parser, float *coords)
+{
+    int i = 0;
+
+    coords[0] = coords[1] = coords[2] = coords[3] = 0.f;
+
+    while (parser->cur_tok == T_FLT_NUM && i < 4){
+        coords[i] = parser->yylval.flt_num;
+        i++;
+        NEXT;
+    }
+
+    if (parser->cur_tok != T_EOL){
+        fprintf(stderr, "Error on line %d: Coordinates are not terminated by EOL\n", parser->yylval.lineno);
+        return -1;
+    }
+    return 0;
+}
+
 static int svtParserParse2Ints(svt_parser_t *parser, int *nums)
 {
     size_t i = 0;
@@ -388,6 +413,28 @@ static void svtParserParseFaces(svt_parser_t *parser)
     }
 }
 
+static void svtParserParseSpheres(svt_parser_t *parser)
+{
+    float coords[4];
+
+    NEXT;
+    while (parser->cur_tok == T_FLT_NUM){
+        if (svtParserParse4Flts(parser, coords) == 0){
+            NEXT;
+        }else{
+            return;
+        }
+
+        if (parser->cur_obj == NULL)
+            parser->cur_obj = svtObjNew();
+
+        svtObjAddSphere(parser->cur_obj,
+                        coords[0], coords[1], coords[2], coords[3]);
+    }
+
+    parser->has_3d_points = 1;
+}
+
 static void svtParserParseName(svt_parser_t *parser)
 {
     if (strlen(parser->yylval.buffer) > 0){
@@ -402,7 +449,7 @@ static void svtParserParseName(svt_parser_t *parser)
 
 static void svtParserParsePoly(svt_parser_t *parser)
 {
-    float coords[2];
+    float coords[3];
     int edge = -1, pos, start = -1;
 
     NEXT;
@@ -417,7 +464,7 @@ static void svtParserParsePoly(svt_parser_t *parser)
             parser->cur_obj = svtObjNew();
 
         pos = svtObjAddPoint(parser->cur_obj,
-                coords[0], coords[1], coords[2]);
+                             coords[0], coords[1], coords[2]);
         if (start == -1)
             start = pos;
 
@@ -435,7 +482,7 @@ static void svtParserParsePoly(svt_parser_t *parser)
 
 static void svtParserParsePolyline(svt_parser_t *parser)
 {
-    float coords[2];
+    float coords[3];
     int edge = -1, pos;
 
     NEXT;
@@ -450,7 +497,7 @@ static void svtParserParsePolyline(svt_parser_t *parser)
             parser->cur_obj = svtObjNew();
 
         pos = svtObjAddPoint(parser->cur_obj,
-                coords[0], coords[1], coords[2]);
+                             coords[0], coords[1], coords[2]);
         if (edge == -1){
             edge = pos;
         }else{

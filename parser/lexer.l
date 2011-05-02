@@ -1,7 +1,7 @@
 /**
  * SVT
  * ----------
- * Copyright (c)2007,2008 Daniel Fiser <danfis (at) danfis (dot) cz>
+ * Copyright (c)2007-2011 Daniel Fiser <danfis (at) danfis (dot) cz>
  *
  *
  * This file is part of SVT
@@ -76,6 +76,7 @@ HEADER_EDGES ^(?i:edges:){WHITESPACE}*
 HEADER_FACES ^(?i:faces:){WHITESPACE}*
 HEADER_POLY ^((?i:poly:)|(?i:poly3d:)){WHITESPACE}*
 HEADER_POLYLINE ^(?i:polyline:){WHITESPACE}*
+HEADER_SPHERES ^(?i:spheres:){WHITESPACE}*
 HEADER_POINT_COLOR ^(?i:point[ ]color):{WHITESPACE}*
 HEADER_EDGE_COLOR ^(?i:edge[ ]color):{WHITESPACE}*
 HEADER_FACE_COLOR ^(?i:face[ ]color):{WHITESPACE}*
@@ -149,6 +150,12 @@ DELIM ([-=+]+{WHITESPACE}*)+
     BEGIN(flts);
     yyextra->lineno = yylineno;
     return T_POLYLINE;
+}
+
+{HEADER_SPHERES} {
+    BEGIN(flts);
+    yyextra->lineno = yylineno;
+    return T_SPHERES;
 }
 
 {HEADER_POINT_COLOR} {
