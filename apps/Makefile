@@ -1,12 +1,14 @@
 include ../Makefile.include
 
 CXXFLAGS += $(QT_CXXFLAGS) $(COIN_CXXFLAGS) $(QUARTER_CXXFLAGS)
+CXXFLAGS += $(CAIRO_CXXFLAGS)
 LDFLAGS = -L../parser -lsvtparser \
           -L../coin3d -lsvtcoin3d \
           -L../qt -lsvtqt \
           -L../common -lsvtcommon \
           -lfl \
-          $(QT_LDFLAGS) $(COIN_LDFLAGS) $(QUARTER_LDFLAGS)
+          $(QT_LDFLAGS) $(COIN_LDFLAGS) $(QUARTER_LDFLAGS) \
+		  $(CAIRO_LDFLAGS)
 
 SVT_DEPS = ../parser/libsvtparser.a \
            ../coin3d/libsvtcoin3d.a \
@@ -14,8 +16,8 @@ SVT_DEPS = ../parser/libsvtparser.a \
            ../common/libsvtcommon.a
 
 TARGETS = svt svt-viewer-3d svt-viewer-2d svt-to-svg svt-viewer-3d-live \
-          svt-viewer-2d-live
-OBJS = main.o to-svg.o viewer-2d3d-live.o viewer-2d3d.o
+          svt-viewer-2d-live svt-to-png
+OBJS = main.o to-svg.o to-png.o viewer-2d3d-live.o viewer-2d3d.o
 
 all: $(TARGETS)
 
@@ -28,6 +30,8 @@ svt-viewer-3d-live: svt
 svt-viewer-2d-live: svt
 	rm -f $@; ln $< $@
 svt-to-svg: svt
+	rm -f $@; ln $< $@
+svt-to-png: svt
 	rm -f $@; ln $< $@
 svt-viewer-2d: svt
 	rm -f $@; ln $< $@

@@ -36,6 +36,7 @@ struct Settings {
         TYPE_VIEWER3DLIVE,
         TYPE_VIEWER2DLIVE,
         TYPE_TO_SVG,
+        TYPE_TO_PNG,
         TYPE_NONE
     };
 
@@ -58,6 +59,7 @@ struct Settings {
     bool colour_faces;
 
     float bg_color[3];
+    bool no_bg;
 
     bool point_color_changed;
 

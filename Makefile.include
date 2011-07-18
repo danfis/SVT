@@ -22,4 +22,6 @@ COIN_CXXFLAGS = $(shell coin-config --cppflags)
 COIN_LDFLAGS = $(shell coin-config --ldflags --libs)
 QUARTER_CXXFLAGS = $(shell pkg-config Quarter --cflags)
 QUARTER_LDFLAGS = $(shell pkg-config Quarter --libs)
+CAIRO_CXXFLAGS = $(shell pkg-config cairo --cflags)
+CAIRO_LDFLAGS = $(shell pkg-config cairo --libs)
 

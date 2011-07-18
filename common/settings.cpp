@@ -43,6 +43,7 @@ enum Options {
     VIEWER3DLIVE,
     VIEWER2DLIVE,
     TO_SVG,
+    TO_PNG,
 
     ALL_OFF,
     POINTS_OFF,
@@ -61,6 +62,7 @@ enum Options {
     VIEW_BOX,
     PRECISION,
     BG_COLOR,
+    NO_BG,
 
     SLEEPTIME,
     HUNKSIZE,
@@ -78,6 +80,7 @@ struct option options[] = {
     { "3d-live", no_argument, NULL, VIEWER3DLIVE },
     { "2d-live", no_argument, NULL, VIEWER2DLIVE },
     { "to-svg", no_argument, NULL, TO_SVG },
+    { "to-png", no_argument, NULL, TO_PNG },
 
     { "all-off", no_argument, NULL, ALL_OFF },
     { "points-off", no_argument, NULL, POINTS_OFF },
@@ -96,6 +99,7 @@ struct option options[] = {
     { "view-box", required_argument, NULL, VIEW_BOX },
     { "precision", required_argument, NULL, PRECISION },
     { "bg-color", required_argument, NULL, BG_COLOR },
+    { "no-bg", no_argument, NULL, NO_BG },
 
     { "sleeptime", required_argument, NULL, SLEEPTIME },
     { "hunksize", required_argument, NULL, HUNKSIZE },
@@ -143,6 +147,7 @@ Settings::Settings()
     bg_color[0] = 1.;
     bg_color[1] = 1.;
     bg_color[2] = 1.;
+    no_bg = false;
 
     sleeptime = 1000; // default sleeptime is 1s
     hunksize = 1;
@@ -201,6 +206,10 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
                 break;
             case TO_SVG:
                 type = TYPE_TO_SVG;
+                break;
+
+            case TO_PNG:
+                type = TYPE_TO_PNG;
                 break;
 
             case ALL_OFF:
@@ -273,6 +282,9 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
                 bg_color[0] = fl[0];
                 bg_color[1] = fl[1];
                 bg_color[2] = fl[2];
+                break;
+            case NO_BG:
+                no_bg = true;
                 break;
 
             case SLEEPTIME:
@@ -372,6 +384,7 @@ void Settings::usage(int argc, char *argv[])
     std::cerr << "                                          Parameters are: x, y, width, height with respect to svg coordinate system" << std::endl;
     std::cerr << "  --precision    int    Set up precision of floating point numbers when priting them out." << std::endl;
     std::cerr << "  --bg-color     float,float,float  Background color." << std::endl;
+    std::cerr << "  --no-bg                           Turn off background color." << std::endl;
 
     std::cerr << std::endl;
     std::cerr << "  --sleeptime    int    Sleeptime (in ms) between frames in 'live' mode." << std::endl;

@@ -36,6 +36,7 @@ using namespace std;
 int main2d3d(int argc, char *argv[], svt_parser_t *parser, bool disable_rotation);
 int main2d3dLive(int argc, char *argv[], char *args[], int num_args, bool disable_rotation);
 int mainToSVG(int argc, char *argv[], svt_parser_t *parser);
+int mainToPNG(int argc, char *argv[], svt_parser_t *parser);
 
 static int main2d(int argc, char *argv[], svt_parser_t *parser)
     { return main2d3d(argc, argv, parser, true); }
@@ -54,7 +55,8 @@ enum Type {
     VIEWER3D,
     VIEWER2DLIVE,
     VIEWER3DLIVE,
-    TO_SVG
+    TO_SVG,
+    TO_PNG
 };
 
 static int cmpend(const char *a, const char *b);
@@ -84,6 +86,9 @@ int main(int argc, char *argv[])
         case SVT::Common::Settings::TYPE_TO_SVG:
             type = TO_SVG;
             break;
+        case SVT::Common::Settings::TYPE_TO_PNG:
+            type = TO_PNG;
+            break;
         default:
             type = NONE;
             break;
@@ -99,6 +104,8 @@ int main(int argc, char *argv[])
         type = VIEWER3DLIVE;
     }else if (cmpend(argv[0], "svt-to-svg") == 0){
         type = TO_SVG;
+    }else if (cmpend(argv[0], "svt-to-png") == 0){
+        type = TO_PNG;
     }
 
 
@@ -122,6 +129,8 @@ int main(int argc, char *argv[])
             main3d(argc, argv, parser);
         }else if (type == TO_SVG){
             return mainToSVG(argc, argv, parser);
+        }else if (type == TO_PNG){
+            return mainToPNG(argc, argv, parser);
         }
 
         svtParserDelete(parser);
