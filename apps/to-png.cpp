@@ -70,6 +70,7 @@ void toPNG(svt_obj_t *objs)
     int width, height;
     float view_box[4];
     float xscale, yscale, xoff, yoff, x, y, x2, y2;
+    float el_size;
     float transform_matrix[9] =
         { 1.f, 0.f, 0.f,
           0.f, -1.f, 0.f,
@@ -163,6 +164,11 @@ void toPNG(svt_obj_t *objs)
                 col = svtObjEdgeColor(objs);
             }
 
+            el_size = settings.edge_width;
+            if (svtObjEdgeWidth(objs) > 0.f){
+                el_size = svtObjEdgeWidth(objs);
+            }
+
             for (int i=0; i < edges_len; i++){
                 if (edges[i][0] < points_len && edges[i][1] < points_len){
                     x = (points[edges[i][0]][0] + xoff) * xscale;
@@ -170,7 +176,7 @@ void toPNG(svt_obj_t *objs)
                     x2 = (points[edges[i][1]][0] + xoff) * xscale;
                     y2 = (points[edges[i][1]][1] + yoff) * yscale;
 
-                    cairo_set_line_width(cr, settings.edge_width);
+                    cairo_set_line_width(cr, el_size);
                     cairo_set_source_rgb(cr, col[0], col[1], col[2]);
                     cairo_move_to(cr, x, y);
                     cairo_line_to(cr, x2, y2);
@@ -189,13 +195,18 @@ void toPNG(svt_obj_t *objs)
                 col = svtObjPointColor(objs);
             }
 
+            el_size = settings.point_size;
+            if (svtObjPointSize(objs) > 0.f){
+                el_size = svtObjPointSize(objs);
+            }
+
             for (int i=0; i < points_len; i++){
                 x = (points[i][0] + xoff) * xscale;
                 y = (points[i][1] + yoff) * yscale;
 
                 cairo_set_source_rgb(cr, col[0], col[1], col[2]);
                 cairo_move_to(cr, x, y);
-                cairo_arc(cr, x, y, settings.point_size, 0, 2 * M_PI);
+                cairo_arc(cr, x, y, el_size, 0, 2 * M_PI);
                 cairo_fill(cr);
             }
         }
