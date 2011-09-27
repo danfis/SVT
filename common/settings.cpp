@@ -44,6 +44,7 @@ enum Options {
     VIEWER2DLIVE,
     TO_SVG,
     TO_PNG,
+    TO_POV,
 
     ALL_OFF,
     POINTS_OFF,
@@ -81,6 +82,7 @@ struct option options[] = {
     { "2d-live", no_argument, NULL, VIEWER2DLIVE },
     { "to-svg", no_argument, NULL, TO_SVG },
     { "to-png", no_argument, NULL, TO_PNG },
+    { "to-pov", no_argument, NULL, TO_POV },
 
     { "all-off", no_argument, NULL, ALL_OFF },
     { "points-off", no_argument, NULL, POINTS_OFF },
@@ -210,6 +212,9 @@ char **Settings::setUpFromOptions(int argc, char *argv[], int *len)
 
             case TO_PNG:
                 type = TYPE_TO_PNG;
+                break;
+            case TO_POV:
+                type = TYPE_TO_POV;
                 break;
 
             case ALL_OFF:
