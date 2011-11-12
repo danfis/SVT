@@ -57,6 +57,29 @@ int mainToPNG(int argc, char *argv[], svt_parser_t *parser)
     return 0;
 }
 
+static svt_obj_t *_reverseObjs(svt_obj_t *objs, svt_obj_t **last)
+{
+    svt_obj_t *o;
+
+    if (objs->next){
+        o = _reverseObjs(objs->next, last);
+        (*last)->next = objs;
+        objs->next = NULL;
+
+        *last = objs;
+        return o;
+    }else{
+        *last = objs;
+        return objs;
+    }
+}
+
+static svt_obj_t *reverseObjs(svt_obj_t *objs)
+{
+    svt_obj_t *o;
+    return _reverseObjs(objs, &o);
+}
+
 void toPNG(svt_obj_t *objs)
 {
     svt_obj_t *objs2;
@@ -111,6 +134,7 @@ void toPNG(svt_obj_t *objs)
         cairo_fill(cr);
     }
 
+    objs = reverseObjs(objs);
     for (int i=0; objs != NULL; i++, objs = svtObjNext(objs)){
         points = svtObjPoints(objs, &points_len);
         edges = svtObjEdges(objs, &edges_len);
