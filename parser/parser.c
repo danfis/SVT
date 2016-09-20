@@ -20,6 +20,7 @@
  * along with SVT. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <limits.h>
 #include "parser.h"
 #include "utils.h"
 
@@ -122,6 +123,7 @@ static void svtParserParseError(svt_parser_t *parser);
 static void svtParserParsePointsOff(svt_parser_t *parser);
 static void svtParserParseEdgesOff(svt_parser_t *parser);
 static void svtParserParseFacesOff(svt_parser_t *parser);
+static void svtParserParseHunkDelim(svt_parser_t *parser);
 
 int svtParserParse(svt_parser_t *parser)
 {
@@ -171,6 +173,9 @@ int svtParserParseHunk(svt_parser_t *parser, int num_objs)
 {
     int parsed = 0;
 
+    if (num_objs <= 0)
+        num_objs = INT_MAX;
+
     do {
         parser->cur_obj = NULL;
 
@@ -183,6 +188,9 @@ int svtParserParseHunk(svt_parser_t *parser, int num_objs)
                        &parser->objs_head, &parser->objs_tail);
             parser->objs_len++;
             parsed++;
+
+            if (svtObjHunkDelim(parser->cur_obj))
+                break;
         }
     } while (parser->cur_obj != NULL
              && parser->cur_tok != 0
@@ -274,6 +282,9 @@ static void svtParserParseObj(svt_parser_t *parser)
                 break;
             case T_ERROR:
                 svtParserParseError(parser);
+                break;
+            case T_HUNK_DELIM:
+                svtParserParseHunkDelim(parser);
                 break;
             case T_DELIM:
                 end = 1;
@@ -694,6 +705,15 @@ static void svtParserParseFacesOff(svt_parser_t *parser)
         parser->cur_obj = svtObjNew();
 
     svtObjSetFacesOff(parser->cur_obj, parser->yylval.off);
+
+    NEXT;
+}
+
+static void svtParserParseHunkDelim(svt_parser_t *parser)
+{
+    if (parser->cur_obj == NULL)
+        parser->cur_obj = svtObjNew();
+    svtObjSetHunkDelim(parser->cur_obj);
 
     NEXT;
 }

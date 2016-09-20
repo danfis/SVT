@@ -89,6 +89,7 @@ HEADER_EDGES_OFF ^(?i:edges[ ]off):{WHITESPACE}*
 HEADER_FACES_OFF ^(?i:faces[ ]off):{WHITESPACE}*
 OFF_VAL (?i:off)|(?i:on)|0|1
 DELIM ([-=+]+{WHITESPACE}*)+
+HUNK_DELIM %+
 
 %s flts ints name pointsoff edgesoff facesoff
 %%
@@ -219,6 +220,12 @@ DELIM ([-=+]+{WHITESPACE}*)+
     BEGIN(INITIAL);
     yyextra->lineno = yylineno;
     return T_DELIM;
+}
+
+{HUNK_DELIM} {
+    BEGIN(INITIAL);
+    yyextra->lineno = yylineno;
+    return T_HUNK_DELIM;
 }
 
 . {

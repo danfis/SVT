@@ -102,6 +102,8 @@ svt_obj_t *svtObjNew()
     obj->point_size = -1.f;
     obj->edge_width = -1.f;
 
+    obj->hunk_delim = 0;
+
     obj->next = NULL;
 
     return obj;
@@ -354,4 +356,9 @@ void svtObjSetEdgesOff(svt_obj_t *o, int off)
 void svtObjSetFacesOff(svt_obj_t *o, int off)
 {
     o->faces_off = off;
+}
+
+void svtObjSetHunkDelim(svt_obj_t *o)
+{
+    o->hunk_delim = 1;
 }

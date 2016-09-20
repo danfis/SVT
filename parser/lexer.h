@@ -49,6 +49,7 @@ extern "C" {
 #define T_POINT_SIZE 279
 #define T_EDGE_WIDTH 280
 #define T_SPHERES 281
+#define T_HUNK_DELIM 282
 
 #define YY_BUFSIZE 1000
 

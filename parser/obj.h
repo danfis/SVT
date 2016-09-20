@@ -90,6 +90,8 @@ struct _svt_obj_t {
     int points_off, edges_off, faces_off;
     float point_size, edge_width;
 
+    int hunk_delim;
+
     struct _svt_obj_t *next;
 };
 typedef struct _svt_obj_t svt_obj_t;
@@ -140,6 +142,7 @@ void svtObjSetEdgeWidth(svt_obj_t *, float s);
 void svtObjSetPointsOff(svt_obj_t *, int off);
 void svtObjSetEdgesOff(svt_obj_t *, int off);
 void svtObjSetFacesOff(svt_obj_t *, int off);
+void svtObjSetHunkDelim(svt_obj_t *);
 
 /**
  * Truncate all internaly managed lists to occupy only necessary amount of
@@ -163,6 +166,8 @@ const char *svtObjName(svt_obj_t *obj);
 #define svtObjPointsOff(o) ((o)->points_off)
 #define svtObjEdgesOff(o) ((o)->edges_off)
 #define svtObjFacesOff(o) ((o)->faces_off)
+
+#define svtObjHunkDelim(o) ((o)->hunk_delim)
 
 /**
  * Transform all points from obj using given transform matrix.
